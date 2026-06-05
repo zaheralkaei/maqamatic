@@ -1,0 +1,1279 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "description": "Complete database of Arabic Maqamat (melodic modes)",
+    "divisions_per_quarter": 8,
+    "cents_per_semitone": 100
+  },
+  "maqamat": {
+    "ajam": {
+      "name": "Maqam Ajam",
+      "transliteration": "Maqām 'Ajam",
+      "family": "ajam",
+      "scale_semitones": [0, 2, 4, 5, 7, 9, 11, 12],
+      "scale_cents": [0, 200, 400, 500, 700, 900, 1100, 1200],
+      "octave_equivalent": true,
+      "ajnas": [
+        {"jins_id": "ajam", "position": "lower", "start_degree": 1, "is_primary": true, "alternatives": []},
+        {"jins_id": "ajam_upper", "position": "upper", "start_degree": 5, "is_primary": true, "alternatives": ["nahawand_upper"]}
+      ],
+      "important_degrees": {
+        "tonic": {"degree": 1, "constraint": "hard"},
+        "ghammaz": {"degree": 5, "constraint": "hard"},
+        "secondary_ghammaz": null,
+        "leading_tone": {"degree": 7, "constraint": "soft"}
+      },
+      "sayr": {
+        "starting_range": [5, 8],
+        "typical_direction": "descending",
+        "emphasis_degrees": [1, 3, 5, 8],
+        "tension_degrees": [4, 7],
+        "resolution_degrees": [1, 5]
+      },
+      "modulations": {
+        "common_modulations": [
+          {"target": "nahawand", "pivot_degree": 5, "frequency": "common", "constraint": "soft"},
+          {"target": "hijaz", "pivot_degree": 4, "frequency": "occasional", "constraint": "preference"}
+        ]
+      },
+      "characteristics": {
+        "mood": ["joyful", "bright", "celebratory"],
+        "time_of_day": "any",
+        "traditional_usage": ["weddings", "celebrations", "happy occasions"],
+        "popularity": "high",
+        "region": ["Levant", "Egypt", "North Africa"]
+      },
+      "constraints": {
+        "hard": {
+          "must_resolve_to_tonic": true,
+          "forbidden_intervals": [],
+          "required_ajnas": ["ajam"]
+        },
+        "soft": {
+          "preferred_range": [1, 15],
+          "cadence_patterns": [[5, 4, 3, 2, 1], [8, 7, 6, 5]],
+          "avoid_degrees": []
+        },
+        "preferences": {
+          "ornament_degrees": [3, 5, 7],
+          "vibrato_degrees": [1, 5],
+          "phrase_endings": [1, 5, 8]
+        }
+      },
+      "musicxml": {
+        "default_tonic": {"step": "B", "octave": 3, "alter": -1},
+        "key_signature_fifths": -2,
+        "custom_accidentals": [],
+        "scale_notes": [
+          {"step": "B", "octave": 3, "alter": -1},
+          {"step": "C", "octave": 4, "alter": 0},
+          {"step": "D", "octave": 4, "alter": 0},
+          {"step": "E", "octave": 4, "alter": -1},
+          {"step": "F", "octave": 4, "alter": 0},
+          {"step": "G", "octave": 4, "alter": 0},
+          {"step": "A", "octave": 4, "alter": 0},
+          {"step": "B", "octave": 4, "alter": -1}
+        ]
+      }
+    },
+    "ajam_ushayran": {
+      "name": "Maqam Ajam Ushayran",
+      "transliteration": "Maqām 'Ajam 'Ushayrān",
+      "family": "ajam",
+      "scale_semitones": [0, 2, 4, 5, 7, 9, 11, 12],
+      "scale_cents": [0, 200, 400, 500, 700, 900, 1100, 1200],
+      "octave_equivalent": true,
+      "ajnas": [
+        {"jins_id": "ajam", "position": "lower", "start_degree": 1, "is_primary": true, "alternatives": []},
+        {"jins_id": "ajam_upper", "position": "upper", "start_degree": 5, "is_primary": true, "alternatives": []}
+      ],
+      "important_degrees": {
+        "tonic": {"degree": 1, "constraint": "hard"},
+        "ghammaz": {"degree": 5, "constraint": "hard"},
+        "secondary_ghammaz": null,
+        "leading_tone": {"degree": 7, "constraint": "soft"}
+      },
+      "sayr": {
+        "starting_range": [1, 4],
+        "typical_direction": "ascending",
+        "emphasis_degrees": [1, 3, 5],
+        "tension_degrees": [4, 7],
+        "resolution_degrees": [1]
+      },
+      "modulations": {
+        "common_modulations": []
+      },
+      "characteristics": {
+        "mood": ["bright", "joyful"],
+        "time_of_day": "any",
+        "traditional_usage": ["instrumental pieces"],
+        "popularity": "moderate",
+        "region": ["Levant", "Turkey"]
+      },
+      "constraints": {
+        "hard": {"must_resolve_to_tonic": true, "forbidden_intervals": [], "required_ajnas": ["ajam"]},
+        "soft": {"preferred_range": [1, 12], "cadence_patterns": [], "avoid_degrees": []},
+        "preferences": {"ornament_degrees": [3, 5], "vibrato_degrees": [1], "phrase_endings": [1, 5]}
+      },
+      "musicxml": {
+        "default_tonic": {"step": "G", "octave": 3, "alter": 0},
+        "key_signature_fifths": 0,
+        "custom_accidentals": [{"step": "F", "alter": 1}],
+        "scale_notes": [
+          {"step": "G", "octave": 3, "alter": 0},
+          {"step": "A", "octave": 3, "alter": 0},
+          {"step": "B", "octave": 3, "alter": 0},
+          {"step": "C", "octave": 4, "alter": 0},
+          {"step": "D", "octave": 4, "alter": 0},
+          {"step": "E", "octave": 4, "alter": 0},
+          {"step": "F", "octave": 4, "alter": 1},
+          {"step": "G", "octave": 4, "alter": 0}
+        ]
+      }
+    },
+    "bayati": {
+      "name": "Maqam Bayati",
+      "transliteration": "Maqām Bayātī",
+      "family": "bayati",
+      "scale_semitones": [0, 1.5, 3, 5, 7, 8, 10, 12],
+      "scale_cents": [0, 150, 300, 500, 700, 800, 1000, 1200],
+      "octave_equivalent": true,
+      "ajnas": [
+        {"jins_id": "bayati", "position": "lower", "start_degree": 1, "is_primary": true, "alternatives": []},
+        {"jins_id": "nahawand_upper", "position": "upper", "start_degree": 4, "is_primary": true, "alternatives": ["hijaz_upper", "ajam_upper"]}
+      ],
+      "important_degrees": {
+        "tonic": {"degree": 1, "constraint": "hard"},
+        "ghammaz": {"degree": 4, "constraint": "hard"},
+        "secondary_ghammaz": {"degree": 5, "constraint": "soft"},
+        "leading_tone": {"degree": 7, "constraint": "soft"}
+      },
+      "sayr": {
+        "starting_range": [4, 6],
+        "typical_direction": "descending",
+        "emphasis_degrees": [1, 4, 5],
+        "tension_degrees": [2, 6],
+        "resolution_degrees": [1, 4]
+      },
+      "modulations": {
+        "common_modulations": [
+          {"target": "rast", "pivot_degree": 5, "frequency": "common", "constraint": "soft"},
+          {"target": "saba", "pivot_degree": 1, "frequency": "common", "constraint": "soft"},
+          {"target": "hijaz", "pivot_degree": 4, "frequency": "occasional", "constraint": "preference"}
+        ]
+      },
+      "characteristics": {
+        "mood": ["contemplative", "earthy", "spiritual"],
+        "time_of_day": "evening",
+        "traditional_usage": ["religious music", "classical pieces", "mawwal"],
+        "popularity": "very high",
+        "region": ["Egypt", "Levant", "Iraq"]
+      },
+      "constraints": {
+        "hard": {"must_resolve_to_tonic": true, "forbidden_intervals": [], "required_ajnas": ["bayati"]},
+        "soft": {"preferred_range": [1, 15], "cadence_patterns": [[4, 3, 2, 1]], "avoid_degrees": []},
+        "preferences": {"ornament_degrees": [2, 4], "vibrato_degrees": [1], "phrase_endings": [1, 4]}
+      },
+      "musicxml": {
+        "default_tonic": {"step": "D", "octave": 4, "alter": 0},
+        "key_signature_fifths": 0,
+        "custom_accidentals": [{"step": "E", "alter": -0.5}, {"step": "B", "alter": -1}],
+        "scale_notes": [
+          {"step": "D", "octave": 4, "alter": 0},
+          {"step": "E", "octave": 4, "alter": -0.5},
+          {"step": "F", "octave": 4, "alter": 0},
+          {"step": "G", "octave": 4, "alter": 0},
+          {"step": "A", "octave": 4, "alter": 0},
+          {"step": "B", "octave": 4, "alter": -1},
+          {"step": "C", "octave": 5, "alter": 0},
+          {"step": "D", "octave": 5, "alter": 0}
+        ]
+      }
+    },
+    "bayati_shuri": {
+      "name": "Maqam Bayati Shuri",
+      "transliteration": "Maqām Bayātī Shūrī",
+      "family": "bayati",
+      "scale_semitones": [0, 1.5, 3, 5, 7, 8, 11, 12],
+      "scale_cents": [0, 150, 300, 500, 700, 800, 1100, 1200],
+      "octave_equivalent": true,
+      "ajnas": [
+        {"jins_id": "bayati", "position": "lower", "start_degree": 1, "is_primary": true, "alternatives": []},
+        {"jins_id": "hijaz_upper", "position": "upper", "start_degree": 4, "is_primary": true, "alternatives": []}
+      ],
+      "important_degrees": {
+        "tonic": {"degree": 1, "constraint": "hard"},
+        "ghammaz": {"degree": 4, "constraint": "hard"},
+        "secondary_ghammaz": null,
+        "leading_tone": {"degree": 7, "constraint": "hard"}
+      },
+      "sayr": {
+        "starting_range": [4, 6],
+        "typical_direction": "descending",
+        "emphasis_degrees": [1, 4, 7],
+        "tension_degrees": [2, 6],
+        "resolution_degrees": [1]
+      },
+      "modulations": {
+        "common_modulations": [
+          {"target": "bayati", "pivot_degree": 1, "frequency": "common", "constraint": "soft"}
+        ]
+      },
+      "characteristics": {
+        "mood": ["longing", "dramatic"],
+        "time_of_day": "night",
+        "traditional_usage": ["emotional pieces", "mawwal"],
+        "popularity": "moderate",
+        "region": ["Levant", "Egypt"]
+      },
+      "constraints": {
+        "hard": {"must_resolve_to_tonic": true, "forbidden_intervals": [], "required_ajnas": ["bayati"]},
+        "soft": {"preferred_range": [1, 12], "cadence_patterns": [], "avoid_degrees": []},
+        "preferences": {"ornament_degrees": [2, 7], "vibrato_degrees": [1], "phrase_endings": [1]}
+      },
+      "musicxml": {
+        "default_tonic": {"step": "D", "octave": 4, "alter": 0},
+        "key_signature_fifths": 0,
+        "custom_accidentals": [{"step": "E", "alter": -0.5}, {"step": "B", "alter": 0}],
+        "scale_notes": [
+          {"step": "D", "octave": 4, "alter": 0},
+          {"step": "E", "octave": 4, "alter": -0.5},
+          {"step": "F", "octave": 4, "alter": 0},
+          {"step": "G", "octave": 4, "alter": 0},
+          {"step": "A", "octave": 4, "alter": 0},
+          {"step": "B", "octave": 4, "alter": -1},
+          {"step": "C", "octave": 5, "alter": 1},
+          {"step": "D", "octave": 5, "alter": 0}
+        ]
+      }
+    },
+    "hijaz": {
+      "name": "Maqam Hijaz",
+      "transliteration": "Maqām Ḥijāz",
+      "family": "hijaz",
+      "scale_semitones": [0, 1, 4, 5, 7, 8, 10, 12],
+      "scale_cents": [0, 100, 400, 500, 700, 800, 1000, 1200],
+      "octave_equivalent": true,
+      "ajnas": [
+        {"jins_id": "hijaz", "position": "lower", "start_degree": 1, "is_primary": true, "alternatives": []},
+        {"jins_id": "nahawand_upper", "position": "upper", "start_degree": 4, "is_primary": true, "alternatives": ["rast"]}
+      ],
+      "important_degrees": {
+        "tonic": {"degree": 1, "constraint": "hard"},
+        "ghammaz": {"degree": 4, "constraint": "hard"},
+        "secondary_ghammaz": {"degree": 5, "constraint": "soft"},
+        "leading_tone": {"degree": 2, "constraint": "hard"}
+      },
+      "sayr": {
+        "starting_range": [4, 6],
+        "typical_direction": "descending",
+        "emphasis_degrees": [1, 2, 4, 5],
+        "tension_degrees": [2, 3, 6],
+        "resolution_degrees": [1, 4]
+      },
+      "modulations": {
+        "common_modulations": [
+          {"target": "bayati", "pivot_degree": 4, "frequency": "common", "constraint": "soft"},
+          {"target": "nahawand", "pivot_degree": 4, "frequency": "occasional", "constraint": "preference"}
+        ]
+      },
+      "characteristics": {
+        "mood": ["exotic", "mysterious", "Middle Eastern"],
+        "time_of_day": "any",
+        "traditional_usage": ["adhan", "religious music", "emotional pieces"],
+        "popularity": "very high",
+        "region": ["all Arab world", "Turkey", "Iran"]
+      },
+      "constraints": {
+        "hard": {"must_resolve_to_tonic": true, "forbidden_intervals": [], "required_ajnas": ["hijaz"]},
+        "soft": {"preferred_range": [1, 15], "cadence_patterns": [[4, 3, 2, 1]], "avoid_degrees": []},
+        "preferences": {"ornament_degrees": [2, 3], "vibrato_degrees": [1, 4], "phrase_endings": [1, 4]}
+      },
+      "musicxml": {
+        "default_tonic": {"step": "D", "octave": 4, "alter": 0},
+        "key_signature_fifths": 0,
+        "custom_accidentals": [{"step": "E", "alter": -1}, {"step": "F", "alter": 1}, {"step": "B", "alter": -1}],
+        "scale_notes": [
+          {"step": "D", "octave": 4, "alter": 0},
+          {"step": "E", "octave": 4, "alter": -1},
+          {"step": "F", "octave": 4, "alter": 1},
+          {"step": "G", "octave": 4, "alter": 0},
+          {"step": "A", "octave": 4, "alter": 0},
+          {"step": "B", "octave": 4, "alter": -1},
+          {"step": "C", "octave": 5, "alter": 0},
+          {"step": "D", "octave": 5, "alter": 0}
+        ]
+      }
+    },
+    "hijazkar": {
+      "name": "Maqam Hijazkar",
+      "transliteration": "Maqām Ḥijāzkār",
+      "family": "hijaz",
+      "scale_semitones": [0, 1, 4, 5, 7, 8, 11, 12],
+      "scale_cents": [0, 100, 400, 500, 700, 800, 1100, 1200],
+      "octave_equivalent": true,
+      "ajnas": [
+        {"jins_id": "hijaz", "position": "lower", "start_degree": 1, "is_primary": true, "alternatives": []},
+        {"jins_id": "hijaz_upper", "position": "upper", "start_degree": 5, "is_primary": true, "alternatives": []}
+      ],
+      "important_degrees": {
+        "tonic": {"degree": 1, "constraint": "hard"},
+        "ghammaz": {"degree": 5, "constraint": "hard"},
+        "secondary_ghammaz": null,
+        "leading_tone": {"degree": 7, "constraint": "hard"}
+      },
+      "sayr": {
+        "starting_range": [5, 8],
+        "typical_direction": "descending",
+        "emphasis_degrees": [1, 5, 8],
+        "tension_degrees": [2, 6],
+        "resolution_degrees": [1, 5]
+      },
+      "modulations": {
+        "common_modulations": [
+          {"target": "hijaz", "pivot_degree": 1, "frequency": "common", "constraint": "soft"}
+        ]
+      },
+      "characteristics": {
+        "mood": ["dramatic", "intense", "double exotic"],
+        "time_of_day": "night",
+        "traditional_usage": ["dramatic pieces", "film music"],
+        "popularity": "high",
+        "region": ["Levant", "Egypt", "Turkey"]
+      },
+      "constraints": {
+        "hard": {"must_resolve_to_tonic": true, "forbidden_intervals": [], "required_ajnas": ["hijaz"]},
+        "soft": {"preferred_range": [1, 15], "cadence_patterns": [], "avoid_degrees": []},
+        "preferences": {"ornament_degrees": [2, 6], "vibrato_degrees": [1, 5], "phrase_endings": [1, 5]}
+      },
+      "musicxml": {
+        "default_tonic": {"step": "C", "octave": 4, "alter": 0},
+        "key_signature_fifths": 0,
+        "custom_accidentals": [{"step": "D", "alter": -1}, {"step": "E", "alter": 0}, {"step": "A", "alter": -1}, {"step": "B", "alter": 0}],
+        "scale_notes": [
+          {"step": "C", "octave": 4, "alter": 0},
+          {"step": "D", "octave": 4, "alter": -1},
+          {"step": "E", "octave": 4, "alter": 0},
+          {"step": "F", "octave": 4, "alter": 0},
+          {"step": "G", "octave": 4, "alter": 0},
+          {"step": "A", "octave": 4, "alter": -1},
+          {"step": "B", "octave": 4, "alter": 0},
+          {"step": "C", "octave": 5, "alter": 0}
+        ]
+      }
+    },
+    "kurd": {
+      "name": "Maqam Kurd",
+      "transliteration": "Maqām Kurd",
+      "family": "kurd",
+      "scale_semitones": [0, 1, 3, 5, 7, 8, 10, 12],
+      "scale_cents": [0, 100, 300, 500, 700, 800, 1000, 1200],
+      "octave_equivalent": true,
+      "ajnas": [
+        {"jins_id": "kurd", "position": "lower", "start_degree": 1, "is_primary": true, "alternatives": []},
+        {"jins_id": "nahawand_upper", "position": "upper", "start_degree": 4, "is_primary": true, "alternatives": ["hijaz_upper"]}
+      ],
+      "important_degrees": {
+        "tonic": {"degree": 1, "constraint": "hard"},
+        "ghammaz": {"degree": 4, "constraint": "hard"},
+        "secondary_ghammaz": null,
+        "leading_tone": {"degree": 7, "constraint": "soft"}
+      },
+      "sayr": {
+        "starting_range": [4, 6],
+        "typical_direction": "descending",
+        "emphasis_degrees": [1, 4, 5],
+        "tension_degrees": [2, 6],
+        "resolution_degrees": [1]
+      },
+      "modulations": {
+        "common_modulations": [
+          {"target": "hijaz", "pivot_degree": 4, "frequency": "common", "constraint": "soft"},
+          {"target": "bayati", "pivot_degree": 4, "frequency": "occasional", "constraint": "preference"}
+        ]
+      },
+      "characteristics": {
+        "mood": ["melancholic", "Phrygian", "minor"],
+        "time_of_day": "evening",
+        "traditional_usage": ["sad pieces", "laments"],
+        "popularity": "high",
+        "region": ["Turkey", "Levant", "Egypt"]
+      },
+      "constraints": {
+        "hard": {"must_resolve_to_tonic": true, "forbidden_intervals": [], "required_ajnas": ["kurd"]},
+        "soft": {"preferred_range": [1, 12], "cadence_patterns": [[4, 3, 2, 1]], "avoid_degrees": []},
+        "preferences": {"ornament_degrees": [2, 4], "vibrato_degrees": [1], "phrase_endings": [1]}
+      },
+      "musicxml": {
+        "default_tonic": {"step": "D", "octave": 4, "alter": 0},
+        "key_signature_fifths": -1,
+        "custom_accidentals": [],
+        "scale_notes": [
+          {"step": "D", "octave": 4, "alter": 0},
+          {"step": "E", "octave": 4, "alter": -1},
+          {"step": "F", "octave": 4, "alter": 0},
+          {"step": "G", "octave": 4, "alter": 0},
+          {"step": "A", "octave": 4, "alter": 0},
+          {"step": "B", "octave": 4, "alter": -1},
+          {"step": "C", "octave": 5, "alter": 0},
+          {"step": "D", "octave": 5, "alter": 0}
+        ]
+      }
+    },
+    "nahawand": {
+      "name": "Maqam Nahawand",
+      "transliteration": "Maqām Nahāwand",
+      "family": "nahawand",
+      "scale_semitones": [0, 2, 3, 5, 7, 8, 10, 12],
+      "scale_cents": [0, 200, 300, 500, 700, 800, 1000, 1200],
+      "octave_equivalent": true,
+      "ajnas": [
+        {"jins_id": "nahawand", "position": "lower", "start_degree": 1, "is_primary": true, "alternatives": []},
+        {"jins_id": "kurd", "position": "upper", "start_degree": 4, "is_primary": true, "alternatives": ["hijaz"]}
+      ],
+      "important_degrees": {
+        "tonic": {"degree": 1, "constraint": "hard"},
+        "ghammaz": {"degree": 5, "constraint": "hard"},
+        "secondary_ghammaz": null,
+        "leading_tone": {"degree": 7, "constraint": "hard"}
+      },
+      "sayr": {
+        "starting_range": [5, 8],
+        "typical_direction": "descending",
+        "emphasis_degrees": [1, 3, 5],
+        "tension_degrees": [4, 7],
+        "resolution_degrees": [1]
+      },
+      "modulations": {
+        "common_modulations": [
+          {"target": "hijaz", "pivot_degree": 5, "frequency": "common", "constraint": "soft"},
+          {"target": "ajam", "pivot_degree": 3, "frequency": "occasional", "constraint": "preference"}
+        ]
+      },
+      "characteristics": {
+        "mood": ["soft", "romantic", "Western minor"],
+        "time_of_day": "any",
+        "traditional_usage": ["love songs", "film music", "classical"],
+        "popularity": "very high",
+        "region": ["Egypt", "Levant", "Turkey"]
+      },
+      "constraints": {
+        "hard": {"must_resolve_to_tonic": true, "forbidden_intervals": [], "required_ajnas": ["nahawand"]},
+        "soft": {"preferred_range": [1, 15], "cadence_patterns": [[5, 4, 3, 2, 1]], "avoid_degrees": []},
+        "preferences": {"ornament_degrees": [3, 5], "vibrato_degrees": [1, 5], "phrase_endings": [1, 5]}
+      },
+      "musicxml": {
+        "default_tonic": {"step": "C", "octave": 4, "alter": 0},
+        "key_signature_fifths": -3,
+        "custom_accidentals": [],
+        "scale_notes": [
+          {"step": "C", "octave": 4, "alter": 0},
+          {"step": "D", "octave": 4, "alter": 0},
+          {"step": "E", "octave": 4, "alter": -1},
+          {"step": "F", "octave": 4, "alter": 0},
+          {"step": "G", "octave": 4, "alter": 0},
+          {"step": "A", "octave": 4, "alter": -1},
+          {"step": "B", "octave": 4, "alter": -1},
+          {"step": "C", "octave": 5, "alter": 0}
+        ]
+      }
+    },
+    "farahfaza": {
+      "name": "Maqam Farahfaza",
+      "transliteration": "Maqām Faraḥfazā",
+      "family": "nahawand",
+      "scale_semitones": [0, 2, 3, 5, 7, 8, 11, 12],
+      "scale_cents": [0, 200, 300, 500, 700, 800, 1100, 1200],
+      "octave_equivalent": true,
+      "ajnas": [
+        {"jins_id": "nahawand", "position": "lower", "start_degree": 1, "is_primary": true, "alternatives": []},
+        {"jins_id": "hijaz_upper", "position": "upper", "start_degree": 5, "is_primary": true, "alternatives": []}
+      ],
+      "important_degrees": {
+        "tonic": {"degree": 1, "constraint": "hard"},
+        "ghammaz": {"degree": 5, "constraint": "hard"},
+        "secondary_ghammaz": null,
+        "leading_tone": {"degree": 7, "constraint": "hard"}
+      },
+      "sayr": {
+        "starting_range": [5, 8],
+        "typical_direction": "descending",
+        "emphasis_degrees": [1, 5, 7],
+        "tension_degrees": [6],
+        "resolution_degrees": [1, 5]
+      },
+      "modulations": {
+        "common_modulations": [
+          {"target": "nahawand", "pivot_degree": 1, "frequency": "common", "constraint": "soft"}
+        ]
+      },
+      "characteristics": {
+        "mood": ["dramatic", "minor with exotic upper"],
+        "time_of_day": "evening",
+        "traditional_usage": ["dramatic pieces"],
+        "popularity": "moderate",
+        "region": ["Turkey", "Levant"]
+      },
+      "constraints": {
+        "hard": {"must_resolve_to_tonic": true, "forbidden_intervals": [], "required_ajnas": ["nahawand"]},
+        "soft": {"preferred_range": [1, 12], "cadence_patterns": [], "avoid_degrees": []},
+        "preferences": {"ornament_degrees": [6, 7], "vibrato_degrees": [1, 5], "phrase_endings": [1, 5]}
+      },
+      "musicxml": {
+        "default_tonic": {"step": "C", "octave": 4, "alter": 0},
+        "key_signature_fifths": -2,
+        "custom_accidentals": [{"step": "B", "alter": 0}],
+        "scale_notes": [
+          {"step": "C", "octave": 4, "alter": 0},
+          {"step": "D", "octave": 4, "alter": 0},
+          {"step": "E", "octave": 4, "alter": -1},
+          {"step": "F", "octave": 4, "alter": 0},
+          {"step": "G", "octave": 4, "alter": 0},
+          {"step": "A", "octave": 4, "alter": -1},
+          {"step": "B", "octave": 4, "alter": 0},
+          {"step": "C", "octave": 5, "alter": 0}
+        ]
+      }
+    },
+    "nikriz": {
+      "name": "Maqam Nikriz",
+      "transliteration": "Maqām Nīkrīz",
+      "family": "nikriz",
+      "scale_semitones": [0, 2, 3, 6, 7, 9, 10, 12],
+      "scale_cents": [0, 200, 300, 600, 700, 900, 1000, 1200],
+      "octave_equivalent": true,
+      "ajnas": [
+        {"jins_id": "nikriz", "position": "lower", "start_degree": 1, "is_primary": true, "alternatives": []},
+        {"jins_id": "nahawand_upper", "position": "upper", "start_degree": 5, "is_primary": true, "alternatives": ["rast"]}
+      ],
+      "important_degrees": {
+        "tonic": {"degree": 1, "constraint": "hard"},
+        "ghammaz": {"degree": 5, "constraint": "hard"},
+        "secondary_ghammaz": null,
+        "leading_tone": {"degree": 4, "constraint": "soft"}
+      },
+      "sayr": {
+        "starting_range": [5, 8],
+        "typical_direction": "descending",
+        "emphasis_degrees": [1, 4, 5],
+        "tension_degrees": [4, 6],
+        "resolution_degrees": [1, 5]
+      },
+      "modulations": {
+        "common_modulations": [
+          {"target": "hijaz", "pivot_degree": 5, "frequency": "common", "constraint": "soft"},
+          {"target": "nahawand", "pivot_degree": 1, "frequency": "occasional", "constraint": "preference"}
+        ]
+      },
+      "characteristics": {
+        "mood": ["exotic", "dramatic", "augmented second"],
+        "time_of_day": "any",
+        "traditional_usage": ["instrumental pieces", "dramatic scenes"],
+        "popularity": "high",
+        "region": ["Turkey", "Levant", "Egypt"]
+      },
+      "constraints": {
+        "hard": {"must_resolve_to_tonic": true, "forbidden_intervals": [], "required_ajnas": ["nikriz"]},
+        "soft": {"preferred_range": [1, 15], "cadence_patterns": [], "avoid_degrees": []},
+        "preferences": {"ornament_degrees": [4, 5], "vibrato_degrees": [1, 5], "phrase_endings": [1, 5]}
+      },
+      "musicxml": {
+        "default_tonic": {"step": "C", "octave": 4, "alter": 0},
+        "key_signature_fifths": -2,
+        "custom_accidentals": [{"step": "F", "alter": 1}],
+        "scale_notes": [
+          {"step": "C", "octave": 4, "alter": 0},
+          {"step": "D", "octave": 4, "alter": 0},
+          {"step": "E", "octave": 4, "alter": -1},
+          {"step": "F", "octave": 4, "alter": 1},
+          {"step": "G", "octave": 4, "alter": 0},
+          {"step": "A", "octave": 4, "alter": 0},
+          {"step": "B", "octave": 4, "alter": -1},
+          {"step": "C", "octave": 5, "alter": 0}
+        ]
+      }
+    },
+    "nawa_athar": {
+      "name": "Maqam Nawa Athar",
+      "transliteration": "Maqām Nawā Athar",
+      "family": "nikriz",
+      "scale_semitones": [0, 2, 3, 6, 7, 8, 11, 12],
+      "scale_cents": [0, 200, 300, 600, 700, 800, 1100, 1200],
+      "octave_equivalent": true,
+      "ajnas": [
+        {"jins_id": "nikriz", "position": "lower", "start_degree": 1, "is_primary": true, "alternatives": []},
+        {"jins_id": "hijaz_upper", "position": "upper", "start_degree": 5, "is_primary": true, "alternatives": []}
+      ],
+      "important_degrees": {
+        "tonic": {"degree": 1, "constraint": "hard"},
+        "ghammaz": {"degree": 5, "constraint": "hard"},
+        "secondary_ghammaz": null,
+        "leading_tone": {"degree": 7, "constraint": "hard"}
+      },
+      "sayr": {
+        "starting_range": [5, 8],
+        "typical_direction": "descending",
+        "emphasis_degrees": [1, 5, 7],
+        "tension_degrees": [4, 6],
+        "resolution_degrees": [1, 5]
+      },
+      "modulations": {
+        "common_modulations": [
+          {"target": "nikriz", "pivot_degree": 1, "frequency": "common", "constraint": "soft"}
+        ]
+      },
+      "characteristics": {
+        "mood": ["double augmented", "very dramatic", "intense"],
+        "time_of_day": "night",
+        "traditional_usage": ["dramatic climax", "intense passages"],
+        "popularity": "moderate",
+        "region": ["Turkey", "Levant"]
+      },
+      "constraints": {
+        "hard": {"must_resolve_to_tonic": true, "forbidden_intervals": [], "required_ajnas": ["nikriz"]},
+        "soft": {"preferred_range": [1, 12], "cadence_patterns": [], "avoid_degrees": []},
+        "preferences": {"ornament_degrees": [4, 7], "vibrato_degrees": [1, 5], "phrase_endings": [1, 5]}
+      },
+      "musicxml": {
+        "default_tonic": {"step": "C", "octave": 4, "alter": 0},
+        "key_signature_fifths": -1,
+        "custom_accidentals": [{"step": "E", "alter": -1}, {"step": "F", "alter": 1}],
+        "scale_notes": [
+          {"step": "C", "octave": 4, "alter": 0},
+          {"step": "D", "octave": 4, "alter": 0},
+          {"step": "E", "octave": 4, "alter": -1},
+          {"step": "F", "octave": 4, "alter": 1},
+          {"step": "G", "octave": 4, "alter": 0},
+          {"step": "A", "octave": 4, "alter": -1},
+          {"step": "B", "octave": 4, "alter": 0},
+          {"step": "C", "octave": 5, "alter": 0}
+        ]
+      }
+    },
+    "rast": {
+      "name": "Maqam Rast",
+      "transliteration": "Maqām Rāst",
+      "family": "rast",
+      "scale_semitones": [0, 2, 3.5, 5, 7, 9, 10.5, 12],
+      "scale_cents": [0, 200, 350, 500, 700, 900, 1050, 1200],
+      "octave_equivalent": true,
+      "ajnas": [
+        {"jins_id": "rast", "position": "lower", "start_degree": 1, "is_primary": true, "alternatives": []},
+        {"jins_id": "rast", "position": "upper", "start_degree": 5, "is_primary": true, "alternatives": ["ajam_upper", "nahawand_upper"]}
+      ],
+      "important_degrees": {
+        "tonic": {"degree": 1, "constraint": "hard"},
+        "ghammaz": {"degree": 5, "constraint": "hard"},
+        "secondary_ghammaz": null,
+        "leading_tone": {"degree": 7, "constraint": "soft"}
+      },
+      "sayr": {
+        "starting_range": [5, 8],
+        "typical_direction": "descending",
+        "emphasis_degrees": [1, 3, 5],
+        "tension_degrees": [4, 7],
+        "resolution_degrees": [1, 5]
+      },
+      "modulations": {
+        "common_modulations": [
+          {"target": "bayati", "pivot_degree": 4, "frequency": "common", "constraint": "soft"},
+          {"target": "nahawand", "pivot_degree": 5, "frequency": "occasional", "constraint": "preference"},
+          {"target": "sikah", "pivot_degree": 3, "frequency": "common", "constraint": "soft"}
+        ]
+      },
+      "characteristics": {
+        "mood": ["fundamental", "balanced", "versatile", "proud"],
+        "time_of_day": "any",
+        "traditional_usage": ["opening pieces", "classical", "ceremonial"],
+        "popularity": "very high",
+        "region": ["all Arab world", "Turkey", "Iran"]
+      },
+      "constraints": {
+        "hard": {"must_resolve_to_tonic": true, "forbidden_intervals": [], "required_ajnas": ["rast"]},
+        "soft": {"preferred_range": [1, 15], "cadence_patterns": [[5, 4, 3, 2, 1]], "avoid_degrees": []},
+        "preferences": {"ornament_degrees": [3, 5], "vibrato_degrees": [1, 5], "phrase_endings": [1, 5]}
+      },
+      "musicxml": {
+        "default_tonic": {"step": "C", "octave": 4, "alter": 0},
+        "key_signature_fifths": 0,
+        "custom_accidentals": [{"step": "E", "alter": -0.5}, {"step": "B", "alter": -0.5}],
+        "scale_notes": [
+          {"step": "C", "octave": 4, "alter": 0},
+          {"step": "D", "octave": 4, "alter": 0},
+          {"step": "E", "octave": 4, "alter": -0.5},
+          {"step": "F", "octave": 4, "alter": 0},
+          {"step": "G", "octave": 4, "alter": 0},
+          {"step": "A", "octave": 4, "alter": 0},
+          {"step": "B", "octave": 4, "alter": -0.5},
+          {"step": "C", "octave": 5, "alter": 0}
+        ]
+      }
+    },
+    "suznak": {
+      "name": "Maqam Suznak",
+      "transliteration": "Maqām Sūznāk",
+      "family": "rast",
+      "scale_semitones": [0, 2, 3.5, 5, 7, 8, 11, 12],
+      "scale_cents": [0, 200, 350, 500, 700, 800, 1100, 1200],
+      "octave_equivalent": true,
+      "ajnas": [
+        {"jins_id": "rast", "position": "lower", "start_degree": 1, "is_primary": true, "alternatives": []},
+        {"jins_id": "hijaz_upper", "position": "upper", "start_degree": 5, "is_primary": true, "alternatives": []}
+      ],
+      "important_degrees": {
+        "tonic": {"degree": 1, "constraint": "hard"},
+        "ghammaz": {"degree": 5, "constraint": "hard"},
+        "secondary_ghammaz": null,
+        "leading_tone": {"degree": 7, "constraint": "hard"}
+      },
+      "sayr": {
+        "starting_range": [5, 8],
+        "typical_direction": "descending",
+        "emphasis_degrees": [1, 5, 7],
+        "tension_degrees": [6],
+        "resolution_degrees": [1, 5]
+      },
+      "modulations": {
+        "common_modulations": [
+          {"target": "rast", "pivot_degree": 1, "frequency": "common", "constraint": "soft"},
+          {"target": "hijaz", "pivot_degree": 5, "frequency": "occasional", "constraint": "preference"}
+        ]
+      },
+      "characteristics": {
+        "mood": ["Rast with Hijaz upper", "dramatic", "mixed"],
+        "time_of_day": "any",
+        "traditional_usage": ["instrumental pieces", "dramatic passages"],
+        "popularity": "high",
+        "region": ["Levant", "Egypt", "Turkey"]
+      },
+      "constraints": {
+        "hard": {"must_resolve_to_tonic": true, "forbidden_intervals": [], "required_ajnas": ["rast"]},
+        "soft": {"preferred_range": [1, 15], "cadence_patterns": [], "avoid_degrees": []},
+        "preferences": {"ornament_degrees": [3, 7], "vibrato_degrees": [1, 5], "phrase_endings": [1, 5]}
+      },
+      "musicxml": {
+        "default_tonic": {"step": "C", "octave": 4, "alter": 0},
+        "key_signature_fifths": 0,
+        "custom_accidentals": [{"step": "E", "alter": -0.5}, {"step": "A", "alter": -1}, {"step": "B", "alter": 0}],
+        "scale_notes": [
+          {"step": "C", "octave": 4, "alter": 0},
+          {"step": "D", "octave": 4, "alter": 0},
+          {"step": "E", "octave": 4, "alter": -0.5},
+          {"step": "F", "octave": 4, "alter": 0},
+          {"step": "G", "octave": 4, "alter": 0},
+          {"step": "A", "octave": 4, "alter": -1},
+          {"step": "B", "octave": 4, "alter": 0},
+          {"step": "C", "octave": 5, "alter": 0}
+        ]
+      }
+    },
+    "sikah": {
+      "name": "Maqam Sikah",
+      "transliteration": "Maqām Sīkāh",
+      "family": "sikah",
+      "scale_semitones": [0, 1.5, 3, 5, 6.5, 8, 10],
+      "scale_cents": [0, 150, 300, 500, 650, 800, 1000],
+      "octave_equivalent": false,
+      "ajnas": [
+        {"jins_id": "sikah", "position": "lower", "start_degree": 1, "is_primary": true, "alternatives": []},
+        {"jins_id": "rast", "position": "upper", "start_degree": 3, "is_primary": true, "alternatives": []}
+      ],
+      "important_degrees": {
+        "tonic": {"degree": 1, "constraint": "hard"},
+        "ghammaz": {"degree": 3, "constraint": "hard"},
+        "secondary_ghammaz": {"degree": 5, "constraint": "soft"},
+        "leading_tone": null
+      },
+      "sayr": {
+        "starting_range": [3, 5],
+        "typical_direction": "descending",
+        "emphasis_degrees": [1, 3, 5],
+        "tension_degrees": [2, 4],
+        "resolution_degrees": [1, 3]
+      },
+      "modulations": {
+        "common_modulations": [
+          {"target": "rast", "pivot_degree": 3, "frequency": "common", "constraint": "soft"},
+          {"target": "huzam", "pivot_degree": 1, "frequency": "occasional", "constraint": "preference"}
+        ]
+      },
+      "characteristics": {
+        "mood": ["mystical", "ethereal", "otherworldly"],
+        "time_of_day": "night",
+        "traditional_usage": ["Sufi music", "spiritual pieces", "taqasim"],
+        "popularity": "high",
+        "region": ["Egypt", "Levant"]
+      },
+      "constraints": {
+        "hard": {"must_resolve_to_tonic": true, "forbidden_intervals": [], "required_ajnas": ["sikah"]},
+        "soft": {"preferred_range": [1, 12], "cadence_patterns": [[3, 2, 1]], "avoid_degrees": []},
+        "preferences": {"ornament_degrees": [1, 3], "vibrato_degrees": [1], "phrase_endings": [1, 3]}
+      },
+      "musicxml": {
+        "default_tonic": {"step": "E", "octave": 4, "alter": -0.5},
+        "key_signature_fifths": 0,
+        "custom_accidentals": [{"step": "E", "alter": -0.5}, {"step": "B", "alter": -0.5}],
+        "scale_notes": [
+          {"step": "E", "octave": 4, "alter": -0.5},
+          {"step": "F", "octave": 4, "alter": 0},
+          {"step": "G", "octave": 4, "alter": 0},
+          {"step": "A", "octave": 4, "alter": 0},
+          {"step": "B", "octave": 4, "alter": -0.5},
+          {"step": "C", "octave": 5, "alter": 0},
+          {"step": "D", "octave": 5, "alter": 0}
+        ]
+      }
+    },
+    "huzam": {
+      "name": "Maqam Huzam",
+      "transliteration": "Maqām Huzām",
+      "family": "sikah",
+      "scale_semitones": [0, 1.5, 3, 4, 6.5, 8, 10],
+      "scale_cents": [0, 150, 300, 400, 650, 800, 1000],
+      "octave_equivalent": false,
+      "ajnas": [
+        {"jins_id": "sikah", "position": "lower", "start_degree": 1, "is_primary": true, "alternatives": []},
+        {"jins_id": "hijaz", "position": "upper", "start_degree": 3, "is_primary": true, "alternatives": []}
+      ],
+      "important_degrees": {
+        "tonic": {"degree": 1, "constraint": "hard"},
+        "ghammaz": {"degree": 3, "constraint": "hard"},
+        "secondary_ghammaz": null,
+        "leading_tone": {"degree": 4, "constraint": "soft"}
+      },
+      "sayr": {
+        "starting_range": [3, 5],
+        "typical_direction": "descending",
+        "emphasis_degrees": [1, 3, 5],
+        "tension_degrees": [4],
+        "resolution_degrees": [1, 3]
+      },
+      "modulations": {
+        "common_modulations": [
+          {"target": "sikah", "pivot_degree": 1, "frequency": "common", "constraint": "soft"}
+        ]
+      },
+      "characteristics": {
+        "mood": ["Sikah with Hijaz upper", "mystical", "exotic"],
+        "time_of_day": "night",
+        "traditional_usage": ["spiritual pieces"],
+        "popularity": "moderate",
+        "region": ["Egypt", "Levant"]
+      },
+      "constraints": {
+        "hard": {"must_resolve_to_tonic": true, "forbidden_intervals": [], "required_ajnas": ["sikah"]},
+        "soft": {"preferred_range": [1, 10], "cadence_patterns": [], "avoid_degrees": []},
+        "preferences": {"ornament_degrees": [1, 4], "vibrato_degrees": [1], "phrase_endings": [1, 3]}
+      },
+      "musicxml": {
+        "default_tonic": {"step": "E", "octave": 4, "alter": -0.5},
+        "key_signature_fifths": 0,
+        "custom_accidentals": [{"step": "E", "alter": -0.5}, {"step": "A", "alter": -1}, {"step": "B", "alter": 0}],
+        "scale_notes": [
+          {"step": "E", "octave": 4, "alter": -0.5},
+          {"step": "F", "octave": 4, "alter": 0},
+          {"step": "G", "octave": 4, "alter": 0},
+          {"step": "A", "octave": 4, "alter": -1},
+          {"step": "B", "octave": 4, "alter": 0},
+          {"step": "C", "octave": 5, "alter": 0},
+          {"step": "D", "octave": 5, "alter": 0}
+        ]
+      }
+    },
+    "saba": {
+      "name": "Maqam Saba",
+      "transliteration": "Maqām Ṣabā",
+      "family": "saba",
+      "scale_semitones": [0, 1.5, 3, 5, 7, 10, 12, 14],
+      "scale_cents": [0, 150, 300, 500, 700, 1000, 1200, 1400],
+      "octave_equivalent": false,
+      "ajnas": [
+        {"jins_id": "saba", "position": "lower", "start_degree": 1, "is_primary": true, "alternatives": []},
+        {"jins_id": "hijaz", "position": "upper", "start_degree": 3, "is_primary": true, "alternatives": [], "note": "overlaps with Saba jins at F-Gb"}
+      ],
+      "important_degrees": {
+        "tonic": {"degree": 1, "constraint": "hard"},
+        "ghammaz": {"degree": 3, "constraint": "hard", "note": "F is the ghammaz where Hijaz begins"},
+        "secondary_ghammaz": {"degree": 4, "constraint": "soft"},
+        "leading_tone": null
+      },
+      "sayr": {
+        "starting_range": [4, 6],
+        "typical_direction": "descending",
+        "emphasis_degrees": [1, 2, 4],
+        "tension_degrees": [3, 4],
+        "resolution_degrees": [1]
+      },
+      "modulations": {
+        "common_modulations": [
+          {"target": "bayati", "pivot_degree": 1, "frequency": "common", "constraint": "soft"},
+          {"target": "hijaz", "pivot_degree": 4, "frequency": "common", "constraint": "soft"}
+        ]
+      },
+      "characteristics": {
+        "mood": ["mournful", "lamenting", "profound sadness"],
+        "time_of_day": "night",
+        "traditional_usage": ["elegies", "laments", "spiritual mourning"],
+        "popularity": "high",
+        "region": ["Egypt", "Levant", "Iraq"]
+      },
+      "constraints": {
+        "hard": {"must_resolve_to_tonic": true, "forbidden_intervals": [], "required_ajnas": ["saba"]},
+        "soft": {"preferred_range": [1, 12], "cadence_patterns": [[4, 3, 2, 1]], "avoid_degrees": []},
+        "preferences": {"ornament_degrees": [2, 4], "vibrato_degrees": [1, 4], "phrase_endings": [1]}
+      },
+      "musicxml": {
+        "default_tonic": {"step": "D", "octave": 4, "alter": 0},
+        "key_signature_fifths": 0,
+        "custom_accidentals": [{"step": "E", "alter": -0.5}, {"step": "G", "alter": -1}],
+        "scale_notes": [
+          {"step": "D", "octave": 4, "alter": 0},
+          {"step": "E", "octave": 4, "alter": -0.5},
+          {"step": "F", "octave": 4, "alter": 0},
+          {"step": "G", "octave": 4, "alter": -1},
+          {"step": "A", "octave": 4, "alter": 0},
+          {"step": "B", "octave": 4, "alter": -1},
+          {"step": "C", "octave": 5, "alter": 0},
+          {"step": "D", "octave": 5, "alter": 0}
+        ]
+      }
+    },
+    "saba_zamzam": {
+      "name": "Maqam Saba Zamzam",
+      "transliteration": "Maqām Ṣabā Zamzam",
+      "family": "saba",
+      "scale_semitones": [0, 1, 3, 5, 7, 10, 12, 14],
+      "scale_cents": [0, 100, 300, 500, 700, 1000, 1200, 1400],
+      "octave_equivalent": false,
+      "ajnas": [
+        {"jins_id": "saba_zamzam", "position": "lower", "start_degree": 1, "is_primary": true, "alternatives": []},
+        {"jins_id": "hijaz", "position": "upper", "start_degree": 3, "is_primary": true, "alternatives": [], "note": "overlaps with Saba Zamzam jins at F-Gb"}
+      ],
+      "important_degrees": {
+        "tonic": {"degree": 1, "constraint": "hard"},
+        "ghammaz": {"degree": 3, "constraint": "hard", "note": "F is the ghammaz where Hijaz begins"},
+        "secondary_ghammaz": {"degree": 4, "constraint": "soft"},
+        "leading_tone": null
+      },
+      "sayr": {
+        "starting_range": [4, 6],
+        "typical_direction": "descending",
+        "emphasis_degrees": [1, 2, 4],
+        "tension_degrees": [3],
+        "resolution_degrees": [1]
+      },
+      "modulations": {
+        "common_modulations": [
+          {"target": "saba", "pivot_degree": 1, "frequency": "common", "constraint": "soft"}
+        ]
+      },
+      "characteristics": {
+        "mood": ["darker variant of Saba", "more intense mourning"],
+        "time_of_day": "night",
+        "traditional_usage": ["deep laments"],
+        "popularity": "moderate",
+        "region": ["Egypt", "Levant"]
+      },
+      "constraints": {
+        "hard": {"must_resolve_to_tonic": true, "forbidden_intervals": [], "required_ajnas": ["saba_zamzam"]},
+        "soft": {"preferred_range": [1, 12], "cadence_patterns": [], "avoid_degrees": []},
+        "preferences": {"ornament_degrees": [2], "vibrato_degrees": [1], "phrase_endings": [1]}
+      },
+      "musicxml": {
+        "default_tonic": {"step": "D", "octave": 4, "alter": 0},
+        "key_signature_fifths": -1,
+        "custom_accidentals": [{"step": "G", "alter": -1}],
+        "scale_notes": [
+          {"step": "D", "octave": 4, "alter": 0},
+          {"step": "E", "octave": 4, "alter": -1},
+          {"step": "F", "octave": 4, "alter": 0},
+          {"step": "G", "octave": 4, "alter": -1},
+          {"step": "A", "octave": 4, "alter": 0},
+          {"step": "B", "octave": 4, "alter": -1},
+          {"step": "C", "octave": 5, "alter": 0},
+          {"step": "D", "octave": 5, "alter": 0}
+        ]
+      }
+    },
+    "jiharkah": {
+      "name": "Maqam Jiharkah",
+      "transliteration": "Maqām Jihārkāh",
+      "family": "jiharkah",
+      "scale_semitones": [0, 2, 4, 5, 7, 9, 10.5, 12],
+      "scale_cents": [0, 200, 400, 500, 700, 900, 1050, 1200],
+      "octave_equivalent": true,
+      "ajnas": [
+        {"jins_id": "jiharkah", "position": "lower", "start_degree": 1, "is_primary": true, "alternatives": []},
+        {"jins_id": "rast", "position": "upper", "start_degree": 5, "is_primary": true, "alternatives": []}
+      ],
+      "important_degrees": {
+        "tonic": {"degree": 1, "constraint": "hard"},
+        "ghammaz": {"degree": 5, "constraint": "hard"},
+        "secondary_ghammaz": null,
+        "leading_tone": {"degree": 7, "constraint": "soft"}
+      },
+      "sayr": {
+        "starting_range": [5, 8],
+        "typical_direction": "descending",
+        "emphasis_degrees": [1, 4, 5],
+        "tension_degrees": [4],
+        "resolution_degrees": [1, 5]
+      },
+      "modulations": {
+        "common_modulations": [
+          {"target": "rast", "pivot_degree": 5, "frequency": "common", "constraint": "soft"}
+        ]
+      },
+      "characteristics": {
+        "mood": ["bright", "elevated", "Lydian-like"],
+        "time_of_day": "morning",
+        "traditional_usage": ["joyful pieces", "celebrations"],
+        "popularity": "moderate",
+        "region": ["Turkey", "Levant"]
+      },
+      "constraints": {
+        "hard": {"must_resolve_to_tonic": true, "forbidden_intervals": [], "required_ajnas": ["jiharkah"]},
+        "soft": {"preferred_range": [1, 12], "cadence_patterns": [], "avoid_degrees": []},
+        "preferences": {"ornament_degrees": [4], "vibrato_degrees": [1, 5], "phrase_endings": [1, 5]}
+      },
+      "musicxml": {
+        "default_tonic": {"step": "F", "octave": 4, "alter": 0},
+        "key_signature_fifths": -1,
+        "custom_accidentals": [{"step": "E", "alter": -0.5}],
+        "scale_notes": [
+          {"step": "F", "octave": 4, "alter": 0},
+          {"step": "G", "octave": 4, "alter": 0},
+          {"step": "A", "octave": 4, "alter": 0},
+          {"step": "B", "octave": 4, "alter": -1},
+          {"step": "C", "octave": 5, "alter": 0},
+          {"step": "D", "octave": 5, "alter": 0},
+          {"step": "E", "octave": 5, "alter": -0.5},
+          {"step": "F", "octave": 5, "alter": 0}
+        ]
+      }
+    },
+    "lami": {
+      "name": "Maqam Lami",
+      "transliteration": "Maqām Lāmī",
+      "family": "lami",
+      "scale_semitones": [0, 1, 3, 4.5, 5, 7, 8, 10],
+      "scale_cents": [0, 100, 300, 450, 500, 700, 800, 1000],
+      "octave_equivalent": false,
+      "ajnas": [
+        {"jins_id": "lami", "position": "lower", "start_degree": 1, "is_primary": true, "alternatives": []},
+        {"jins_id": "kurd", "position": "upper", "start_degree": 4, "is_primary": true, "alternatives": []}
+      ],
+      "important_degrees": {
+        "tonic": {"degree": 1, "constraint": "hard"},
+        "ghammaz": {"degree": 4, "constraint": "hard"},
+        "secondary_ghammaz": null,
+        "leading_tone": null
+      },
+      "sayr": {
+        "starting_range": [4, 6],
+        "typical_direction": "descending",
+        "emphasis_degrees": [1, 4],
+        "tension_degrees": [3],
+        "resolution_degrees": [1]
+      },
+      "modulations": {
+        "common_modulations": []
+      },
+      "characteristics": {
+        "mood": ["rare", "unusual", "ancient"],
+        "time_of_day": "any",
+        "traditional_usage": ["traditional pieces", "Iraqi music"],
+        "popularity": "low",
+        "region": ["Iraq"]
+      },
+      "constraints": {
+        "hard": {"must_resolve_to_tonic": true, "forbidden_intervals": [], "required_ajnas": ["lami"]},
+        "soft": {"preferred_range": [1, 10], "cadence_patterns": [], "avoid_degrees": []},
+        "preferences": {"ornament_degrees": [], "vibrato_degrees": [1], "phrase_endings": [1]}
+      },
+      "musicxml": {
+        "default_tonic": {"step": "A", "octave": 3, "alter": 0},
+        "key_signature_fifths": -1,
+        "custom_accidentals": [{"step": "D", "alter": -0.5}],
+        "scale_notes": [
+          {"step": "A", "octave": 3, "alter": 0},
+          {"step": "B", "octave": 3, "alter": -1},
+          {"step": "C", "octave": 4, "alter": 0},
+          {"step": "D", "octave": 4, "alter": -0.5},
+          {"step": "E", "octave": 4, "alter": -1},
+          {"step": "F", "octave": 4, "alter": 0},
+          {"step": "G", "octave": 4, "alter": 0}
+        ]
+      }
+    },
+    "sikah_baladi": {
+      "name": "Maqam Sikah Baladi",
+      "transliteration": "Maqām Sīkāh Baladī",
+      "family": "sikah",
+      "scale_semitones": [0, 1.5, 3.5, 5, 6.5, 8.5, 10],
+      "scale_cents": [0, 150, 350, 500, 650, 850, 1000],
+      "octave_equivalent": false,
+      "ajnas": [
+        {"jins_id": "sikah_baladi", "position": "lower", "start_degree": 1, "is_primary": true, "alternatives": []},
+        {"jins_id": "sikah_baladi", "position": "upper", "start_degree": 4, "is_primary": true, "alternatives": []}
+      ],
+      "important_degrees": {
+        "tonic": {"degree": 1, "constraint": "hard"},
+        "ghammaz": {"degree": 4, "constraint": "hard"},
+        "secondary_ghammaz": null,
+        "leading_tone": null
+      },
+      "sayr": {
+        "starting_range": [3, 5],
+        "typical_direction": "descending",
+        "emphasis_degrees": [1, 4],
+        "tension_degrees": [3],
+        "resolution_degrees": [1]
+      },
+      "modulations": {
+        "common_modulations": [
+          {"target": "sikah", "pivot_degree": 1, "frequency": "common", "constraint": "soft"}
+        ]
+      },
+      "characteristics": {
+        "mood": ["folk", "Egyptian", "popular"],
+        "time_of_day": "any",
+        "traditional_usage": ["Egyptian folk music", "sha'bi"],
+        "popularity": "moderate",
+        "region": ["Egypt"]
+      },
+      "constraints": {
+        "hard": {"must_resolve_to_tonic": true, "forbidden_intervals": [], "required_ajnas": ["sikah_baladi"]},
+        "soft": {"preferred_range": [1, 10], "cadence_patterns": [], "avoid_degrees": []},
+        "preferences": {"ornament_degrees": [1, 4], "vibrato_degrees": [1], "phrase_endings": [1]}
+      },
+      "musicxml": {
+        "default_tonic": {"step": "E", "octave": 4, "alter": -0.5},
+        "key_signature_fifths": 0,
+        "custom_accidentals": [{"step": "E", "alter": -0.5}, {"step": "A", "alter": -0.5}],
+        "scale_notes": [
+          {"step": "E", "octave": 4, "alter": -0.5},
+          {"step": "F", "octave": 4, "alter": 0},
+          {"step": "G", "octave": 4, "alter": 0},
+          {"step": "A", "octave": 4, "alter": -0.5},
+          {"step": "B", "octave": 4, "alter": -0.5},
+          {"step": "C", "octave": 5, "alter": 0},
+          {"step": "D", "octave": 5, "alter": 0}
+        ]
+      }
+    },
+    "iraq": {
+      "name": "Maqam Iraq",
+      "transliteration": "Maqām 'Irāq",
+      "family": "sikah",
+      "scale_semitones": [0, 1.5, 3, 4.5, 6, 7.5, 9],
+      "scale_cents": [0, 150, 300, 450, 600, 750, 900],
+      "octave_equivalent": false,
+      "ajnas": [
+        {"jins_id": "iraq", "position": "lower", "start_degree": 1, "is_primary": true, "alternatives": []},
+        {"jins_id": "sikah", "position": "upper", "start_degree": 4, "is_primary": true, "alternatives": []}
+      ],
+      "important_degrees": {
+        "tonic": {"degree": 1, "constraint": "hard"},
+        "ghammaz": {"degree": 4, "constraint": "hard"},
+        "secondary_ghammaz": null,
+        "leading_tone": null
+      },
+      "sayr": {
+        "starting_range": [3, 5],
+        "typical_direction": "descending",
+        "emphasis_degrees": [1, 4],
+        "tension_degrees": [2, 3],
+        "resolution_degrees": [1]
+      },
+      "modulations": {
+        "common_modulations": [
+          {"target": "sikah", "pivot_degree": 4, "frequency": "common", "constraint": "soft"}
+        ]
+      },
+      "characteristics": {
+        "mood": ["mystical", "symmetrical", "floating"],
+        "time_of_day": "night",
+        "traditional_usage": ["Sufi music", "mystical pieces"],
+        "popularity": "low",
+        "region": ["Iraq", "Levant"]
+      },
+      "constraints": {
+        "hard": {"must_resolve_to_tonic": true, "forbidden_intervals": [], "required_ajnas": ["iraq"]},
+        "soft": {"preferred_range": [1, 8], "cadence_patterns": [], "avoid_degrees": []},
+        "preferences": {"ornament_degrees": [1, 4], "vibrato_degrees": [1], "phrase_endings": [1]}
+      },
+      "musicxml": {
+        "default_tonic": {"step": "B", "octave": 3, "alter": -0.5},
+        "key_signature_fifths": 0,
+        "custom_accidentals": [{"step": "B", "alter": -0.5}, {"step": "D", "alter": -0.5}, {"step": "E", "alter": -0.5}],
+        "scale_notes": [
+          {"step": "B", "octave": 3, "alter": -0.5},
+          {"step": "C", "octave": 4, "alter": 0},
+          {"step": "D", "octave": 4, "alter": -0.5},
+          {"step": "E", "octave": 4, "alter": -0.5},
+          {"step": "F", "octave": 4, "alter": 0},
+          {"step": "G", "octave": 4, "alter": 0},
+          {"step": "A", "octave": 4, "alter": -0.5}
+        ]
+      }
+    },
+    "yakah": {
+      "name": "Maqam Yakah",
+      "transliteration": "Maqām Yakāh",
+      "family": "rast",
+      "scale_semitones": [0, 2, 3.5, 5, 7, 9, 10.5, 12],
+      "scale_cents": [0, 200, 350, 500, 700, 900, 1050, 1200],
+      "octave_equivalent": true,
+      "ajnas": [
+        {"jins_id": "rast", "position": "lower", "start_degree": 1, "is_primary": true, "alternatives": []},
+        {"jins_id": "rast", "position": "upper", "start_degree": 5, "is_primary": true, "alternatives": []}
+      ],
+      "important_degrees": {
+        "tonic": {"degree": 1, "constraint": "hard"},
+        "ghammaz": {"degree": 5, "constraint": "hard"},
+        "secondary_ghammaz": null,
+        "leading_tone": {"degree": 7, "constraint": "soft"}
+      },
+      "sayr": {
+        "starting_range": [1, 4],
+        "typical_direction": "ascending",
+        "emphasis_degrees": [1, 5],
+        "tension_degrees": [4, 7],
+        "resolution_degrees": [1]
+      },
+      "modulations": {
+        "common_modulations": [
+          {"target": "rast", "pivot_degree": 4, "frequency": "common", "constraint": "soft"}
+        ]
+      },
+      "characteristics": {
+        "mood": ["Rast starting from G", "fundamental"],
+        "time_of_day": "any",
+        "traditional_usage": ["classical pieces"],
+        "popularity": "moderate",
+        "region": ["Levant", "Turkey"]
+      },
+      "constraints": {
+        "hard": {"must_resolve_to_tonic": true, "forbidden_intervals": [], "required_ajnas": ["rast"]},
+        "soft": {"preferred_range": [1, 15], "cadence_patterns": [], "avoid_degrees": []},
+        "preferences": {"ornament_degrees": [3, 5], "vibrato_degrees": [1], "phrase_endings": [1, 5]}
+      },
+      "musicxml": {
+        "default_tonic": {"step": "G", "octave": 3, "alter": 0},
+        "key_signature_fifths": 0,
+        "custom_accidentals": [{"step": "B", "alter": -0.5}, {"step": "E", "alter": -0.5}],
+        "scale_notes": [
+          {"step": "G", "octave": 3, "alter": 0},
+          {"step": "A", "octave": 3, "alter": 0},
+          {"step": "B", "octave": 3, "alter": -0.5},
+          {"step": "C", "octave": 4, "alter": 0},
+          {"step": "D", "octave": 4, "alter": 0},
+          {"step": "E", "octave": 4, "alter": 0},
+          {"step": "F", "octave": 4, "alter": 0},
+          {"step": "G", "octave": 4, "alter": 0}
+        ]
+      }
+    }
+  }
+}

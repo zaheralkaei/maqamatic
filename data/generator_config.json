@@ -1,0 +1,713 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "description": "Maqam melody generator configuration with universal rules and user-controllable parameters"
+  },
+
+  "universal_rules": {
+    "description": "Rules that apply to ALL maqamat - these are the harmonic/melodic principles",
+
+    "melodic_motion": {
+      "step_vs_jump": {
+        "step_intervals": [1, 2],
+        "small_jump_intervals": [3, 4],
+        "large_jump_intervals": [5, 6, 7],
+        "forbidden_intervals": [8, 9, 10],
+        "default_step_probability": 0.7,
+        "default_small_jump_probability": 0.25,
+        "default_large_jump_probability": 0.05
+      },
+
+      "balance_principle": {
+        "description": "What goes up should come down, and vice versa",
+        "rules": [
+          {
+            "name": "jump_compensation",
+            "description": "A jump should be followed by stepwise motion in opposite direction",
+            "trigger": "interval >= 3",
+            "expected_response": "steps in opposite direction",
+            "compensation_steps": "proportional to jump size",
+            "strictness": "soft"
+          },
+          {
+            "name": "direction_balance",
+            "description": "Ascending motion should be balanced by descending motion",
+            "window_size": 8,
+            "max_imbalance_ratio": 0.7,
+            "strictness": "soft"
+          },
+          {
+            "name": "range_return",
+            "description": "After reaching extremes, return toward middle register",
+            "extreme_threshold_high": 0.85,
+            "extreme_threshold_low": 0.15,
+            "return_probability": 0.8,
+            "strictness": "soft"
+          }
+        ]
+      },
+
+      "continuity": {
+        "description": "Melodic lines should have smooth contours",
+        "rules": [
+          {
+            "name": "no_consecutive_jumps_same_direction",
+            "description": "Avoid two jumps in the same direction",
+            "strictness": "hard"
+          },
+          {
+            "name": "jump_preparation",
+            "description": "Large jumps should be approached by step from opposite direction",
+            "applies_to": "intervals >= 4",
+            "strictness": "soft"
+          },
+          {
+            "name": "climax_uniqueness",
+            "description": "Highest note should appear only once or twice",
+            "max_occurrences": 2,
+            "strictness": "soft"
+          }
+        ]
+      }
+    },
+
+    "pitch_hierarchy": {
+      "description": "Universal pitch importance rules",
+      "tonic": {
+        "gravity": 1.0,
+        "stability": "maximum",
+        "can_start": true,
+        "can_end": true,
+        "long_duration_probability": 0.8
+      },
+      "ghammaz": {
+        "gravity": 0.85,
+        "stability": "high",
+        "can_start": true,
+        "can_end": true,
+        "long_duration_probability": 0.7
+      },
+      "secondary_ghammaz": {
+        "gravity": 0.6,
+        "stability": "medium",
+        "can_start": false,
+        "can_end": true,
+        "long_duration_probability": 0.5
+      },
+      "characteristic_degree": {
+        "gravity": 0.7,
+        "stability": "medium",
+        "can_start": true,
+        "can_end": false,
+        "long_duration_probability": 0.6
+      },
+      "passing_degree": {
+        "gravity": 0.3,
+        "stability": "low",
+        "can_start": false,
+        "can_end": false,
+        "long_duration_probability": 0.2
+      },
+      "leading_tone": {
+        "gravity": 0.4,
+        "stability": "unstable",
+        "tendency": "must_resolve",
+        "can_start": false,
+        "can_end": false,
+        "long_duration_probability": 0.1
+      }
+    },
+
+    "phrase_structure": {
+      "description": "Universal phrase building rules",
+      "minimum_length_notes": 4,
+      "maximum_length_notes": 16,
+      "typical_length_notes": 8,
+
+      "antecedent_consequent": {
+        "description": "Question-answer phrase pairs",
+        "antecedent_endings": ["ghammaz", "secondary_ghammaz", "dominant"],
+        "consequent_endings": ["tonic"],
+        "length_ratio": [0.9, 1.1]
+      },
+
+      "breath_points": {
+        "description": "Natural resting points within phrases",
+        "allowed_on": ["tonic", "ghammaz", "secondary_ghammaz"],
+        "minimum_interval_notes": 3
+      }
+    },
+
+    "repetition_variation": {
+      "description": "How motifs are repeated and varied",
+      "types": [
+        {
+          "name": "exact_repetition",
+          "description": "Same pitches, same rhythm",
+          "probability_weight": 0.2
+        },
+        {
+          "name": "sequence",
+          "description": "Same contour, different starting pitch",
+          "allowed_transpositions": [-3, -2, -1, 1, 2, 3],
+          "probability_weight": 0.3
+        },
+        {
+          "name": "rhythmic_variation",
+          "description": "Same pitches, different rhythm",
+          "probability_weight": 0.25
+        },
+        {
+          "name": "melodic_variation",
+          "description": "Same rhythm, ornamented/simplified pitches",
+          "probability_weight": 0.15
+        },
+        {
+          "name": "development",
+          "description": "Motif fragmented, extended, or inverted",
+          "probability_weight": 0.1
+        }
+      ]
+    },
+
+    "cadence_types": {
+      "full": {
+        "description": "Complete resolution to tonic",
+        "final_degrees": [1],
+        "approach_patterns": [[2, 1], [3, 2, 1], [4, 3, 2, 1]],
+        "strength": 1.0
+      },
+      "half": {
+        "description": "Resting on ghammaz, incomplete",
+        "final_degrees": [4, 5],
+        "approach_patterns": [[3, 4], [5, 4], [6, 5]],
+        "strength": 0.5
+      },
+      "deceptive": {
+        "description": "Expected tonic avoided",
+        "final_degrees": [3, 6],
+        "approach_patterns": [[2, 3], [7, 6]],
+        "strength": 0.3
+      },
+      "plagal": {
+        "description": "Subdominant to tonic",
+        "final_degrees": [1],
+        "approach_patterns": [[4, 1], [3, 4, 1]],
+        "strength": 0.7
+      }
+    }
+  },
+
+  "duration_logic": {
+    "description": "How note durations are determined",
+
+    "factors": {
+      "pitch_importance": {
+        "weight": 0.3,
+        "description": "Important pitches (tonic, ghammaz) get longer durations",
+        "mapping": {
+          "tonic": 1.5,
+          "ghammaz": 1.3,
+          "characteristic": 1.1,
+          "passing": 0.7,
+          "leading": 0.6
+        }
+      },
+
+      "metric_position": {
+        "weight": 0.25,
+        "description": "Alignment with iqa' strong beats",
+        "downbeat_multiplier": 1.4,
+        "weak_beat_multiplier": 0.8,
+        "syncopation_allowed": true
+      },
+
+      "neighbor_context": {
+        "weight": 0.2,
+        "description": "Homogeneity vs contrast with surrounding notes",
+        "same_duration_tendency": 0.6,
+        "contrast_after_long": 0.7,
+        "contrast_after_short": 0.5
+      },
+
+      "phrase_position": {
+        "weight": 0.15,
+        "description": "Position within phrase affects duration",
+        "phrase_start_multiplier": 1.2,
+        "phrase_middle_multiplier": 1.0,
+        "phrase_end_multiplier": 1.5
+      },
+
+      "global_style": {
+        "weight": 0.1,
+        "description": "Overall tempo and style of section",
+        "styles": {
+          "sustained": {"base_duration": 1.5, "variance": 0.3},
+          "flowing": {"base_duration": 1.0, "variance": 0.4},
+          "agitated": {"base_duration": 0.7, "variance": 0.5},
+          "recitative": {"base_duration": 1.2, "variance": 0.8}
+        }
+      }
+    },
+
+    "duration_values": {
+      "whole": {"divisions": 32, "weight": 0.05},
+      "half": {"divisions": 16, "weight": 0.15},
+      "quarter": {"divisions": 8, "weight": 0.35},
+      "eighth": {"divisions": 4, "weight": 0.30},
+      "sixteenth": {"divisions": 2, "weight": 0.15}
+    },
+
+    "rhythmic_patterns": {
+      "description": "Beat-level rhythmic cells and measure-level patterns. Each cell fills one beat (8 divisions = 1 quarter note). Cells are combined to fill measures.",
+
+      "beat_cells": {
+        "description": "Patterns within one beat (8 divisions). Durations in divisions.",
+        "cells": [
+          {"id": "q",    "name": "quarter",             "durations": [8],          "notes": 1, "weight": 0.20, "energy": "low"},
+          {"id": "ee",   "name": "two_eighths",         "durations": [4, 4],       "notes": 2, "weight": 0.25, "energy": "medium"},
+          {"id": "ssss", "name": "four_sixteenths",     "durations": [2, 2, 2, 2], "notes": 4, "weight": 0.10, "energy": "high"},
+          {"id": "de_s", "name": "dotted_eighth_16th",  "durations": [6, 2],       "notes": 2, "weight": 0.12, "energy": "medium"},
+          {"id": "s_de", "name": "16th_dotted_eighth",  "durations": [2, 6],       "notes": 2, "weight": 0.05, "energy": "medium"},
+          {"id": "e_ss", "name": "eighth_two_16ths",    "durations": [4, 2, 2],    "notes": 3, "weight": 0.08, "energy": "high"},
+          {"id": "ss_e", "name": "two_16ths_eighth",    "durations": [2, 2, 4],    "notes": 3, "weight": 0.08, "energy": "high"},
+          {"id": "s_e_s","name": "16th_8th_16th",       "durations": [2, 4, 2],    "notes": 3, "weight": 0.04, "energy": "high"},
+          {"id": "t3",   "name": "eighth_triplet",      "durations": [3, 3, 2],    "notes": 3, "weight": 0.05, "energy": "medium"},
+          {"id": "t6",   "name": "16th_triplet_pair",   "durations": [1, 2, 1, 2, 2], "notes": 5, "weight": 0.03, "energy": "high"}
+        ]
+      },
+
+      "half_cells": {
+        "description": "Patterns spanning two beats (16 divisions = 1 half note).",
+        "cells": [
+          {"id": "h",      "name": "half_note",            "durations": [16],             "notes": 1, "weight": 0.15, "energy": "low"},
+          {"id": "qq",     "name": "two_quarters",         "durations": [8, 8],           "notes": 2, "weight": 0.20, "energy": "low"},
+          {"id": "dq_e",   "name": "dotted_quarter_eighth","durations": [12, 4],          "notes": 2, "weight": 0.15, "energy": "low"},
+          {"id": "e_dq",   "name": "eighth_dotted_quarter","durations": [4, 12],          "notes": 2, "weight": 0.08, "energy": "low"},
+          {"id": "q_ee",   "name": "quarter_two_eighths",  "durations": [8, 4, 4],        "notes": 3, "weight": 0.12, "energy": "medium"},
+          {"id": "ee_q",   "name": "two_eighths_quarter",  "durations": [4, 4, 8],        "notes": 3, "weight": 0.12, "energy": "medium"},
+          {"id": "eeee",   "name": "four_eighths",         "durations": [4, 4, 4, 4],     "notes": 4, "weight": 0.10, "energy": "medium"},
+          {"id": "qt3",    "name": "quarter_triplet",      "durations": [6, 5, 5],        "notes": 3, "weight": 0.05, "energy": "medium"},
+          {"id": "sync",   "name": "syncopated",           "durations": [4, 8, 4],        "notes": 3, "weight": 0.03, "energy": "medium"}
+        ]
+      },
+
+      "measure_templates": {
+        "description": "Common measure-filling patterns for 4/4 (32 divisions). Each template references cell IDs.",
+        "templates_4_4": [
+          {"name": "all_quarters",       "cells": ["q", "q", "q", "q"],       "weight": 0.10, "energy": "low"},
+          {"name": "all_eighths",        "cells": ["ee", "ee", "ee", "ee"],   "weight": 0.10, "energy": "medium"},
+          {"name": "long_to_short",      "cells": ["h", "ee", "ee"],          "weight": 0.08, "energy": "medium"},
+          {"name": "short_to_long",      "cells": ["ee", "ee", "h"],          "weight": 0.08, "energy": "medium"},
+          {"name": "mixed_quarter_eighth","cells": ["q", "ee", "q", "ee"],    "weight": 0.12, "energy": "medium"},
+          {"name": "dotted_drive",       "cells": ["de_s", "de_s", "de_s", "de_s"], "weight": 0.06, "energy": "medium"},
+          {"name": "sixteenths_burst",   "cells": ["q", "q", "ssss", "ssss"],"weight": 0.05, "energy": "high"},
+          {"name": "triplet_flow",       "cells": ["t3", "t3", "ee", "q"],   "weight": 0.04, "energy": "medium"},
+          {"name": "opening_sustained",  "cells": ["h", "q", "q"],           "weight": 0.08, "energy": "low"},
+          {"name": "closing_sustained",  "cells": ["q", "q", "h"],           "weight": 0.08, "energy": "low"},
+          {"name": "half_notes",         "cells": ["h", "h"],                 "weight": 0.06, "energy": "low"},
+          {"name": "accelerating",       "cells": ["q", "ee", "ssss", "ssss"],"weight": 0.04, "energy": "high"},
+          {"name": "decelerating",       "cells": ["ssss", "ee", "q", "q"],  "weight": 0.04, "energy": "medium"},
+          {"name": "syncopated_mix",     "cells": ["sync", "ee"],            "weight": 0.04, "energy": "medium"},
+          {"name": "all_sixteenths",     "cells": ["ssss","ssss","ssss","ssss"],"weight": 0.03, "energy": "high"}
+        ]
+      }
+    }
+  },
+
+  "structure_grammar": {
+    "description": "Formal structure generation rules",
+
+    "base_forms": {
+      "binary": {
+        "pattern": "AB",
+        "description": "Two contrasting sections"
+      },
+      "ternary": {
+        "pattern": "ABA",
+        "description": "Statement, contrast, return"
+      },
+      "rondo": {
+        "pattern": "ABACA",
+        "description": "Recurring theme with episodes"
+      },
+      "through_composed": {
+        "pattern": "ABCD",
+        "description": "Continuous development"
+      },
+      "strophic": {
+        "pattern": "AAA",
+        "description": "Repeated with variations"
+      },
+      "samai": {
+        "pattern": "KTKTKTK'T",
+        "composed": true,
+        "main_iqa": "samai_thaqil",
+        "taslim_iqa": "samai_thaqil",
+        "k4_iqa": "samai_darij",
+        "description": "Sama'i: 4 khanas with taslim, K4 in 3/4"
+      },
+      "longa": {
+        "pattern": "KTKTKTK'T",
+        "composed": true,
+        "main_iqa": "fox",
+        "taslim_iqa": "fox",
+        "k4_iqa": "samai_darij",
+        "description": "Longa: khanas in fox 2/4, K4 in 3/4"
+      },
+      "bashraf": {
+        "pattern": "KTKTKTK'T",
+        "composed": true,
+        "main_iqa": "maqsum",
+        "taslim_iqa": "maqsum",
+        "k4_iqa": "samai_darij",
+        "description": "Bashraf: all in 4/4 except K4 in 3/4"
+      }
+    },
+
+    "expansion_rules": {
+      "description": "How sections can be expanded recursively",
+      "rules": [
+        {
+          "input": "A",
+          "outputs": ["A", "AA", "AA'", "ABA"],
+          "probabilities": [0.3, 0.3, 0.2, 0.2]
+        },
+        {
+          "input": "B",
+          "outputs": ["B", "BB", "BB'", "BCB"],
+          "probabilities": [0.3, 0.3, 0.2, 0.2]
+        },
+        {
+          "input": "AB",
+          "outputs": ["AB", "AAB", "ABB", "AABB", "ABA"],
+          "probabilities": [0.2, 0.2, 0.2, 0.2, 0.2]
+        }
+      ],
+      "max_recursion_depth": 3,
+      "max_total_sections": 12
+    },
+
+    "section_properties": {
+      "A": {
+        "role": "primary",
+        "maqam": "tonic_maqam",
+        "intensity_range": [0.3, 0.7],
+        "typical_phrases": 4
+      },
+      "B": {
+        "role": "contrast",
+        "maqam": "related_or_modulatory",
+        "intensity_range": [0.5, 0.9],
+        "typical_phrases": 3
+      },
+      "C": {
+        "role": "development",
+        "maqam": "distant_or_return",
+        "intensity_range": [0.6, 1.0],
+        "typical_phrases": 2
+      },
+      "A'": {
+        "role": "varied_return",
+        "maqam": "tonic_maqam",
+        "intensity_range": [0.4, 0.8],
+        "typical_phrases": 4
+      },
+      "K": {
+        "role": "primary",
+        "maqam": "tonic_maqam",
+        "intensity_range": [0.4, 0.7],
+        "typical_phrases": 4
+      },
+      "K2": {
+        "role": "contrast",
+        "maqam": "related_or_modulatory",
+        "intensity_range": [0.5, 0.8],
+        "typical_phrases": 4
+      },
+      "K3": {
+        "role": "development",
+        "maqam": "related_or_modulatory",
+        "intensity_range": [0.6, 0.9],
+        "typical_phrases": 4
+      },
+      "K'": {
+        "role": "contrast",
+        "maqam": "tonic_maqam",
+        "intensity_range": [0.6, 0.9],
+        "typical_phrases": 4
+      },
+      "T": {
+        "role": "refrain",
+        "maqam": "tonic_maqam",
+        "intensity_range": [0.3, 0.5],
+        "typical_phrases": 2
+      }
+    }
+  },
+
+  "phase_system": {
+    "description": "The 5 basic phases (can be nested if dynamic mode)",
+
+    "fixed_phases": [
+      {
+        "id": "exposition",
+        "order": 1,
+        "duration_ratio_range": [0.15, 0.30],
+        "default_duration_ratio": 0.20,
+        "zone_focus": ["tonic", "middle"],
+        "direction_bias": "ascending",
+        "intensity_range": [0.2, 0.5],
+        "goals": ["establish_tonic", "introduce_characteristic_intervals"],
+        "allowed_cadences": ["half"]
+      },
+      {
+        "id": "exploration",
+        "order": 2,
+        "duration_ratio_range": [0.20, 0.35],
+        "default_duration_ratio": 0.25,
+        "zone_focus": ["middle", "upper"],
+        "direction_bias": "ascending",
+        "intensity_range": [0.4, 0.7],
+        "goals": ["reach_ghammaz", "explore_upper_jins"],
+        "allowed_cadences": ["half", "deceptive"]
+      },
+      {
+        "id": "climax",
+        "order": 3,
+        "duration_ratio_range": [0.10, 0.20],
+        "default_duration_ratio": 0.15,
+        "zone_focus": ["upper"],
+        "direction_bias": "neutral",
+        "intensity_range": [0.8, 1.0],
+        "goals": ["reach_highest_point", "maximum_tension"],
+        "allowed_cadences": ["deceptive", "half"]
+      },
+      {
+        "id": "descent",
+        "order": 4,
+        "duration_ratio_range": [0.15, 0.25],
+        "default_duration_ratio": 0.20,
+        "zone_focus": ["upper", "middle", "tonic"],
+        "direction_bias": "descending",
+        "intensity_range": [0.4, 0.7],
+        "goals": ["gradual_return", "visit_important_degrees"],
+        "allowed_cadences": ["half", "full"]
+      },
+      {
+        "id": "resolution",
+        "order": 5,
+        "duration_ratio_range": [0.10, 0.25],
+        "default_duration_ratio": 0.20,
+        "zone_focus": ["tonic", "lower"],
+        "direction_bias": "descending",
+        "intensity_range": [0.1, 0.4],
+        "goals": ["confirm_tonic", "final_cadence"],
+        "allowed_cadences": ["full"]
+      }
+    ],
+
+    "dynamic_nesting": {
+      "description": "When enabled, phases can contain sub-phases",
+      "allowed_nesting": {
+        "exposition": ["mini_exploration", "mini_resolution"],
+        "exploration": ["mini_climax", "mini_descent"],
+        "climax": [],
+        "descent": ["mini_exploration", "mini_climax"],
+        "resolution": ["mini_exploration"]
+      },
+      "max_nesting_depth": 2,
+      "sub_phase_duration_ratio": 0.3
+    }
+  },
+
+  "modulation_system": {
+    "description": "Rules for moving between maqamat",
+
+    "modulation_types": {
+      "pivot_tone": {
+        "description": "Common tone between two maqamat becomes bridge",
+        "smoothness": "high",
+        "preparation_length": 2
+      },
+      "pivot_jins": {
+        "description": "Shared jins eases transition",
+        "smoothness": "very_high",
+        "preparation_length": 4
+      },
+      "direct": {
+        "description": "Abrupt change without preparation",
+        "smoothness": "low",
+        "preparation_length": 0
+      },
+      "chromatic": {
+        "description": "Chromatic alteration leads to new maqam",
+        "smoothness": "medium",
+        "preparation_length": 1
+      }
+    },
+
+    "modulation_depth": {
+      "brief_tonicization": {
+        "duration_phrases": [1, 2],
+        "sayr_depth": "none",
+        "description": "Quick visit, no full exploration"
+      },
+      "short_modulation": {
+        "duration_phrases": [2, 4],
+        "sayr_depth": "partial",
+        "description": "Explore some zones but not full sayr"
+      },
+      "full_modulation": {
+        "duration_phrases": [4, 8],
+        "sayr_depth": "full",
+        "description": "Complete sayr in new maqam"
+      }
+    },
+
+    "return_strategies": {
+      "reverse_pivot": {
+        "description": "Use same pivot in reverse",
+        "probability": 0.4
+      },
+      "dominant_preparation": {
+        "description": "Approach original tonic via its dominant",
+        "probability": 0.3
+      },
+      "direct_return": {
+        "description": "Sudden return to original",
+        "probability": 0.2
+      },
+      "chain_modulation": {
+        "description": "Return via intermediate maqam",
+        "probability": 0.1
+      }
+    }
+  },
+
+  "transition_matrices": {
+    "description": "Markov-style probabilities for note-to-note transitions",
+
+    "generic_matrix": {
+      "description": "Default matrix when maqam-specific not available",
+      "from_degree": {
+        "1": {"1": 0.1, "2": 0.35, "3": 0.25, "4": 0.15, "5": 0.1, "6": 0.03, "7": 0.02, "-1": 0.0},
+        "2": {"1": 0.4, "2": 0.1, "3": 0.3, "4": 0.15, "5": 0.03, "6": 0.02, "7": 0.0, "-1": 0.0},
+        "3": {"1": 0.15, "2": 0.3, "3": 0.1, "4": 0.3, "5": 0.1, "6": 0.05, "7": 0.0, "-1": 0.0},
+        "4": {"1": 0.1, "2": 0.15, "3": 0.3, "4": 0.1, "5": 0.25, "6": 0.08, "7": 0.02, "-1": 0.0},
+        "5": {"1": 0.05, "2": 0.05, "3": 0.1, "4": 0.35, "5": 0.1, "6": 0.25, "7": 0.1, "-1": 0.0},
+        "6": {"1": 0.02, "2": 0.03, "3": 0.05, "4": 0.15, "5": 0.35, "6": 0.1, "7": 0.25, "8": 0.05},
+        "7": {"1": 0.02, "2": 0.02, "3": 0.03, "4": 0.05, "5": 0.15, "6": 0.3, "7": 0.08, "8": 0.35},
+        "8": {"1": 0.05, "2": 0.02, "3": 0.03, "4": 0.05, "5": 0.1, "6": 0.15, "7": 0.35, "8": 0.25}
+      }
+    },
+
+    "direction_modifiers": {
+      "ascending": {
+        "description": "Multiply probabilities for upward motion",
+        "up_multiplier": 1.5,
+        "down_multiplier": 0.6,
+        "same_multiplier": 0.8
+      },
+      "descending": {
+        "description": "Multiply probabilities for downward motion",
+        "up_multiplier": 0.6,
+        "down_multiplier": 1.5,
+        "same_multiplier": 0.8
+      },
+      "neutral": {
+        "up_multiplier": 1.0,
+        "down_multiplier": 1.0,
+        "same_multiplier": 1.0
+      }
+    },
+
+    "context_modifiers": {
+      "after_jump_up": {
+        "description": "After upward jump, prefer steps down",
+        "applies_when": "previous_interval >= 3 AND direction == up",
+        "modifiers": {"down_step": 1.8, "down_jump": 0.5, "up_any": 0.3}
+      },
+      "after_jump_down": {
+        "description": "After downward jump, prefer steps up",
+        "applies_when": "previous_interval >= 3 AND direction == down",
+        "modifiers": {"up_step": 1.8, "up_jump": 0.5, "down_any": 0.3}
+      },
+      "approaching_cadence": {
+        "description": "Near phrase end, increase gravity toward cadence tones",
+        "applies_when": "position > 0.8",
+        "modifiers": {"to_tonic": 2.0, "to_ghammaz": 1.5, "to_passing": 0.4}
+      },
+      "repeated_note": {
+        "description": "Avoid too many repetitions",
+        "applies_when": "same_pitch_count >= 2",
+        "modifiers": {"same_pitch": 0.2, "step_away": 1.5}
+      }
+    }
+  },
+
+  "ornamentation": {
+    "description": "Melodic embellishments typical of Arabic music",
+
+    "types": {
+      "trill": {
+        "description": "Rapid alternation with upper neighbor",
+        "interval": 1,
+        "speed": "fast",
+        "applies_to": ["long_notes", "emphasized_notes"],
+        "probability": 0.15
+      },
+      "mordent": {
+        "description": "Quick neighbor note and back",
+        "interval": 1,
+        "direction": "upper",
+        "applies_to": ["beat_starts"],
+        "probability": 0.2
+      },
+      "grace_note": {
+        "description": "Quick approach note",
+        "interval": [1, 2],
+        "direction": "below",
+        "applies_to": ["phrase_starts", "emphasized_notes"],
+        "probability": 0.25
+      },
+      "slide": {
+        "description": "Glissando between notes",
+        "max_interval": 3,
+        "applies_to": ["expressive_passages"],
+        "probability": 0.1
+      },
+      "vibrato": {
+        "description": "Pitch oscillation",
+        "depth_cents": [10, 30],
+        "speed": "variable",
+        "applies_to": ["sustained_notes"],
+        "probability": 0.4
+      },
+      "passing_tone": {
+        "description": "Fill in gaps between structural notes",
+        "applies_to": ["large_intervals"],
+        "probability": 0.3
+      }
+    },
+
+    "style_presets": {
+      "plain": {
+        "global_probability_multiplier": 0.2,
+        "description": "Minimal ornamentation"
+      },
+      "moderate": {
+        "global_probability_multiplier": 0.6,
+        "description": "Tasteful ornamentation"
+      },
+      "ornate": {
+        "global_probability_multiplier": 1.0,
+        "description": "Rich traditional ornamentation"
+      },
+      "virtuosic": {
+        "global_probability_multiplier": 1.5,
+        "description": "Heavy ornamentation for display"
+      }
+    }
+  }
+}

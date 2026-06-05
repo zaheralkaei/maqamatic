@@ -1,0 +1,48 @@
+# Maqamatic - Docker Compose Configuration
+# Run: docker-compose up --build
+
+version: '3.8'
+
+services:
+  maqamatic:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: maqamatic-app
+    ports:
+      - "5025:5025"
+    environment:
+      - FLASK_ENV=production
+      - PYTHONUNBUFFERED=1
+    volumes:
+      # Mount data directory for persistence (optional)
+      - ./data:/app/data:ro
+      # Output directory for generated files
+      - maqamatic-output:/tmp/maqamatic
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5025/')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # Development service with hot reload
+  maqamatic-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: maqamatic-dev
+    ports:
+      - "5025:5025"
+    environment:
+      - FLASK_ENV=development
+      - FLASK_DEBUG=1
+    volumes:
+      - .:/app
+      - maqamatic-output:/tmp/maqamatic
+    profiles:
+      - dev
+
+volumes:
+  maqamatic-output:

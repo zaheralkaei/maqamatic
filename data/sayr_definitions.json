@@ -1,0 +1,1218 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "description": "Sayr (melodic path) definitions for all maqamat"
+  },
+
+  "zone_definitions": {
+    "description": "Standard zone types used across all maqamat",
+    "lower": {
+      "description": "Below tonic, used for emphasis and depth",
+      "typical_degrees": [-2, -1, 0],
+      "character": "grounding, emphasis"
+    },
+    "tonic": {
+      "description": "Home base around the tonic",
+      "typical_degrees": [1, 2],
+      "character": "stability, home"
+    },
+    "middle": {
+      "description": "Lower jins upper portion, approaching ghammaz",
+      "typical_degrees": [3, 4],
+      "character": "transition, building"
+    },
+    "upper": {
+      "description": "Upper jins territory",
+      "typical_degrees": [5, 6, 7, 8],
+      "character": "exploration, climax"
+    },
+    "extended": {
+      "description": "Beyond octave for special effects",
+      "typical_degrees": [9, 10],
+      "character": "extreme, rare"
+    }
+  },
+
+  "sayr": {
+    "bayati": {
+      "maqam_id": "bayati",
+      "zones": {
+        "lower": {"degrees": [-1, 0], "entry_probability": 0.1, "dwell": "short"},
+        "tonic": {"degrees": [1, 2], "entry_probability": 0.5, "dwell": "medium"},
+        "middle": {"degrees": [3, 4], "entry_probability": 0.3, "dwell": "medium"},
+        "upper": {"degrees": [5, 6, 7, 8], "entry_probability": 0.1, "dwell": "variable"}
+      },
+      "zone_transitions": {
+        "lower": {"lower": 0.2, "tonic": 0.8, "middle": 0.0, "upper": 0.0},
+        "tonic": {"lower": 0.1, "tonic": 0.3, "middle": 0.6, "upper": 0.0},
+        "middle": {"lower": 0.0, "tonic": 0.4, "middle": 0.3, "upper": 0.3},
+        "upper": {"lower": 0.0, "tonic": 0.1, "middle": 0.5, "upper": 0.4}
+      },
+      "pitch_properties": {
+        "1": {"gravity": 1.0, "stability": "rest", "tendency": "neutral", "importance": "tonic", "can_end": true},
+        "2": {"gravity": 0.7, "stability": "unstable", "tendency": "descending", "importance": "characteristic", "can_end": false},
+        "3": {"gravity": 0.5, "stability": "passing", "tendency": "neutral", "importance": "secondary", "can_end": false},
+        "4": {"gravity": 0.9, "stability": "rest", "tendency": "neutral", "importance": "ghammaz", "can_end": true},
+        "5": {"gravity": 0.6, "stability": "unstable", "tendency": "descending", "importance": "secondary", "can_end": false},
+        "6": {"gravity": 0.3, "stability": "unstable", "tendency": "descending", "importance": "passing", "can_end": false},
+        "7": {"gravity": 0.5, "stability": "unstable", "tendency": "ascending", "importance": "leading", "can_end": false},
+        "8": {"gravity": 0.8, "stability": "rest", "tendency": "descending", "importance": "octave", "can_end": true}
+      },
+      "characteristic_phrases": {
+        "opening": [
+          {"degrees": [1, 2, 3, 4], "weight": 0.4},
+          {"degrees": [4, 3, 2, 1], "weight": 0.35},
+          {"degrees": [1, 2, 1, 2, 3], "weight": 0.25}
+        ],
+        "transitional": [
+          {"degrees": [4, 5, 4, 3], "weight": 0.4},
+          {"degrees": [3, 4, 5, 6], "weight": 0.3},
+          {"degrees": [4, 3, 4, 5], "weight": 0.3}
+        ],
+        "climactic": [
+          {"degrees": [5, 6, 7, 8], "weight": 0.4},
+          {"degrees": [8, 7, 6, 5], "weight": 0.35},
+          {"degrees": [6, 7, 8, 7], "weight": 0.25}
+        ],
+        "cadential": [
+          {"degrees": [4, 3, 2, 1], "weight": 0.5},
+          {"degrees": [3, 2, 1], "weight": 0.3},
+          {"degrees": [2, 1, 2, 1], "weight": 0.2}
+        ]
+      },
+      "typical_start_degrees": [1, 4],
+      "typical_climax_degrees": [7, 8],
+      "required_visits_per_section": [1, 2, 4],
+      "default_direction": "ascending_then_descending"
+    },
+
+    "rast": {
+      "maqam_id": "rast",
+      "zones": {
+        "lower": {"degrees": [-1, 0], "entry_probability": 0.05, "dwell": "short"},
+        "tonic": {"degrees": [1, 2, 3], "entry_probability": 0.4, "dwell": "medium"},
+        "middle": {"degrees": [4, 5], "entry_probability": 0.35, "dwell": "medium"},
+        "upper": {"degrees": [6, 7, 8], "entry_probability": 0.2, "dwell": "medium"}
+      },
+      "zone_transitions": {
+        "lower": {"lower": 0.15, "tonic": 0.85, "middle": 0.0, "upper": 0.0},
+        "tonic": {"lower": 0.05, "tonic": 0.35, "middle": 0.55, "upper": 0.05},
+        "middle": {"lower": 0.0, "tonic": 0.3, "middle": 0.35, "upper": 0.35},
+        "upper": {"lower": 0.0, "tonic": 0.15, "middle": 0.45, "upper": 0.4}
+      },
+      "pitch_properties": {
+        "1": {"gravity": 1.0, "stability": "rest", "tendency": "neutral", "importance": "tonic", "can_end": true},
+        "2": {"gravity": 0.6, "stability": "passing", "tendency": "neutral", "importance": "secondary", "can_end": false},
+        "3": {"gravity": 0.75, "stability": "semi-stable", "tendency": "descending", "importance": "characteristic", "can_end": true},
+        "4": {"gravity": 0.5, "stability": "passing", "tendency": "ascending", "importance": "passing", "can_end": false},
+        "5": {"gravity": 0.9, "stability": "rest", "tendency": "neutral", "importance": "ghammaz", "can_end": true},
+        "6": {"gravity": 0.5, "stability": "passing", "tendency": "neutral", "importance": "secondary", "can_end": false},
+        "7": {"gravity": 0.65, "stability": "semi-stable", "tendency": "descending", "importance": "characteristic", "can_end": false},
+        "8": {"gravity": 0.85, "stability": "rest", "tendency": "descending", "importance": "octave", "can_end": true}
+      },
+      "characteristic_phrases": {
+        "opening": [
+          {"degrees": [1, 2, 3, 4, 5], "weight": 0.4},
+          {"degrees": [5, 4, 3, 2, 1], "weight": 0.3},
+          {"degrees": [1, 3, 2, 3, 4, 5], "weight": 0.3}
+        ],
+        "transitional": [
+          {"degrees": [5, 6, 5, 4, 3], "weight": 0.4},
+          {"degrees": [3, 4, 5, 6, 7], "weight": 0.35},
+          {"degrees": [5, 4, 5, 6, 5], "weight": 0.25}
+        ],
+        "climactic": [
+          {"degrees": [6, 7, 8], "weight": 0.45},
+          {"degrees": [8, 7, 6, 5], "weight": 0.35},
+          {"degrees": [7, 8, 7, 6], "weight": 0.2}
+        ],
+        "cadential": [
+          {"degrees": [5, 4, 3, 2, 1], "weight": 0.45},
+          {"degrees": [3, 2, 1], "weight": 0.35},
+          {"degrees": [2, 3, 2, 1], "weight": 0.2}
+        ]
+      },
+      "typical_start_degrees": [1, 5],
+      "typical_climax_degrees": [8],
+      "required_visits_per_section": [1, 3, 5],
+      "default_direction": "ascending_then_descending"
+    },
+
+    "hijaz": {
+      "maqam_id": "hijaz",
+      "zones": {
+        "lower": {"degrees": [-1, 0], "entry_probability": 0.1, "dwell": "short"},
+        "tonic": {"degrees": [1, 2, 3], "entry_probability": 0.45, "dwell": "medium"},
+        "middle": {"degrees": [4, 5], "entry_probability": 0.3, "dwell": "medium"},
+        "upper": {"degrees": [6, 7, 8], "entry_probability": 0.15, "dwell": "short"}
+      },
+      "zone_transitions": {
+        "lower": {"lower": 0.2, "tonic": 0.8, "middle": 0.0, "upper": 0.0},
+        "tonic": {"lower": 0.1, "tonic": 0.4, "middle": 0.5, "upper": 0.0},
+        "middle": {"lower": 0.0, "tonic": 0.45, "middle": 0.3, "upper": 0.25},
+        "upper": {"lower": 0.0, "tonic": 0.15, "middle": 0.5, "upper": 0.35}
+      },
+      "pitch_properties": {
+        "1": {"gravity": 1.0, "stability": "rest", "tendency": "neutral", "importance": "tonic", "can_end": true},
+        "2": {"gravity": 0.8, "stability": "unstable", "tendency": "descending", "importance": "characteristic", "can_end": false},
+        "3": {"gravity": 0.7, "stability": "semi-stable", "tendency": "descending", "importance": "leading_up", "can_end": false},
+        "4": {"gravity": 0.85, "stability": "rest", "tendency": "neutral", "importance": "ghammaz", "can_end": true},
+        "5": {"gravity": 0.55, "stability": "passing", "tendency": "descending", "importance": "secondary", "can_end": false},
+        "6": {"gravity": 0.4, "stability": "unstable", "tendency": "descending", "importance": "passing", "can_end": false},
+        "7": {"gravity": 0.5, "stability": "unstable", "tendency": "ascending", "importance": "leading", "can_end": false},
+        "8": {"gravity": 0.75, "stability": "rest", "tendency": "descending", "importance": "octave", "can_end": true}
+      },
+      "characteristic_phrases": {
+        "opening": [
+          {"degrees": [4, 3, 2, 1], "weight": 0.45},
+          {"degrees": [1, 2, 3, 4], "weight": 0.3},
+          {"degrees": [2, 3, 2, 1], "weight": 0.25}
+        ],
+        "transitional": [
+          {"degrees": [4, 5, 4, 3, 2], "weight": 0.4},
+          {"degrees": [3, 4, 5, 6], "weight": 0.35},
+          {"degrees": [4, 3, 4, 5], "weight": 0.25}
+        ],
+        "climactic": [
+          {"degrees": [5, 6, 7, 8], "weight": 0.4},
+          {"degrees": [8, 7, 6, 5], "weight": 0.35},
+          {"degrees": [6, 7, 8, 7, 6], "weight": 0.25}
+        ],
+        "cadential": [
+          {"degrees": [4, 3, 2, 1], "weight": 0.5},
+          {"degrees": [3, 2, 1], "weight": 0.3},
+          {"degrees": [2, 3, 2, 1], "weight": 0.2}
+        ]
+      },
+      "typical_start_degrees": [1, 4],
+      "typical_climax_degrees": [7, 8],
+      "required_visits_per_section": [1, 2, 4],
+      "default_direction": "descending_primary"
+    },
+
+    "nahawand": {
+      "maqam_id": "nahawand",
+      "zones": {
+        "lower": {"degrees": [-1, 0], "entry_probability": 0.08, "dwell": "short"},
+        "tonic": {"degrees": [1, 2, 3], "entry_probability": 0.4, "dwell": "medium"},
+        "middle": {"degrees": [4, 5], "entry_probability": 0.35, "dwell": "medium"},
+        "upper": {"degrees": [6, 7, 8], "entry_probability": 0.17, "dwell": "medium"}
+      },
+      "zone_transitions": {
+        "lower": {"lower": 0.15, "tonic": 0.85, "middle": 0.0, "upper": 0.0},
+        "tonic": {"lower": 0.08, "tonic": 0.35, "middle": 0.55, "upper": 0.02},
+        "middle": {"lower": 0.0, "tonic": 0.35, "middle": 0.35, "upper": 0.3},
+        "upper": {"lower": 0.0, "tonic": 0.1, "middle": 0.5, "upper": 0.4}
+      },
+      "pitch_properties": {
+        "1": {"gravity": 1.0, "stability": "rest", "tendency": "neutral", "importance": "tonic", "can_end": true},
+        "2": {"gravity": 0.55, "stability": "passing", "tendency": "neutral", "importance": "secondary", "can_end": false},
+        "3": {"gravity": 0.7, "stability": "semi-stable", "tendency": "descending", "importance": "characteristic", "can_end": false},
+        "4": {"gravity": 0.5, "stability": "passing", "tendency": "ascending", "importance": "passing", "can_end": false},
+        "5": {"gravity": 0.9, "stability": "rest", "tendency": "neutral", "importance": "ghammaz", "can_end": true},
+        "6": {"gravity": 0.4, "stability": "unstable", "tendency": "descending", "importance": "passing", "can_end": false},
+        "7": {"gravity": 0.75, "stability": "unstable", "tendency": "ascending", "importance": "leading", "can_end": false},
+        "8": {"gravity": 0.8, "stability": "rest", "tendency": "descending", "importance": "octave", "can_end": true}
+      },
+      "characteristic_phrases": {
+        "opening": [
+          {"degrees": [1, 2, 3, 4, 5], "weight": 0.4},
+          {"degrees": [5, 4, 3, 2, 1], "weight": 0.35},
+          {"degrees": [1, 3, 2, 3, 4], "weight": 0.25}
+        ],
+        "transitional": [
+          {"degrees": [5, 6, 5, 4], "weight": 0.4},
+          {"degrees": [4, 5, 6, 7], "weight": 0.35},
+          {"degrees": [5, 4, 5, 6], "weight": 0.25}
+        ],
+        "climactic": [
+          {"degrees": [6, 7, 8], "weight": 0.45},
+          {"degrees": [8, 7, 6, 5], "weight": 0.35},
+          {"degrees": [7, 8, 7], "weight": 0.2}
+        ],
+        "cadential": [
+          {"degrees": [5, 4, 3, 2, 1], "weight": 0.45},
+          {"degrees": [3, 2, 1], "weight": 0.35},
+          {"degrees": [7, 1], "weight": 0.2}
+        ]
+      },
+      "typical_start_degrees": [1, 5],
+      "typical_climax_degrees": [8],
+      "required_visits_per_section": [1, 3, 5],
+      "default_direction": "ascending_then_descending"
+    },
+
+    "kurd": {
+      "maqam_id": "kurd",
+      "zones": {
+        "lower": {"degrees": [-1, 0], "entry_probability": 0.12, "dwell": "short"},
+        "tonic": {"degrees": [1, 2], "entry_probability": 0.45, "dwell": "medium"},
+        "middle": {"degrees": [3, 4], "entry_probability": 0.3, "dwell": "medium"},
+        "upper": {"degrees": [5, 6, 7, 8], "entry_probability": 0.13, "dwell": "short"}
+      },
+      "zone_transitions": {
+        "lower": {"lower": 0.2, "tonic": 0.8, "middle": 0.0, "upper": 0.0},
+        "tonic": {"lower": 0.12, "tonic": 0.38, "middle": 0.5, "upper": 0.0},
+        "middle": {"lower": 0.0, "tonic": 0.45, "middle": 0.3, "upper": 0.25},
+        "upper": {"lower": 0.0, "tonic": 0.15, "middle": 0.5, "upper": 0.35}
+      },
+      "pitch_properties": {
+        "1": {"gravity": 1.0, "stability": "rest", "tendency": "neutral", "importance": "tonic", "can_end": true},
+        "2": {"gravity": 0.75, "stability": "unstable", "tendency": "descending", "importance": "characteristic", "can_end": false},
+        "3": {"gravity": 0.6, "stability": "passing", "tendency": "neutral", "importance": "secondary", "can_end": false},
+        "4": {"gravity": 0.85, "stability": "rest", "tendency": "neutral", "importance": "ghammaz", "can_end": true},
+        "5": {"gravity": 0.55, "stability": "passing", "tendency": "descending", "importance": "secondary", "can_end": false},
+        "6": {"gravity": 0.35, "stability": "unstable", "tendency": "descending", "importance": "passing", "can_end": false},
+        "7": {"gravity": 0.5, "stability": "unstable", "tendency": "ascending", "importance": "leading", "can_end": false},
+        "8": {"gravity": 0.7, "stability": "rest", "tendency": "descending", "importance": "octave", "can_end": true}
+      },
+      "characteristic_phrases": {
+        "opening": [
+          {"degrees": [4, 3, 2, 1], "weight": 0.45},
+          {"degrees": [1, 2, 3, 4], "weight": 0.3},
+          {"degrees": [2, 1, 2, 3], "weight": 0.25}
+        ],
+        "transitional": [
+          {"degrees": [4, 5, 4, 3], "weight": 0.4},
+          {"degrees": [3, 4, 5, 6], "weight": 0.35},
+          {"degrees": [4, 3, 4, 5], "weight": 0.25}
+        ],
+        "climactic": [
+          {"degrees": [5, 6, 7, 8], "weight": 0.4},
+          {"degrees": [8, 7, 6, 5], "weight": 0.35},
+          {"degrees": [6, 7, 8, 7], "weight": 0.25}
+        ],
+        "cadential": [
+          {"degrees": [4, 3, 2, 1], "weight": 0.5},
+          {"degrees": [3, 2, 1], "weight": 0.3},
+          {"degrees": [2, 1], "weight": 0.2}
+        ]
+      },
+      "typical_start_degrees": [4, 1],
+      "typical_climax_degrees": [7, 8],
+      "required_visits_per_section": [1, 2, 4],
+      "default_direction": "descending_primary"
+    },
+
+    "saba": {
+      "maqam_id": "saba",
+      "zones": {
+        "lower": {"degrees": [-1, 0], "entry_probability": 0.15, "dwell": "medium"},
+        "tonic": {"degrees": [1, 2], "entry_probability": 0.5, "dwell": "long"},
+        "middle": {"degrees": [3, 4], "entry_probability": 0.25, "dwell": "short"},
+        "upper": {"degrees": [5, 6, 7, 8], "entry_probability": 0.1, "dwell": "short"}
+      },
+      "zone_transitions": {
+        "lower": {"lower": 0.25, "tonic": 0.75, "middle": 0.0, "upper": 0.0},
+        "tonic": {"lower": 0.15, "tonic": 0.45, "middle": 0.4, "upper": 0.0},
+        "middle": {"lower": 0.05, "tonic": 0.5, "middle": 0.25, "upper": 0.2},
+        "upper": {"lower": 0.0, "tonic": 0.2, "middle": 0.55, "upper": 0.25}
+      },
+      "pitch_properties": {
+        "1": {"gravity": 1.0, "stability": "rest", "tendency": "neutral", "importance": "tonic", "can_end": true},
+        "2": {"gravity": 0.85, "stability": "semi-stable", "tendency": "descending", "importance": "characteristic", "can_end": false},
+        "3": {"gravity": 0.6, "stability": "unstable", "tendency": "descending", "importance": "secondary", "can_end": false},
+        "4": {"gravity": 0.75, "stability": "semi-stable", "tendency": "neutral", "importance": "ghammaz", "can_end": true},
+        "5": {"gravity": 0.5, "stability": "passing", "tendency": "descending", "importance": "passing", "can_end": false},
+        "6": {"gravity": 0.55, "stability": "passing", "tendency": "descending", "importance": "secondary", "can_end": false},
+        "7": {"gravity": 0.4, "stability": "unstable", "tendency": "ascending", "importance": "leading", "can_end": false},
+        "8": {"gravity": 0.6, "stability": "rest", "tendency": "descending", "importance": "octave", "can_end": true}
+      },
+      "characteristic_phrases": {
+        "opening": [
+          {"degrees": [4, 3, 2, 1], "weight": 0.5},
+          {"degrees": [1, 2, 3, 4], "weight": 0.25},
+          {"degrees": [2, 1, 2, 3], "weight": 0.25}
+        ],
+        "transitional": [
+          {"degrees": [4, 5, 4, 3, 2], "weight": 0.45},
+          {"degrees": [3, 4, 5, 6], "weight": 0.3},
+          {"degrees": [4, 3, 4, 3, 2], "weight": 0.25}
+        ],
+        "climactic": [
+          {"degrees": [5, 6, 7, 8], "weight": 0.35},
+          {"degrees": [8, 7, 6, 5, 4], "weight": 0.4},
+          {"degrees": [6, 5, 6, 7], "weight": 0.25}
+        ],
+        "cadential": [
+          {"degrees": [4, 3, 2, 1], "weight": 0.55},
+          {"degrees": [2, 1, 2, 1], "weight": 0.3},
+          {"degrees": [3, 2, 1], "weight": 0.15}
+        ]
+      },
+      "typical_start_degrees": [4, 1],
+      "typical_climax_degrees": [6, 7],
+      "required_visits_per_section": [1, 2, 4],
+      "default_direction": "descending_primary",
+      "special_notes": "Saba has a unique 'sighing' quality - the lowered 4th degree creates plaintive feeling"
+    },
+
+    "sikah": {
+      "maqam_id": "sikah",
+      "zones": {
+        "lower": {"degrees": [-2, -1, 0], "entry_probability": 0.2, "dwell": "medium"},
+        "tonic": {"degrees": [1, 2], "entry_probability": 0.4, "dwell": "medium"},
+        "middle": {"degrees": [3, 4, 5], "entry_probability": 0.3, "dwell": "medium"},
+        "upper": {"degrees": [6, 7], "entry_probability": 0.1, "dwell": "short"}
+      },
+      "zone_transitions": {
+        "lower": {"lower": 0.3, "tonic": 0.7, "middle": 0.0, "upper": 0.0},
+        "tonic": {"lower": 0.15, "tonic": 0.35, "middle": 0.5, "upper": 0.0},
+        "middle": {"lower": 0.0, "tonic": 0.35, "middle": 0.4, "upper": 0.25},
+        "upper": {"lower": 0.0, "tonic": 0.1, "middle": 0.6, "upper": 0.3}
+      },
+      "pitch_properties": {
+        "1": {"gravity": 1.0, "stability": "rest", "tendency": "neutral", "importance": "tonic", "can_end": true},
+        "2": {"gravity": 0.6, "stability": "passing", "tendency": "neutral", "importance": "secondary", "can_end": false},
+        "3": {"gravity": 0.85, "stability": "rest", "tendency": "neutral", "importance": "ghammaz", "can_end": true},
+        "4": {"gravity": 0.55, "stability": "passing", "tendency": "neutral", "importance": "secondary", "can_end": false},
+        "5": {"gravity": 0.7, "stability": "semi-stable", "tendency": "descending", "importance": "secondary_ghammaz", "can_end": true},
+        "6": {"gravity": 0.45, "stability": "passing", "tendency": "descending", "importance": "passing", "can_end": false},
+        "7": {"gravity": 0.55, "stability": "rest", "tendency": "descending", "importance": "upper_rest", "can_end": false}
+      },
+      "characteristic_phrases": {
+        "opening": [
+          {"degrees": [1, 2, 3], "weight": 0.45},
+          {"degrees": [3, 2, 1], "weight": 0.35},
+          {"degrees": [1, 0, 1, 2, 3], "weight": 0.2}
+        ],
+        "transitional": [
+          {"degrees": [3, 4, 5, 4, 3], "weight": 0.45},
+          {"degrees": [3, 4, 5, 6], "weight": 0.3},
+          {"degrees": [5, 4, 3, 4], "weight": 0.25}
+        ],
+        "climactic": [
+          {"degrees": [5, 6, 7], "weight": 0.4},
+          {"degrees": [7, 6, 5, 4], "weight": 0.35},
+          {"degrees": [6, 7, 6, 5], "weight": 0.25}
+        ],
+        "cadential": [
+          {"degrees": [3, 2, 1], "weight": 0.5},
+          {"degrees": [2, 1, 0, 1], "weight": 0.3},
+          {"degrees": [1, 0, 1], "weight": 0.2}
+        ]
+      },
+      "typical_start_degrees": [1, 3],
+      "typical_climax_degrees": [6, 7],
+      "required_visits_per_section": [1, 3],
+      "default_direction": "oscillating",
+      "special_notes": "Sikah is unique - tonic on E half-flat, often explores below tonic"
+    },
+
+    "ajam": {
+      "maqam_id": "ajam",
+      "zones": {
+        "lower": {"degrees": [-1, 0], "entry_probability": 0.05, "dwell": "short"},
+        "tonic": {"degrees": [1, 2, 3], "entry_probability": 0.35, "dwell": "medium"},
+        "middle": {"degrees": [4, 5], "entry_probability": 0.4, "dwell": "medium"},
+        "upper": {"degrees": [6, 7, 8], "entry_probability": 0.2, "dwell": "medium"}
+      },
+      "zone_transitions": {
+        "lower": {"lower": 0.1, "tonic": 0.9, "middle": 0.0, "upper": 0.0},
+        "tonic": {"lower": 0.05, "tonic": 0.3, "middle": 0.6, "upper": 0.05},
+        "middle": {"lower": 0.0, "tonic": 0.25, "middle": 0.4, "upper": 0.35},
+        "upper": {"lower": 0.0, "tonic": 0.15, "middle": 0.45, "upper": 0.4}
+      },
+      "pitch_properties": {
+        "1": {"gravity": 1.0, "stability": "rest", "tendency": "neutral", "importance": "tonic", "can_end": true},
+        "2": {"gravity": 0.5, "stability": "passing", "tendency": "neutral", "importance": "secondary", "can_end": false},
+        "3": {"gravity": 0.7, "stability": "semi-stable", "tendency": "descending", "importance": "mediant", "can_end": true},
+        "4": {"gravity": 0.45, "stability": "passing", "tendency": "ascending", "importance": "passing", "can_end": false},
+        "5": {"gravity": 0.9, "stability": "rest", "tendency": "neutral", "importance": "ghammaz", "can_end": true},
+        "6": {"gravity": 0.5, "stability": "passing", "tendency": "neutral", "importance": "secondary", "can_end": false},
+        "7": {"gravity": 0.75, "stability": "unstable", "tendency": "ascending", "importance": "leading", "can_end": false},
+        "8": {"gravity": 0.85, "stability": "rest", "tendency": "descending", "importance": "octave", "can_end": true}
+      },
+      "characteristic_phrases": {
+        "opening": [
+          {"degrees": [5, 4, 3, 2, 1], "weight": 0.4},
+          {"degrees": [1, 2, 3, 4, 5], "weight": 0.35},
+          {"degrees": [1, 3, 5], "weight": 0.25}
+        ],
+        "transitional": [
+          {"degrees": [5, 6, 7, 8], "weight": 0.4},
+          {"degrees": [5, 6, 5, 4], "weight": 0.35},
+          {"degrees": [3, 4, 5, 6], "weight": 0.25}
+        ],
+        "climactic": [
+          {"degrees": [6, 7, 8], "weight": 0.5},
+          {"degrees": [8, 7, 6, 5], "weight": 0.3},
+          {"degrees": [8, 8, 7, 8], "weight": 0.2}
+        ],
+        "cadential": [
+          {"degrees": [5, 4, 3, 2, 1], "weight": 0.45},
+          {"degrees": [7, 1], "weight": 0.3},
+          {"degrees": [3, 2, 1], "weight": 0.25}
+        ]
+      },
+      "typical_start_degrees": [5, 1],
+      "typical_climax_degrees": [8],
+      "required_visits_per_section": [1, 3, 5],
+      "default_direction": "ascending_then_descending"
+    },
+
+    "nikriz": {
+      "maqam_id": "nikriz",
+      "zones": {
+        "lower": {"degrees": [-1, 0], "entry_probability": 0.08, "dwell": "short"},
+        "tonic": {"degrees": [1, 2, 3], "entry_probability": 0.4, "dwell": "medium"},
+        "middle": {"degrees": [4, 5], "entry_probability": 0.35, "dwell": "medium"},
+        "upper": {"degrees": [6, 7, 8], "entry_probability": 0.17, "dwell": "short"}
+      },
+      "zone_transitions": {
+        "lower": {"lower": 0.15, "tonic": 0.85, "middle": 0.0, "upper": 0.0},
+        "tonic": {"lower": 0.08, "tonic": 0.35, "middle": 0.55, "upper": 0.02},
+        "middle": {"lower": 0.0, "tonic": 0.3, "middle": 0.4, "upper": 0.3},
+        "upper": {"lower": 0.0, "tonic": 0.1, "middle": 0.55, "upper": 0.35}
+      },
+      "pitch_properties": {
+        "1": {"gravity": 1.0, "stability": "rest", "tendency": "neutral", "importance": "tonic", "can_end": true},
+        "2": {"gravity": 0.55, "stability": "passing", "tendency": "neutral", "importance": "secondary", "can_end": false},
+        "3": {"gravity": 0.65, "stability": "semi-stable", "tendency": "descending", "importance": "characteristic", "can_end": false},
+        "4": {"gravity": 0.8, "stability": "unstable", "tendency": "ascending", "importance": "characteristic_aug", "can_end": false},
+        "5": {"gravity": 0.9, "stability": "rest", "tendency": "neutral", "importance": "ghammaz", "can_end": true},
+        "6": {"gravity": 0.5, "stability": "passing", "tendency": "neutral", "importance": "secondary", "can_end": false},
+        "7": {"gravity": 0.45, "stability": "unstable", "tendency": "ascending", "importance": "leading", "can_end": false},
+        "8": {"gravity": 0.8, "stability": "rest", "tendency": "descending", "importance": "octave", "can_end": true}
+      },
+      "characteristic_phrases": {
+        "opening": [
+          {"degrees": [1, 2, 3, 4, 5], "weight": 0.4},
+          {"degrees": [5, 4, 3, 2, 1], "weight": 0.35},
+          {"degrees": [1, 3, 4, 5], "weight": 0.25}
+        ],
+        "transitional": [
+          {"degrees": [5, 6, 5, 4, 3], "weight": 0.4},
+          {"degrees": [4, 5, 6, 7], "weight": 0.35},
+          {"degrees": [3, 4, 5, 4], "weight": 0.25}
+        ],
+        "climactic": [
+          {"degrees": [6, 7, 8], "weight": 0.45},
+          {"degrees": [8, 7, 6, 5], "weight": 0.35},
+          {"degrees": [7, 8, 7], "weight": 0.2}
+        ],
+        "cadential": [
+          {"degrees": [5, 4, 3, 2, 1], "weight": 0.45},
+          {"degrees": [4, 3, 2, 1], "weight": 0.35},
+          {"degrees": [3, 2, 1], "weight": 0.2}
+        ]
+      },
+      "typical_start_degrees": [1, 5],
+      "typical_climax_degrees": [8],
+      "required_visits_per_section": [1, 4, 5],
+      "default_direction": "ascending_then_descending",
+      "special_notes": "The augmented second (3-4) is the signature sound - must be highlighted"
+    },
+
+    "hijazkar": {
+      "maqam_id": "hijazkar",
+      "zones": {
+        "lower": {"degrees": [-1, 0], "entry_probability": 0.1, "dwell": "short"},
+        "tonic": {"degrees": [1, 2, 3], "entry_probability": 0.4, "dwell": "medium"},
+        "middle": {"degrees": [4, 5], "entry_probability": 0.3, "dwell": "medium"},
+        "upper": {"degrees": [6, 7, 8], "entry_probability": 0.2, "dwell": "medium"}
+      },
+      "zone_transitions": {
+        "lower": {"lower": 0.2, "tonic": 0.8, "middle": 0.0, "upper": 0.0},
+        "tonic": {"lower": 0.1, "tonic": 0.35, "middle": 0.5, "upper": 0.05},
+        "middle": {"lower": 0.0, "tonic": 0.35, "middle": 0.35, "upper": 0.3},
+        "upper": {"lower": 0.0, "tonic": 0.1, "middle": 0.45, "upper": 0.45}
+      },
+      "pitch_properties": {
+        "1": {"gravity": 1.0, "stability": "rest", "tendency": "neutral", "importance": "tonic", "can_end": true},
+        "2": {"gravity": 0.8, "stability": "unstable", "tendency": "descending", "importance": "characteristic", "can_end": false},
+        "3": {"gravity": 0.7, "stability": "semi-stable", "tendency": "descending", "importance": "leading_up", "can_end": false},
+        "4": {"gravity": 0.55, "stability": "passing", "tendency": "ascending", "importance": "passing", "can_end": false},
+        "5": {"gravity": 0.9, "stability": "rest", "tendency": "neutral", "importance": "ghammaz", "can_end": true},
+        "6": {"gravity": 0.75, "stability": "unstable", "tendency": "descending", "importance": "characteristic_upper", "can_end": false},
+        "7": {"gravity": 0.7, "stability": "semi-stable", "tendency": "ascending", "importance": "leading", "can_end": false},
+        "8": {"gravity": 0.85, "stability": "rest", "tendency": "descending", "importance": "octave", "can_end": true}
+      },
+      "characteristic_phrases": {
+        "opening": [
+          {"degrees": [5, 4, 3, 2, 1], "weight": 0.4},
+          {"degrees": [1, 2, 3, 4, 5], "weight": 0.3},
+          {"degrees": [2, 3, 2, 1], "weight": 0.3}
+        ],
+        "transitional": [
+          {"degrees": [5, 6, 7, 8], "weight": 0.4},
+          {"degrees": [5, 6, 5, 4], "weight": 0.35},
+          {"degrees": [3, 4, 5, 6], "weight": 0.25}
+        ],
+        "climactic": [
+          {"degrees": [6, 7, 8], "weight": 0.45},
+          {"degrees": [8, 7, 6, 5], "weight": 0.35},
+          {"degrees": [7, 8, 7, 6], "weight": 0.2}
+        ],
+        "cadential": [
+          {"degrees": [4, 3, 2, 1], "weight": 0.5},
+          {"degrees": [3, 2, 1], "weight": 0.3},
+          {"degrees": [2, 3, 2, 1], "weight": 0.2}
+        ]
+      },
+      "typical_start_degrees": [5, 1],
+      "typical_climax_degrees": [8],
+      "required_visits_per_section": [1, 2, 5, 6],
+      "default_direction": "ascending_then_descending",
+      "special_notes": "Double Hijaz - both lower and upper tetrachords have augmented second"
+    },
+
+    "ajam_ushayran": {
+      "maqam_id": "ajam_ushayran",
+      "zones": {
+        "lower": {"degrees": [-1, 0], "entry_probability": 0.05, "dwell": "short"},
+        "tonic": {"degrees": [1, 2, 3], "entry_probability": 0.4, "dwell": "medium"},
+        "middle": {"degrees": [4, 5], "entry_probability": 0.35, "dwell": "medium"},
+        "upper": {"degrees": [6, 7, 8], "entry_probability": 0.2, "dwell": "medium"}
+      },
+      "zone_transitions": {
+        "lower": {"lower": 0.1, "tonic": 0.9, "middle": 0.0, "upper": 0.0},
+        "tonic": {"lower": 0.05, "tonic": 0.35, "middle": 0.55, "upper": 0.05},
+        "middle": {"lower": 0.0, "tonic": 0.3, "middle": 0.35, "upper": 0.35},
+        "upper": {"lower": 0.0, "tonic": 0.15, "middle": 0.45, "upper": 0.4}
+      },
+      "pitch_properties": {
+        "1": {"gravity": 1.0, "stability": "rest", "tendency": "neutral", "importance": "tonic", "can_end": true},
+        "2": {"gravity": 0.5, "stability": "passing", "tendency": "neutral", "importance": "secondary", "can_end": false},
+        "3": {"gravity": 0.7, "stability": "semi-stable", "tendency": "descending", "importance": "mediant", "can_end": true},
+        "4": {"gravity": 0.45, "stability": "passing", "tendency": "ascending", "importance": "passing", "can_end": false},
+        "5": {"gravity": 0.9, "stability": "rest", "tendency": "neutral", "importance": "ghammaz", "can_end": true},
+        "6": {"gravity": 0.5, "stability": "passing", "tendency": "neutral", "importance": "secondary", "can_end": false},
+        "7": {"gravity": 0.75, "stability": "unstable", "tendency": "ascending", "importance": "leading", "can_end": false},
+        "8": {"gravity": 0.85, "stability": "rest", "tendency": "descending", "importance": "octave", "can_end": true}
+      },
+      "characteristic_phrases": {
+        "opening": [
+          {"degrees": [1, 2, 3, 4, 5], "weight": 0.45},
+          {"degrees": [1, 3, 5], "weight": 0.3},
+          {"degrees": [1, 2, 3], "weight": 0.25}
+        ],
+        "transitional": [
+          {"degrees": [5, 6, 5, 4], "weight": 0.4},
+          {"degrees": [3, 4, 5, 6], "weight": 0.35},
+          {"degrees": [5, 4, 5, 6], "weight": 0.25}
+        ],
+        "climactic": [
+          {"degrees": [6, 7, 8], "weight": 0.5},
+          {"degrees": [8, 7, 6, 5], "weight": 0.3},
+          {"degrees": [7, 8, 7], "weight": 0.2}
+        ],
+        "cadential": [
+          {"degrees": [5, 4, 3, 2, 1], "weight": 0.45},
+          {"degrees": [3, 2, 1], "weight": 0.35},
+          {"degrees": [7, 1], "weight": 0.2}
+        ]
+      },
+      "typical_start_degrees": [1, 5],
+      "typical_climax_degrees": [8],
+      "required_visits_per_section": [1, 3, 5],
+      "default_direction": "ascending_then_descending",
+      "special_notes": "Ajam starting from Ushayran (G), ascending character"
+    },
+
+    "bayati_shuri": {
+      "maqam_id": "bayati_shuri",
+      "zones": {
+        "lower": {"degrees": [-1, 0], "entry_probability": 0.1, "dwell": "short"},
+        "tonic": {"degrees": [1, 2], "entry_probability": 0.45, "dwell": "medium"},
+        "middle": {"degrees": [3, 4], "entry_probability": 0.3, "dwell": "medium"},
+        "upper": {"degrees": [5, 6, 7, 8], "entry_probability": 0.15, "dwell": "short"}
+      },
+      "zone_transitions": {
+        "lower": {"lower": 0.2, "tonic": 0.8, "middle": 0.0, "upper": 0.0},
+        "tonic": {"lower": 0.1, "tonic": 0.35, "middle": 0.55, "upper": 0.0},
+        "middle": {"lower": 0.0, "tonic": 0.45, "middle": 0.3, "upper": 0.25},
+        "upper": {"lower": 0.0, "tonic": 0.15, "middle": 0.55, "upper": 0.3}
+      },
+      "pitch_properties": {
+        "1": {"gravity": 1.0, "stability": "rest", "tendency": "neutral", "importance": "tonic", "can_end": true},
+        "2": {"gravity": 0.75, "stability": "unstable", "tendency": "descending", "importance": "characteristic", "can_end": false},
+        "3": {"gravity": 0.55, "stability": "passing", "tendency": "neutral", "importance": "secondary", "can_end": false},
+        "4": {"gravity": 0.85, "stability": "rest", "tendency": "neutral", "importance": "ghammaz", "can_end": true},
+        "5": {"gravity": 0.5, "stability": "unstable", "tendency": "descending", "importance": "secondary", "can_end": false},
+        "6": {"gravity": 0.4, "stability": "unstable", "tendency": "descending", "importance": "passing", "can_end": false},
+        "7": {"gravity": 0.8, "stability": "unstable", "tendency": "ascending", "importance": "leading", "can_end": false},
+        "8": {"gravity": 0.7, "stability": "rest", "tendency": "descending", "importance": "octave", "can_end": true}
+      },
+      "characteristic_phrases": {
+        "opening": [
+          {"degrees": [4, 3, 2, 1], "weight": 0.45},
+          {"degrees": [1, 2, 3, 4], "weight": 0.3},
+          {"degrees": [2, 1, 2, 3], "weight": 0.25}
+        ],
+        "transitional": [
+          {"degrees": [4, 5, 6, 7], "weight": 0.4},
+          {"degrees": [4, 5, 4, 3], "weight": 0.35},
+          {"degrees": [3, 4, 5, 6], "weight": 0.25}
+        ],
+        "climactic": [
+          {"degrees": [6, 7, 8], "weight": 0.45},
+          {"degrees": [7, 8, 7, 6], "weight": 0.35},
+          {"degrees": [8, 7, 6, 5], "weight": 0.2}
+        ],
+        "cadential": [
+          {"degrees": [4, 3, 2, 1], "weight": 0.5},
+          {"degrees": [2, 1, 2, 1], "weight": 0.3},
+          {"degrees": [3, 2, 1], "weight": 0.2}
+        ]
+      },
+      "typical_start_degrees": [4, 1],
+      "typical_climax_degrees": [7, 8],
+      "required_visits_per_section": [1, 2, 4, 7],
+      "default_direction": "descending_primary",
+      "special_notes": "Bayati with Hijaz upper jins - dramatic raised 7th degree"
+    },
+
+    "farahfaza": {
+      "maqam_id": "farahfaza",
+      "zones": {
+        "lower": {"degrees": [-1, 0], "entry_probability": 0.08, "dwell": "short"},
+        "tonic": {"degrees": [1, 2, 3], "entry_probability": 0.38, "dwell": "medium"},
+        "middle": {"degrees": [4, 5], "entry_probability": 0.35, "dwell": "medium"},
+        "upper": {"degrees": [6, 7, 8], "entry_probability": 0.19, "dwell": "medium"}
+      },
+      "zone_transitions": {
+        "lower": {"lower": 0.15, "tonic": 0.85, "middle": 0.0, "upper": 0.0},
+        "tonic": {"lower": 0.08, "tonic": 0.32, "middle": 0.55, "upper": 0.05},
+        "middle": {"lower": 0.0, "tonic": 0.3, "middle": 0.35, "upper": 0.35},
+        "upper": {"lower": 0.0, "tonic": 0.1, "middle": 0.5, "upper": 0.4}
+      },
+      "pitch_properties": {
+        "1": {"gravity": 1.0, "stability": "rest", "tendency": "neutral", "importance": "tonic", "can_end": true},
+        "2": {"gravity": 0.55, "stability": "passing", "tendency": "neutral", "importance": "secondary", "can_end": false},
+        "3": {"gravity": 0.7, "stability": "semi-stable", "tendency": "descending", "importance": "characteristic", "can_end": false},
+        "4": {"gravity": 0.5, "stability": "passing", "tendency": "ascending", "importance": "passing", "can_end": false},
+        "5": {"gravity": 0.9, "stability": "rest", "tendency": "neutral", "importance": "ghammaz", "can_end": true},
+        "6": {"gravity": 0.75, "stability": "unstable", "tendency": "descending", "importance": "characteristic_upper", "can_end": false},
+        "7": {"gravity": 0.8, "stability": "unstable", "tendency": "ascending", "importance": "leading", "can_end": false},
+        "8": {"gravity": 0.85, "stability": "rest", "tendency": "descending", "importance": "octave", "can_end": true}
+      },
+      "characteristic_phrases": {
+        "opening": [
+          {"degrees": [5, 4, 3, 2, 1], "weight": 0.4},
+          {"degrees": [1, 2, 3, 4, 5], "weight": 0.35},
+          {"degrees": [1, 3, 5], "weight": 0.25}
+        ],
+        "transitional": [
+          {"degrees": [5, 6, 7, 8], "weight": 0.4},
+          {"degrees": [5, 6, 5, 4], "weight": 0.35},
+          {"degrees": [4, 5, 6, 7], "weight": 0.25}
+        ],
+        "climactic": [
+          {"degrees": [6, 7, 8], "weight": 0.45},
+          {"degrees": [8, 7, 6, 5], "weight": 0.35},
+          {"degrees": [7, 8, 7, 6], "weight": 0.2}
+        ],
+        "cadential": [
+          {"degrees": [5, 4, 3, 2, 1], "weight": 0.45},
+          {"degrees": [3, 2, 1], "weight": 0.35},
+          {"degrees": [7, 1], "weight": 0.2}
+        ]
+      },
+      "typical_start_degrees": [5, 1],
+      "typical_climax_degrees": [8],
+      "required_visits_per_section": [1, 3, 5, 7],
+      "default_direction": "ascending_then_descending",
+      "special_notes": "Nahawand with Hijaz upper - dramatic augmented second in upper register"
+    },
+
+    "nawa_athar": {
+      "maqam_id": "nawa_athar",
+      "zones": {
+        "lower": {"degrees": [-1, 0], "entry_probability": 0.08, "dwell": "short"},
+        "tonic": {"degrees": [1, 2, 3], "entry_probability": 0.38, "dwell": "medium"},
+        "middle": {"degrees": [4, 5], "entry_probability": 0.35, "dwell": "medium"},
+        "upper": {"degrees": [6, 7, 8], "entry_probability": 0.19, "dwell": "short"}
+      },
+      "zone_transitions": {
+        "lower": {"lower": 0.15, "tonic": 0.85, "middle": 0.0, "upper": 0.0},
+        "tonic": {"lower": 0.08, "tonic": 0.35, "middle": 0.55, "upper": 0.02},
+        "middle": {"lower": 0.0, "tonic": 0.3, "middle": 0.4, "upper": 0.3},
+        "upper": {"lower": 0.0, "tonic": 0.1, "middle": 0.55, "upper": 0.35}
+      },
+      "pitch_properties": {
+        "1": {"gravity": 1.0, "stability": "rest", "tendency": "neutral", "importance": "tonic", "can_end": true},
+        "2": {"gravity": 0.55, "stability": "passing", "tendency": "neutral", "importance": "secondary", "can_end": false},
+        "3": {"gravity": 0.65, "stability": "semi-stable", "tendency": "descending", "importance": "characteristic", "can_end": false},
+        "4": {"gravity": 0.8, "stability": "unstable", "tendency": "ascending", "importance": "characteristic_aug", "can_end": false},
+        "5": {"gravity": 0.9, "stability": "rest", "tendency": "neutral", "importance": "ghammaz", "can_end": true},
+        "6": {"gravity": 0.75, "stability": "unstable", "tendency": "descending", "importance": "characteristic_upper", "can_end": false},
+        "7": {"gravity": 0.8, "stability": "unstable", "tendency": "ascending", "importance": "leading", "can_end": false},
+        "8": {"gravity": 0.8, "stability": "rest", "tendency": "descending", "importance": "octave", "can_end": true}
+      },
+      "characteristic_phrases": {
+        "opening": [
+          {"degrees": [1, 2, 3, 4, 5], "weight": 0.4},
+          {"degrees": [5, 4, 3, 2, 1], "weight": 0.35},
+          {"degrees": [1, 3, 4, 5], "weight": 0.25}
+        ],
+        "transitional": [
+          {"degrees": [5, 6, 7, 8], "weight": 0.4},
+          {"degrees": [5, 6, 5, 4, 3], "weight": 0.35},
+          {"degrees": [3, 4, 5, 6], "weight": 0.25}
+        ],
+        "climactic": [
+          {"degrees": [6, 7, 8], "weight": 0.45},
+          {"degrees": [8, 7, 6, 5], "weight": 0.35},
+          {"degrees": [7, 8, 7], "weight": 0.2}
+        ],
+        "cadential": [
+          {"degrees": [5, 4, 3, 2, 1], "weight": 0.45},
+          {"degrees": [4, 3, 2, 1], "weight": 0.35},
+          {"degrees": [3, 2, 1], "weight": 0.2}
+        ]
+      },
+      "typical_start_degrees": [1, 5],
+      "typical_climax_degrees": [8],
+      "required_visits_per_section": [1, 4, 5, 7],
+      "default_direction": "ascending_then_descending",
+      "special_notes": "Double augmented seconds - Nikriz lower with Hijaz upper, very dramatic"
+    },
+
+    "suznak": {
+      "maqam_id": "suznak",
+      "zones": {
+        "lower": {"degrees": [-1, 0], "entry_probability": 0.05, "dwell": "short"},
+        "tonic": {"degrees": [1, 2, 3], "entry_probability": 0.4, "dwell": "medium"},
+        "middle": {"degrees": [4, 5], "entry_probability": 0.35, "dwell": "medium"},
+        "upper": {"degrees": [6, 7, 8], "entry_probability": 0.2, "dwell": "medium"}
+      },
+      "zone_transitions": {
+        "lower": {"lower": 0.15, "tonic": 0.85, "middle": 0.0, "upper": 0.0},
+        "tonic": {"lower": 0.05, "tonic": 0.35, "middle": 0.55, "upper": 0.05},
+        "middle": {"lower": 0.0, "tonic": 0.3, "middle": 0.35, "upper": 0.35},
+        "upper": {"lower": 0.0, "tonic": 0.1, "middle": 0.5, "upper": 0.4}
+      },
+      "pitch_properties": {
+        "1": {"gravity": 1.0, "stability": "rest", "tendency": "neutral", "importance": "tonic", "can_end": true},
+        "2": {"gravity": 0.6, "stability": "passing", "tendency": "neutral", "importance": "secondary", "can_end": false},
+        "3": {"gravity": 0.75, "stability": "semi-stable", "tendency": "descending", "importance": "characteristic", "can_end": true},
+        "4": {"gravity": 0.5, "stability": "passing", "tendency": "ascending", "importance": "passing", "can_end": false},
+        "5": {"gravity": 0.9, "stability": "rest", "tendency": "neutral", "importance": "ghammaz", "can_end": true},
+        "6": {"gravity": 0.75, "stability": "unstable", "tendency": "descending", "importance": "characteristic_upper", "can_end": false},
+        "7": {"gravity": 0.8, "stability": "unstable", "tendency": "ascending", "importance": "leading", "can_end": false},
+        "8": {"gravity": 0.85, "stability": "rest", "tendency": "descending", "importance": "octave", "can_end": true}
+      },
+      "characteristic_phrases": {
+        "opening": [
+          {"degrees": [1, 2, 3, 4, 5], "weight": 0.4},
+          {"degrees": [5, 4, 3, 2, 1], "weight": 0.3},
+          {"degrees": [1, 3, 2, 3, 4, 5], "weight": 0.3}
+        ],
+        "transitional": [
+          {"degrees": [5, 6, 7, 8], "weight": 0.4},
+          {"degrees": [5, 6, 5, 4, 3], "weight": 0.35},
+          {"degrees": [3, 4, 5, 6, 7], "weight": 0.25}
+        ],
+        "climactic": [
+          {"degrees": [6, 7, 8], "weight": 0.45},
+          {"degrees": [8, 7, 6, 5], "weight": 0.35},
+          {"degrees": [7, 8, 7, 6], "weight": 0.2}
+        ],
+        "cadential": [
+          {"degrees": [5, 4, 3, 2, 1], "weight": 0.45},
+          {"degrees": [3, 2, 1], "weight": 0.35},
+          {"degrees": [2, 3, 2, 1], "weight": 0.2}
+        ]
+      },
+      "typical_start_degrees": [1, 5],
+      "typical_climax_degrees": [8],
+      "required_visits_per_section": [1, 3, 5, 7],
+      "default_direction": "ascending_then_descending",
+      "special_notes": "Rast with Hijaz upper - combines the balanced Rast lower with dramatic upper"
+    },
+
+    "huzam": {
+      "maqam_id": "huzam",
+      "zones": {
+        "lower": {"degrees": [-2, -1, 0], "entry_probability": 0.2, "dwell": "medium"},
+        "tonic": {"degrees": [1, 2], "entry_probability": 0.4, "dwell": "medium"},
+        "middle": {"degrees": [3, 4, 5], "entry_probability": 0.3, "dwell": "medium"},
+        "upper": {"degrees": [6, 7], "entry_probability": 0.1, "dwell": "short"}
+      },
+      "zone_transitions": {
+        "lower": {"lower": 0.3, "tonic": 0.7, "middle": 0.0, "upper": 0.0},
+        "tonic": {"lower": 0.15, "tonic": 0.35, "middle": 0.5, "upper": 0.0},
+        "middle": {"lower": 0.0, "tonic": 0.35, "middle": 0.4, "upper": 0.25},
+        "upper": {"lower": 0.0, "tonic": 0.1, "middle": 0.6, "upper": 0.3}
+      },
+      "pitch_properties": {
+        "1": {"gravity": 1.0, "stability": "rest", "tendency": "neutral", "importance": "tonic", "can_end": true},
+        "2": {"gravity": 0.6, "stability": "passing", "tendency": "neutral", "importance": "secondary", "can_end": false},
+        "3": {"gravity": 0.85, "stability": "rest", "tendency": "neutral", "importance": "ghammaz", "can_end": true},
+        "4": {"gravity": 0.8, "stability": "unstable", "tendency": "descending", "importance": "characteristic_aug", "can_end": false},
+        "5": {"gravity": 0.6, "stability": "semi-stable", "tendency": "descending", "importance": "secondary", "can_end": false},
+        "6": {"gravity": 0.45, "stability": "passing", "tendency": "descending", "importance": "passing", "can_end": false},
+        "7": {"gravity": 0.55, "stability": "rest", "tendency": "descending", "importance": "upper_rest", "can_end": false}
+      },
+      "characteristic_phrases": {
+        "opening": [
+          {"degrees": [1, 2, 3], "weight": 0.45},
+          {"degrees": [3, 2, 1], "weight": 0.35},
+          {"degrees": [1, 0, 1, 2, 3], "weight": 0.2}
+        ],
+        "transitional": [
+          {"degrees": [3, 4, 5, 4, 3], "weight": 0.45},
+          {"degrees": [3, 4, 5, 6], "weight": 0.3},
+          {"degrees": [5, 4, 3, 4], "weight": 0.25}
+        ],
+        "climactic": [
+          {"degrees": [5, 6, 7], "weight": 0.4},
+          {"degrees": [7, 6, 5, 4], "weight": 0.35},
+          {"degrees": [6, 7, 6, 5], "weight": 0.25}
+        ],
+        "cadential": [
+          {"degrees": [3, 2, 1], "weight": 0.5},
+          {"degrees": [2, 1, 0, 1], "weight": 0.3},
+          {"degrees": [4, 3, 2, 1], "weight": 0.2}
+        ]
+      },
+      "typical_start_degrees": [1, 3],
+      "typical_climax_degrees": [6, 7],
+      "required_visits_per_section": [1, 3, 4],
+      "default_direction": "oscillating",
+      "special_notes": "Sikah with Hijaz upper - mystical base with exotic augmented second"
+    },
+
+    "saba_zamzam": {
+      "maqam_id": "saba_zamzam",
+      "zones": {
+        "lower": {"degrees": [-1, 0], "entry_probability": 0.15, "dwell": "medium"},
+        "tonic": {"degrees": [1, 2], "entry_probability": 0.5, "dwell": "long"},
+        "middle": {"degrees": [3, 4], "entry_probability": 0.25, "dwell": "short"},
+        "upper": {"degrees": [5, 6, 7, 8], "entry_probability": 0.1, "dwell": "short"}
+      },
+      "zone_transitions": {
+        "lower": {"lower": 0.25, "tonic": 0.75, "middle": 0.0, "upper": 0.0},
+        "tonic": {"lower": 0.15, "tonic": 0.45, "middle": 0.4, "upper": 0.0},
+        "middle": {"lower": 0.05, "tonic": 0.5, "middle": 0.25, "upper": 0.2},
+        "upper": {"lower": 0.0, "tonic": 0.2, "middle": 0.55, "upper": 0.25}
+      },
+      "pitch_properties": {
+        "1": {"gravity": 1.0, "stability": "rest", "tendency": "neutral", "importance": "tonic", "can_end": true},
+        "2": {"gravity": 0.85, "stability": "semi-stable", "tendency": "descending", "importance": "characteristic", "can_end": false},
+        "3": {"gravity": 0.6, "stability": "unstable", "tendency": "descending", "importance": "secondary", "can_end": false},
+        "4": {"gravity": 0.75, "stability": "semi-stable", "tendency": "neutral", "importance": "ghammaz", "can_end": true},
+        "5": {"gravity": 0.5, "stability": "passing", "tendency": "descending", "importance": "passing", "can_end": false},
+        "6": {"gravity": 0.55, "stability": "passing", "tendency": "descending", "importance": "secondary", "can_end": false},
+        "7": {"gravity": 0.4, "stability": "unstable", "tendency": "ascending", "importance": "leading", "can_end": false},
+        "8": {"gravity": 0.6, "stability": "rest", "tendency": "descending", "importance": "octave", "can_end": true}
+      },
+      "characteristic_phrases": {
+        "opening": [
+          {"degrees": [4, 3, 2, 1], "weight": 0.5},
+          {"degrees": [1, 2, 3, 4], "weight": 0.25},
+          {"degrees": [2, 1, 2, 3], "weight": 0.25}
+        ],
+        "transitional": [
+          {"degrees": [4, 5, 4, 3, 2], "weight": 0.45},
+          {"degrees": [3, 4, 5, 6], "weight": 0.3},
+          {"degrees": [4, 3, 4, 3, 2], "weight": 0.25}
+        ],
+        "climactic": [
+          {"degrees": [5, 6, 7, 8], "weight": 0.35},
+          {"degrees": [8, 7, 6, 5, 4], "weight": 0.4},
+          {"degrees": [6, 5, 6, 7], "weight": 0.25}
+        ],
+        "cadential": [
+          {"degrees": [4, 3, 2, 1], "weight": 0.55},
+          {"degrees": [2, 1, 2, 1], "weight": 0.3},
+          {"degrees": [3, 2, 1], "weight": 0.15}
+        ]
+      },
+      "typical_start_degrees": [4, 1],
+      "typical_climax_degrees": [6, 7],
+      "required_visits_per_section": [1, 2, 4],
+      "default_direction": "descending_primary",
+      "special_notes": "Darker variant of Saba with lowered 2nd - more intense mourning quality"
+    },
+
+    "jiharkah": {
+      "maqam_id": "jiharkah",
+      "zones": {
+        "lower": {"degrees": [-1, 0], "entry_probability": 0.05, "dwell": "short"},
+        "tonic": {"degrees": [1, 2, 3], "entry_probability": 0.35, "dwell": "medium"},
+        "middle": {"degrees": [4, 5], "entry_probability": 0.4, "dwell": "medium"},
+        "upper": {"degrees": [6, 7, 8], "entry_probability": 0.2, "dwell": "medium"}
+      },
+      "zone_transitions": {
+        "lower": {"lower": 0.1, "tonic": 0.9, "middle": 0.0, "upper": 0.0},
+        "tonic": {"lower": 0.05, "tonic": 0.3, "middle": 0.6, "upper": 0.05},
+        "middle": {"lower": 0.0, "tonic": 0.25, "middle": 0.4, "upper": 0.35},
+        "upper": {"lower": 0.0, "tonic": 0.15, "middle": 0.45, "upper": 0.4}
+      },
+      "pitch_properties": {
+        "1": {"gravity": 1.0, "stability": "rest", "tendency": "neutral", "importance": "tonic", "can_end": true},
+        "2": {"gravity": 0.5, "stability": "passing", "tendency": "neutral", "importance": "secondary", "can_end": false},
+        "3": {"gravity": 0.65, "stability": "semi-stable", "tendency": "descending", "importance": "characteristic", "can_end": false},
+        "4": {"gravity": 0.7, "stability": "unstable", "tendency": "ascending", "importance": "lydian_fourth", "can_end": false},
+        "5": {"gravity": 0.9, "stability": "rest", "tendency": "neutral", "importance": "ghammaz", "can_end": true},
+        "6": {"gravity": 0.55, "stability": "passing", "tendency": "neutral", "importance": "secondary", "can_end": false},
+        "7": {"gravity": 0.7, "stability": "semi-stable", "tendency": "descending", "importance": "characteristic_upper", "can_end": false},
+        "8": {"gravity": 0.85, "stability": "rest", "tendency": "descending", "importance": "octave", "can_end": true}
+      },
+      "characteristic_phrases": {
+        "opening": [
+          {"degrees": [5, 4, 3, 2, 1], "weight": 0.4},
+          {"degrees": [1, 2, 3, 4, 5], "weight": 0.35},
+          {"degrees": [1, 3, 4, 5], "weight": 0.25}
+        ],
+        "transitional": [
+          {"degrees": [5, 6, 7, 8], "weight": 0.4},
+          {"degrees": [5, 6, 5, 4], "weight": 0.35},
+          {"degrees": [4, 5, 6, 7], "weight": 0.25}
+        ],
+        "climactic": [
+          {"degrees": [6, 7, 8], "weight": 0.45},
+          {"degrees": [8, 7, 6, 5], "weight": 0.35},
+          {"degrees": [7, 8, 7], "weight": 0.2}
+        ],
+        "cadential": [
+          {"degrees": [5, 4, 3, 2, 1], "weight": 0.45},
+          {"degrees": [4, 3, 2, 1], "weight": 0.35},
+          {"degrees": [3, 2, 1], "weight": 0.2}
+        ]
+      },
+      "typical_start_degrees": [5, 1],
+      "typical_climax_degrees": [8],
+      "required_visits_per_section": [1, 4, 5],
+      "default_direction": "ascending_then_descending",
+      "special_notes": "Lydian-like raised 4th degree - bright, elevated character"
+    },
+
+    "lami": {
+      "maqam_id": "lami",
+      "zones": {
+        "lower": {"degrees": [-1, 0], "entry_probability": 0.12, "dwell": "short"},
+        "tonic": {"degrees": [1, 2], "entry_probability": 0.45, "dwell": "medium"},
+        "middle": {"degrees": [3, 4], "entry_probability": 0.33, "dwell": "medium"},
+        "upper": {"degrees": [5, 6, 7], "entry_probability": 0.1, "dwell": "short"}
+      },
+      "zone_transitions": {
+        "lower": {"lower": 0.2, "tonic": 0.8, "middle": 0.0, "upper": 0.0},
+        "tonic": {"lower": 0.12, "tonic": 0.38, "middle": 0.5, "upper": 0.0},
+        "middle": {"lower": 0.0, "tonic": 0.45, "middle": 0.35, "upper": 0.2},
+        "upper": {"lower": 0.0, "tonic": 0.2, "middle": 0.55, "upper": 0.25}
+      },
+      "pitch_properties": {
+        "1": {"gravity": 1.0, "stability": "rest", "tendency": "neutral", "importance": "tonic", "can_end": true},
+        "2": {"gravity": 0.75, "stability": "unstable", "tendency": "descending", "importance": "characteristic", "can_end": false},
+        "3": {"gravity": 0.6, "stability": "passing", "tendency": "neutral", "importance": "secondary", "can_end": false},
+        "4": {"gravity": 0.85, "stability": "rest", "tendency": "neutral", "importance": "ghammaz", "can_end": true},
+        "5": {"gravity": 0.55, "stability": "passing", "tendency": "descending", "importance": "secondary", "can_end": false},
+        "6": {"gravity": 0.4, "stability": "unstable", "tendency": "descending", "importance": "passing", "can_end": false},
+        "7": {"gravity": 0.5, "stability": "unstable", "tendency": "descending", "importance": "upper", "can_end": false}
+      },
+      "characteristic_phrases": {
+        "opening": [
+          {"degrees": [4, 3, 2, 1], "weight": 0.5},
+          {"degrees": [1, 2, 3, 4], "weight": 0.3},
+          {"degrees": [2, 1, 2, 3], "weight": 0.2}
+        ],
+        "transitional": [
+          {"degrees": [4, 5, 4, 3], "weight": 0.45},
+          {"degrees": [3, 4, 5, 6], "weight": 0.3},
+          {"degrees": [4, 3, 4, 5], "weight": 0.25}
+        ],
+        "climactic": [
+          {"degrees": [5, 6, 7], "weight": 0.4},
+          {"degrees": [7, 6, 5, 4], "weight": 0.4},
+          {"degrees": [6, 7, 6], "weight": 0.2}
+        ],
+        "cadential": [
+          {"degrees": [4, 3, 2, 1], "weight": 0.55},
+          {"degrees": [3, 2, 1], "weight": 0.3},
+          {"degrees": [2, 1], "weight": 0.15}
+        ]
+      },
+      "typical_start_degrees": [4, 1],
+      "typical_climax_degrees": [6, 7],
+      "required_visits_per_section": [1, 4],
+      "default_direction": "descending_primary",
+      "special_notes": "Rare maqam with unique quarter-tone on 4th degree - ancient, unusual character"
+    },
+
+    "sikah_baladi": {
+      "maqam_id": "sikah_baladi",
+      "zones": {
+        "lower": {"degrees": [-2, -1, 0], "entry_probability": 0.15, "dwell": "medium"},
+        "tonic": {"degrees": [1, 2], "entry_probability": 0.45, "dwell": "medium"},
+        "middle": {"degrees": [3, 4], "entry_probability": 0.3, "dwell": "medium"},
+        "upper": {"degrees": [5, 6, 7], "entry_probability": 0.1, "dwell": "short"}
+      },
+      "zone_transitions": {
+        "lower": {"lower": 0.25, "tonic": 0.75, "middle": 0.0, "upper": 0.0},
+        "tonic": {"lower": 0.12, "tonic": 0.38, "middle": 0.5, "upper": 0.0},
+        "middle": {"lower": 0.0, "tonic": 0.4, "middle": 0.35, "upper": 0.25},
+        "upper": {"lower": 0.0, "tonic": 0.15, "middle": 0.55, "upper": 0.3}
+      },
+      "pitch_properties": {
+        "1": {"gravity": 1.0, "stability": "rest", "tendency": "neutral", "importance": "tonic", "can_end": true},
+        "2": {"gravity": 0.6, "stability": "passing", "tendency": "neutral", "importance": "secondary", "can_end": false},
+        "3": {"gravity": 0.7, "stability": "semi-stable", "tendency": "descending", "importance": "characteristic", "can_end": false},
+        "4": {"gravity": 0.85, "stability": "rest", "tendency": "neutral", "importance": "ghammaz", "can_end": true},
+        "5": {"gravity": 0.55, "stability": "passing", "tendency": "descending", "importance": "secondary", "can_end": false},
+        "6": {"gravity": 0.45, "stability": "passing", "tendency": "descending", "importance": "passing", "can_end": false},
+        "7": {"gravity": 0.5, "stability": "rest", "tendency": "descending", "importance": "upper_rest", "can_end": false}
+      },
+      "characteristic_phrases": {
+        "opening": [
+          {"degrees": [1, 2, 3, 4], "weight": 0.45},
+          {"degrees": [4, 3, 2, 1], "weight": 0.35},
+          {"degrees": [1, 0, 1, 2, 3], "weight": 0.2}
+        ],
+        "transitional": [
+          {"degrees": [4, 5, 4, 3], "weight": 0.45},
+          {"degrees": [3, 4, 5, 6], "weight": 0.3},
+          {"degrees": [4, 3, 4, 5], "weight": 0.25}
+        ],
+        "climactic": [
+          {"degrees": [5, 6, 7], "weight": 0.4},
+          {"degrees": [7, 6, 5, 4], "weight": 0.35},
+          {"degrees": [6, 7, 6, 5], "weight": 0.25}
+        ],
+        "cadential": [
+          {"degrees": [4, 3, 2, 1], "weight": 0.5},
+          {"degrees": [2, 1, 0, 1], "weight": 0.3},
+          {"degrees": [3, 2, 1], "weight": 0.2}
+        ]
+      },
+      "typical_start_degrees": [1, 4],
+      "typical_climax_degrees": [6, 7],
+      "required_visits_per_section": [1, 4],
+      "default_direction": "oscillating",
+      "special_notes": "Egyptian folk variant of Sikah - wider intervals, popular character"
+    },
+
+    "iraq": {
+      "maqam_id": "iraq",
+      "zones": {
+        "lower": {"degrees": [-2, -1, 0], "entry_probability": 0.15, "dwell": "medium"},
+        "tonic": {"degrees": [1, 2], "entry_probability": 0.45, "dwell": "medium"},
+        "middle": {"degrees": [3, 4], "entry_probability": 0.3, "dwell": "medium"},
+        "upper": {"degrees": [5, 6, 7], "entry_probability": 0.1, "dwell": "short"}
+      },
+      "zone_transitions": {
+        "lower": {"lower": 0.25, "tonic": 0.75, "middle": 0.0, "upper": 0.0},
+        "tonic": {"lower": 0.12, "tonic": 0.4, "middle": 0.48, "upper": 0.0},
+        "middle": {"lower": 0.0, "tonic": 0.4, "middle": 0.35, "upper": 0.25},
+        "upper": {"lower": 0.0, "tonic": 0.15, "middle": 0.6, "upper": 0.25}
+      },
+      "pitch_properties": {
+        "1": {"gravity": 1.0, "stability": "rest", "tendency": "neutral", "importance": "tonic", "can_end": true},
+        "2": {"gravity": 0.7, "stability": "passing", "tendency": "neutral", "importance": "characteristic", "can_end": false},
+        "3": {"gravity": 0.65, "stability": "semi-stable", "tendency": "descending", "importance": "secondary", "can_end": false},
+        "4": {"gravity": 0.85, "stability": "rest", "tendency": "neutral", "importance": "ghammaz", "can_end": true},
+        "5": {"gravity": 0.55, "stability": "passing", "tendency": "descending", "importance": "secondary", "can_end": false},
+        "6": {"gravity": 0.5, "stability": "passing", "tendency": "descending", "importance": "passing", "can_end": false},
+        "7": {"gravity": 0.6, "stability": "semi-stable", "tendency": "descending", "importance": "upper", "can_end": false}
+      },
+      "characteristic_phrases": {
+        "opening": [
+          {"degrees": [1, 2, 3, 4], "weight": 0.45},
+          {"degrees": [4, 3, 2, 1], "weight": 0.35},
+          {"degrees": [1, 0, 1, 2, 3], "weight": 0.2}
+        ],
+        "transitional": [
+          {"degrees": [4, 5, 4, 3], "weight": 0.45},
+          {"degrees": [3, 4, 5, 6], "weight": 0.3},
+          {"degrees": [4, 3, 4, 5], "weight": 0.25}
+        ],
+        "climactic": [
+          {"degrees": [5, 6, 7], "weight": 0.4},
+          {"degrees": [7, 6, 5, 4], "weight": 0.35},
+          {"degrees": [6, 7, 6, 5], "weight": 0.25}
+        ],
+        "cadential": [
+          {"degrees": [4, 3, 2, 1], "weight": 0.5},
+          {"degrees": [2, 1, 0, 1], "weight": 0.3},
+          {"degrees": [3, 2, 1], "weight": 0.2}
+        ]
+      },
+      "typical_start_degrees": [1, 4],
+      "typical_climax_degrees": [6, 7],
+      "required_visits_per_section": [1, 2, 4],
+      "default_direction": "oscillating",
+      "special_notes": "Symmetrical quarter-tone maqam - mystical, floating quality"
+    },
+
+    "yakah": {
+      "maqam_id": "yakah",
+      "zones": {
+        "lower": {"degrees": [-1, 0], "entry_probability": 0.1, "dwell": "short"},
+        "tonic": {"degrees": [1, 2, 3], "entry_probability": 0.4, "dwell": "medium"},
+        "middle": {"degrees": [4, 5], "entry_probability": 0.35, "dwell": "medium"},
+        "upper": {"degrees": [6, 7, 8], "entry_probability": 0.15, "dwell": "medium"}
+      },
+      "zone_transitions": {
+        "lower": {"lower": 0.15, "tonic": 0.85, "middle": 0.0, "upper": 0.0},
+        "tonic": {"lower": 0.1, "tonic": 0.35, "middle": 0.55, "upper": 0.0},
+        "middle": {"lower": 0.0, "tonic": 0.3, "middle": 0.4, "upper": 0.3},
+        "upper": {"lower": 0.0, "tonic": 0.15, "middle": 0.5, "upper": 0.35}
+      },
+      "pitch_properties": {
+        "1": {"gravity": 1.0, "stability": "rest", "tendency": "neutral", "importance": "tonic", "can_end": true},
+        "2": {"gravity": 0.6, "stability": "passing", "tendency": "neutral", "importance": "secondary", "can_end": false},
+        "3": {"gravity": 0.75, "stability": "semi-stable", "tendency": "descending", "importance": "characteristic", "can_end": true},
+        "4": {"gravity": 0.5, "stability": "passing", "tendency": "ascending", "importance": "passing", "can_end": false},
+        "5": {"gravity": 0.9, "stability": "rest", "tendency": "neutral", "importance": "ghammaz", "can_end": true},
+        "6": {"gravity": 0.55, "stability": "passing", "tendency": "neutral", "importance": "secondary", "can_end": false},
+        "7": {"gravity": 0.7, "stability": "semi-stable", "tendency": "descending", "importance": "characteristic_upper", "can_end": false},
+        "8": {"gravity": 0.85, "stability": "rest", "tendency": "descending", "importance": "octave", "can_end": true}
+      },
+      "characteristic_phrases": {
+        "opening": [
+          {"degrees": [1, 2, 3, 4, 5], "weight": 0.45},
+          {"degrees": [1, 3, 5], "weight": 0.3},
+          {"degrees": [1, 2, 3], "weight": 0.25}
+        ],
+        "transitional": [
+          {"degrees": [5, 6, 5, 4, 3], "weight": 0.4},
+          {"degrees": [3, 4, 5, 6, 7], "weight": 0.35},
+          {"degrees": [5, 4, 5, 6, 5], "weight": 0.25}
+        ],
+        "climactic": [
+          {"degrees": [6, 7, 8], "weight": 0.45},
+          {"degrees": [8, 7, 6, 5], "weight": 0.35},
+          {"degrees": [7, 8, 7, 6], "weight": 0.2}
+        ],
+        "cadential": [
+          {"degrees": [5, 4, 3, 2, 1], "weight": 0.45},
+          {"degrees": [3, 2, 1], "weight": 0.35},
+          {"degrees": [2, 3, 2, 1], "weight": 0.2}
+        ]
+      },
+      "typical_start_degrees": [1, 5],
+      "typical_climax_degrees": [8],
+      "required_visits_per_section": [1, 3, 5],
+      "default_direction": "ascending_then_descending",
+      "special_notes": "Rast starting from Yakah (G below) - ascending character, fundamental"
+    }
+  },
+
+  "generic_sayr_template": {
+    "description": "Template for maqamat without specific sayr definitions",
+    "zones": {
+      "lower": {"degrees": [-1, 0], "entry_probability": 0.1, "dwell": "short"},
+      "tonic": {"degrees": [1, 2], "entry_probability": 0.45, "dwell": "medium"},
+      "middle": {"degrees": [3, 4], "entry_probability": 0.3, "dwell": "medium"},
+      "upper": {"degrees": [5, 6, 7, 8], "entry_probability": 0.15, "dwell": "variable"}
+    },
+    "zone_transitions": {
+      "lower": {"lower": 0.2, "tonic": 0.8, "middle": 0.0, "upper": 0.0},
+      "tonic": {"lower": 0.1, "tonic": 0.35, "middle": 0.55, "upper": 0.0},
+      "middle": {"lower": 0.0, "tonic": 0.4, "middle": 0.3, "upper": 0.3},
+      "upper": {"lower": 0.0, "tonic": 0.15, "middle": 0.5, "upper": 0.35}
+    },
+    "pitch_properties_by_role": {
+      "tonic": {"gravity": 1.0, "stability": "rest", "can_end": true},
+      "ghammaz": {"gravity": 0.85, "stability": "rest", "can_end": true},
+      "characteristic": {"gravity": 0.7, "stability": "semi-stable", "can_end": false},
+      "secondary": {"gravity": 0.5, "stability": "passing", "can_end": false},
+      "passing": {"gravity": 0.35, "stability": "unstable", "can_end": false},
+      "leading": {"gravity": 0.6, "stability": "unstable", "tendency": "resolving", "can_end": false},
+      "octave": {"gravity": 0.8, "stability": "rest", "tendency": "descending", "can_end": true}
+    },
+    "default_direction": "ascending_then_descending"
+  }
+}

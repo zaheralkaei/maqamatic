@@ -1,0 +1,664 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "description": "Complete database of Arabic Maqam Ajnas (scale fragments)",
+    "divisions_per_quarter": 8,
+    "cents_per_semitone": 100
+  },
+  "ajnas": {
+    "ajam": {
+      "name": "Ajam",
+      "transliteration": "'Ajam",
+      "size": 4,
+      "intervals_semitones": [2, 2, 1],
+      "intervals_cents": [200, 200, 100],
+      "interval_pattern": "W W H",
+      "important_degrees": {
+        "tonic": {"degree": 1, "constraint": "hard"},
+        "ghammaz": {"degree": 4, "constraint": "hard"},
+        "leading_tone": {"degree": 7, "below_tonic": true, "constraint": "soft"},
+        "emphasis_notes": [1, 3, 4]
+      },
+      "behavior": {
+        "typical_range": {"low": 1, "high": 5},
+        "melodic_direction": "ascending",
+        "character": "bright, joyful, Western major feel"
+      },
+      "constraints": {
+        "hard": {"must_include_notes": [1, 4]},
+        "soft": {"resolution_target": 1, "avoid_intervals": []},
+        "preferences": {"entry_notes": [1, 5], "exit_notes": [1, 4]}
+      },
+      "musicxml": {
+        "default_tonic": {"step": "B", "octave": 3, "alter": -1},
+        "notes": [
+          {"step": "B", "octave": 3, "alter": -1},
+          {"step": "C", "octave": 4, "alter": 0},
+          {"step": "D", "octave": 4, "alter": 0},
+          {"step": "E", "octave": 4, "alter": -1}
+        ]
+      }
+    },
+    "bayati": {
+      "name": "Bayati",
+      "transliteration": "Bayātī",
+      "size": 4,
+      "intervals_semitones": [1.5, 1.5, 2],
+      "intervals_cents": [150, 150, 200],
+      "interval_pattern": "¾ ¾ W",
+      "important_degrees": {
+        "tonic": {"degree": 1, "constraint": "hard"},
+        "ghammaz": {"degree": 4, "constraint": "hard"},
+        "leading_tone": {"degree": 7, "below_tonic": true, "constraint": "soft"},
+        "emphasis_notes": [1, 3, 4]
+      },
+      "behavior": {
+        "typical_range": {"low": 1, "high": 5},
+        "melodic_direction": "descending",
+        "character": "earthy, contemplative, most common Arabic jins"
+      },
+      "constraints": {
+        "hard": {"must_include_notes": [1, 4]},
+        "soft": {"resolution_target": 1, "avoid_intervals": []},
+        "preferences": {"entry_notes": [4, 3], "exit_notes": [1]}
+      },
+      "musicxml": {
+        "default_tonic": {"step": "D", "octave": 4, "alter": 0},
+        "notes": [
+          {"step": "D", "octave": 4, "alter": 0},
+          {"step": "E", "octave": 4, "alter": -0.5},
+          {"step": "F", "octave": 4, "alter": 0},
+          {"step": "G", "octave": 4, "alter": 0}
+        ]
+      }
+    },
+    "hijaz": {
+      "name": "Hijaz",
+      "transliteration": "Ḥijāz",
+      "size": 4,
+      "intervals_semitones": [1, 3, 1],
+      "intervals_cents": [100, 300, 100],
+      "interval_pattern": "H 1½ H",
+      "important_degrees": {
+        "tonic": {"degree": 1, "constraint": "hard"},
+        "ghammaz": {"degree": 4, "constraint": "hard"},
+        "leading_tone": {"degree": 2, "constraint": "hard"},
+        "emphasis_notes": [1, 2, 4]
+      },
+      "behavior": {
+        "typical_range": {"low": 1, "high": 5},
+        "melodic_direction": "descending",
+        "character": "exotic, Middle Eastern, augmented second creates tension"
+      },
+      "constraints": {
+        "hard": {"must_include_notes": [1, 2, 4]},
+        "soft": {"resolution_target": 1, "avoid_intervals": []},
+        "preferences": {"entry_notes": [4, 5], "exit_notes": [1]}
+      },
+      "musicxml": {
+        "default_tonic": {"step": "D", "octave": 4, "alter": 0},
+        "notes": [
+          {"step": "D", "octave": 4, "alter": 0},
+          {"step": "E", "octave": 4, "alter": -1},
+          {"step": "F", "octave": 4, "alter": 1},
+          {"step": "G", "octave": 4, "alter": 0}
+        ]
+      }
+    },
+    "kurd": {
+      "name": "Kurd",
+      "transliteration": "Kurd",
+      "size": 4,
+      "intervals_semitones": [1, 2, 2],
+      "intervals_cents": [100, 200, 200],
+      "interval_pattern": "H W W",
+      "important_degrees": {
+        "tonic": {"degree": 1, "constraint": "hard"},
+        "ghammaz": {"degree": 4, "constraint": "hard"},
+        "leading_tone": {"degree": 7, "below_tonic": true, "constraint": "soft"},
+        "emphasis_notes": [1, 3, 4]
+      },
+      "behavior": {
+        "typical_range": {"low": 1, "high": 5},
+        "melodic_direction": "descending",
+        "character": "minor, Phrygian-like, melancholic"
+      },
+      "constraints": {
+        "hard": {"must_include_notes": [1, 4]},
+        "soft": {"resolution_target": 1, "avoid_intervals": []},
+        "preferences": {"entry_notes": [4, 3], "exit_notes": [1]}
+      },
+      "musicxml": {
+        "default_tonic": {"step": "D", "octave": 4, "alter": 0},
+        "notes": [
+          {"step": "D", "octave": 4, "alter": 0},
+          {"step": "E", "octave": 4, "alter": -1},
+          {"step": "F", "octave": 4, "alter": 0},
+          {"step": "G", "octave": 4, "alter": 0}
+        ]
+      }
+    },
+    "nahawand": {
+      "name": "Nahawand",
+      "transliteration": "Nahāwand",
+      "size": 4,
+      "intervals_semitones": [2, 1, 2],
+      "intervals_cents": [200, 100, 200],
+      "interval_pattern": "W H W",
+      "important_degrees": {
+        "tonic": {"degree": 1, "constraint": "hard"},
+        "ghammaz": {"degree": 4, "constraint": "hard"},
+        "leading_tone": {"degree": 7, "below_tonic": true, "constraint": "hard"},
+        "emphasis_notes": [1, 3, 4]
+      },
+      "behavior": {
+        "typical_range": {"low": 1, "high": 5},
+        "melodic_direction": "ascending",
+        "character": "natural minor, Western-like, soft"
+      },
+      "constraints": {
+        "hard": {"must_include_notes": [1, 4]},
+        "soft": {"resolution_target": 1, "avoid_intervals": []},
+        "preferences": {"entry_notes": [1, 5], "exit_notes": [1]}
+      },
+      "musicxml": {
+        "default_tonic": {"step": "C", "octave": 4, "alter": 0},
+        "notes": [
+          {"step": "C", "octave": 4, "alter": 0},
+          {"step": "D", "octave": 4, "alter": 0},
+          {"step": "E", "octave": 4, "alter": -1},
+          {"step": "F", "octave": 4, "alter": 0}
+        ]
+      }
+    },
+    "nikriz": {
+      "name": "Nikriz",
+      "transliteration": "Nīkrīz",
+      "size": 5,
+      "intervals_semitones": [2, 1, 3, 1],
+      "intervals_cents": [200, 100, 300, 100],
+      "interval_pattern": "W H 1½ H",
+      "important_degrees": {
+        "tonic": {"degree": 1, "constraint": "hard"},
+        "ghammaz": {"degree": 5, "constraint": "hard"},
+        "leading_tone": {"degree": 4, "constraint": "soft"},
+        "emphasis_notes": [1, 4, 5]
+      },
+      "behavior": {
+        "typical_range": {"low": 1, "high": 6},
+        "melodic_direction": "ascending",
+        "character": "exotic, augmented second, dramatic"
+      },
+      "constraints": {
+        "hard": {"must_include_notes": [1, 5]},
+        "soft": {"resolution_target": 1, "avoid_intervals": []},
+        "preferences": {"entry_notes": [1, 5], "exit_notes": [1, 5]}
+      },
+      "musicxml": {
+        "default_tonic": {"step": "C", "octave": 4, "alter": 0},
+        "notes": [
+          {"step": "C", "octave": 4, "alter": 0},
+          {"step": "D", "octave": 4, "alter": 0},
+          {"step": "E", "octave": 4, "alter": -1},
+          {"step": "F", "octave": 4, "alter": 1},
+          {"step": "G", "octave": 4, "alter": 0}
+        ]
+      }
+    },
+    "rast": {
+      "name": "Rast",
+      "transliteration": "Rāst",
+      "size": 5,
+      "intervals_semitones": [2, 1.5, 1.5, 2],
+      "intervals_cents": [200, 150, 150, 200],
+      "interval_pattern": "W ¾ ¾ W",
+      "important_degrees": {
+        "tonic": {"degree": 1, "constraint": "hard"},
+        "ghammaz": {"degree": 5, "constraint": "hard"},
+        "leading_tone": {"degree": 7, "below_tonic": true, "constraint": "soft"},
+        "emphasis_notes": [1, 3, 5]
+      },
+      "behavior": {
+        "typical_range": {"low": 1, "high": 6},
+        "melodic_direction": "ascending",
+        "character": "fundamental Arabic scale, balanced, versatile"
+      },
+      "constraints": {
+        "hard": {"must_include_notes": [1, 5]},
+        "soft": {"resolution_target": 1, "avoid_intervals": []},
+        "preferences": {"entry_notes": [1, 5], "exit_notes": [1]}
+      },
+      "musicxml": {
+        "default_tonic": {"step": "C", "octave": 4, "alter": 0},
+        "notes": [
+          {"step": "C", "octave": 4, "alter": 0},
+          {"step": "D", "octave": 4, "alter": 0},
+          {"step": "E", "octave": 4, "alter": -0.5},
+          {"step": "F", "octave": 4, "alter": 0},
+          {"step": "G", "octave": 4, "alter": 0}
+        ]
+      }
+    },
+    "sikah": {
+      "name": "Sikah",
+      "transliteration": "Sīkāh",
+      "size": 4,
+      "intervals_semitones": [1.5, 1.5, 2],
+      "intervals_cents": [150, 150, 200],
+      "interval_pattern": "¾ ¾ W",
+      "important_degrees": {
+        "tonic": {"degree": 1, "constraint": "hard"},
+        "ghammaz": {"degree": 4, "constraint": "hard"},
+        "leading_tone": {"degree": 7, "below_tonic": true, "constraint": "soft"},
+        "emphasis_notes": [1, 3, 4]
+      },
+      "behavior": {
+        "typical_range": {"low": 1, "high": 5},
+        "melodic_direction": "descending",
+        "character": "mystical, ethereal, unique tonic on E half-flat"
+      },
+      "constraints": {
+        "hard": {"must_include_notes": [1, 4]},
+        "soft": {"resolution_target": 1, "avoid_intervals": []},
+        "preferences": {"entry_notes": [4, 3], "exit_notes": [1]}
+      },
+      "musicxml": {
+        "default_tonic": {"step": "E", "octave": 4, "alter": -0.5},
+        "notes": [
+          {"step": "E", "octave": 4, "alter": -0.5},
+          {"step": "F", "octave": 4, "alter": 0},
+          {"step": "G", "octave": 4, "alter": 0},
+          {"step": "A", "octave": 4, "alter": 0}
+        ]
+      }
+    },
+    "saba": {
+      "name": "Saba",
+      "transliteration": "Ṣabā",
+      "size": 4,
+      "intervals_semitones": [1.5, 1.5, 2],
+      "intervals_cents": [150, 150, 200],
+      "interval_pattern": "¾ ¾ W",
+      "important_degrees": {
+        "tonic": {"degree": 1, "constraint": "hard"},
+        "ghammaz": {"degree": 4, "constraint": "hard"},
+        "leading_tone": {"degree": 3, "constraint": "soft"},
+        "emphasis_notes": [1, 2, 4]
+      },
+      "behavior": {
+        "typical_range": {"low": 1, "high": 5},
+        "melodic_direction": "descending",
+        "character": "mournful, lamenting, unique diminished structure"
+      },
+      "constraints": {
+        "hard": {"must_include_notes": [1, 4]},
+        "soft": {"resolution_target": 1, "avoid_intervals": []},
+        "preferences": {"entry_notes": [4, 3], "exit_notes": [1]}
+      },
+      "musicxml": {
+        "default_tonic": {"step": "D", "octave": 4, "alter": 0},
+        "notes": [
+          {"step": "D", "octave": 4, "alter": 0},
+          {"step": "E", "octave": 4, "alter": -0.5},
+          {"step": "F", "octave": 4, "alter": 0},
+          {"step": "G", "octave": 4, "alter": -1}
+        ]
+      }
+    },
+    "saba_zamzam": {
+      "name": "Saba Zamzam",
+      "transliteration": "Ṣabā Zamzam",
+      "size": 4,
+      "intervals_semitones": [1, 1.5, 1.5],
+      "intervals_cents": [100, 150, 150],
+      "interval_pattern": "H ¾ ¾",
+      "important_degrees": {
+        "tonic": {"degree": 1, "constraint": "hard"},
+        "ghammaz": {"degree": 4, "constraint": "hard"},
+        "leading_tone": {"degree": 3, "constraint": "soft"},
+        "emphasis_notes": [1, 2, 4]
+      },
+      "behavior": {
+        "typical_range": {"low": 1, "high": 5},
+        "melodic_direction": "descending",
+        "character": "variant of Saba, darker tone"
+      },
+      "constraints": {
+        "hard": {"must_include_notes": [1, 4]},
+        "soft": {"resolution_target": 1, "avoid_intervals": []},
+        "preferences": {"entry_notes": [4, 3], "exit_notes": [1]}
+      },
+      "musicxml": {
+        "default_tonic": {"step": "D", "octave": 4, "alter": 0},
+        "notes": [
+          {"step": "D", "octave": 4, "alter": 0},
+          {"step": "E", "octave": 4, "alter": -1},
+          {"step": "F", "octave": 4, "alter": 0},
+          {"step": "G", "octave": 4, "alter": -1}
+        ]
+      }
+    },
+    "ajam_upper": {
+      "name": "Upper Ajam",
+      "transliteration": "'Ajam (Upper)",
+      "size": 4,
+      "intervals_semitones": [2, 2, 1],
+      "intervals_cents": [200, 200, 100],
+      "interval_pattern": "W W H",
+      "important_degrees": {
+        "tonic": {"degree": 1, "constraint": "hard"},
+        "ghammaz": {"degree": 4, "constraint": "hard"},
+        "emphasis_notes": [1, 3, 4]
+      },
+      "behavior": {
+        "typical_range": {"low": 1, "high": 4},
+        "melodic_direction": "descending",
+        "character": "major tetrachord used in upper register"
+      },
+      "constraints": {
+        "hard": {"must_include_notes": [1, 4]},
+        "soft": {"resolution_target": 1, "avoid_intervals": []},
+        "preferences": {"entry_notes": [4, 3], "exit_notes": [1]}
+      },
+      "musicxml": {
+        "default_tonic": {"step": "G", "octave": 4, "alter": 0},
+        "notes": [
+          {"step": "G", "octave": 4, "alter": 0},
+          {"step": "A", "octave": 4, "alter": 0},
+          {"step": "B", "octave": 4, "alter": 0},
+          {"step": "C", "octave": 5, "alter": 0}
+        ]
+      }
+    },
+    "nahawand_upper": {
+      "name": "Upper Nahawand",
+      "transliteration": "Nahāwand (Upper)",
+      "size": 4,
+      "intervals_semitones": [2, 1, 2],
+      "intervals_cents": [200, 100, 200],
+      "interval_pattern": "W H W",
+      "important_degrees": {
+        "tonic": {"degree": 1, "constraint": "hard"},
+        "ghammaz": {"degree": 4, "constraint": "hard"},
+        "emphasis_notes": [1, 3, 4]
+      },
+      "behavior": {
+        "typical_range": {"low": 1, "high": 4},
+        "melodic_direction": "descending",
+        "character": "minor tetrachord used in upper register"
+      },
+      "constraints": {
+        "hard": {"must_include_notes": [1, 4]},
+        "soft": {"resolution_target": 1, "avoid_intervals": []},
+        "preferences": {"entry_notes": [4, 3], "exit_notes": [1]}
+      },
+      "musicxml": {
+        "default_tonic": {"step": "G", "octave": 4, "alter": 0},
+        "notes": [
+          {"step": "G", "octave": 4, "alter": 0},
+          {"step": "A", "octave": 4, "alter": 0},
+          {"step": "B", "octave": 4, "alter": -1},
+          {"step": "C", "octave": 5, "alter": 0}
+        ]
+      }
+    },
+    "hijaz_upper": {
+      "name": "Upper Hijaz",
+      "transliteration": "Ḥijāz (Upper)",
+      "size": 4,
+      "intervals_semitones": [1, 3, 1],
+      "intervals_cents": [100, 300, 100],
+      "interval_pattern": "H 1½ H",
+      "important_degrees": {
+        "tonic": {"degree": 1, "constraint": "hard"},
+        "ghammaz": {"degree": 4, "constraint": "hard"},
+        "emphasis_notes": [1, 2, 4]
+      },
+      "behavior": {
+        "typical_range": {"low": 1, "high": 4},
+        "melodic_direction": "descending",
+        "character": "augmented second tetrachord in upper register"
+      },
+      "constraints": {
+        "hard": {"must_include_notes": [1, 2, 4]},
+        "soft": {"resolution_target": 1, "avoid_intervals": []},
+        "preferences": {"entry_notes": [4], "exit_notes": [1]}
+      },
+      "musicxml": {
+        "default_tonic": {"step": "G", "octave": 4, "alter": 0},
+        "notes": [
+          {"step": "G", "octave": 4, "alter": 0},
+          {"step": "A", "octave": 4, "alter": -1},
+          {"step": "B", "octave": 4, "alter": 0},
+          {"step": "C", "octave": 5, "alter": 0}
+        ]
+      }
+    },
+    "athar_kurd": {
+      "name": "Athar Kurd",
+      "transliteration": "Athar Kurd",
+      "size": 4,
+      "intervals_semitones": [1, 3, 1],
+      "intervals_cents": [100, 300, 100],
+      "interval_pattern": "H 1½ H",
+      "important_degrees": {
+        "tonic": {"degree": 1, "constraint": "hard"},
+        "ghammaz": {"degree": 4, "constraint": "hard"},
+        "emphasis_notes": [1, 3, 4]
+      },
+      "behavior": {
+        "typical_range": {"low": 1, "high": 5},
+        "melodic_direction": "descending",
+        "character": "Kurd with augmented second, dramatic"
+      },
+      "constraints": {
+        "hard": {"must_include_notes": [1, 4]},
+        "soft": {"resolution_target": 1, "avoid_intervals": []},
+        "preferences": {"entry_notes": [4, 3], "exit_notes": [1]}
+      },
+      "musicxml": {
+        "default_tonic": {"step": "D", "octave": 4, "alter": 0},
+        "notes": [
+          {"step": "D", "octave": 4, "alter": 0},
+          {"step": "E", "octave": 4, "alter": -1},
+          {"step": "F", "octave": 4, "alter": 1},
+          {"step": "G", "octave": 4, "alter": 0}
+        ]
+      }
+    },
+    "mustaar": {
+      "name": "Musta'ar",
+      "transliteration": "Musta'ār",
+      "size": 3,
+      "intervals_semitones": [1.5, 2],
+      "intervals_cents": [150, 200],
+      "interval_pattern": "¾ W",
+      "important_degrees": {
+        "tonic": {"degree": 1, "constraint": "hard"},
+        "ghammaz": {"degree": 3, "constraint": "hard"},
+        "emphasis_notes": [1, 3]
+      },
+      "behavior": {
+        "typical_range": {"low": 1, "high": 3},
+        "melodic_direction": "ascending",
+        "character": "small jins, borrowed, ornamental"
+      },
+      "constraints": {
+        "hard": {"must_include_notes": [1, 3]},
+        "soft": {"resolution_target": 1, "avoid_intervals": []},
+        "preferences": {"entry_notes": [3], "exit_notes": [1]}
+      },
+      "musicxml": {
+        "default_tonic": {"step": "E", "octave": 4, "alter": -0.5},
+        "notes": [
+          {"step": "E", "octave": 4, "alter": -0.5},
+          {"step": "F", "octave": 4, "alter": 0},
+          {"step": "G", "octave": 4, "alter": 0}
+        ]
+      }
+    },
+    "jiharkah": {
+      "name": "Jiharkah",
+      "transliteration": "Jihārkāh",
+      "size": 5,
+      "intervals_semitones": [2, 2, 1, 2],
+      "intervals_cents": [200, 200, 100, 200],
+      "interval_pattern": "W W H W",
+      "important_degrees": {
+        "tonic": {"degree": 1, "constraint": "hard"},
+        "ghammaz": {"degree": 5, "constraint": "hard"},
+        "leading_tone": {"degree": 4, "constraint": "soft"},
+        "emphasis_notes": [1, 3, 5]
+      },
+      "behavior": {
+        "typical_range": {"low": 1, "high": 5},
+        "melodic_direction": "ascending",
+        "character": "Lydian-like, bright, elevated"
+      },
+      "constraints": {
+        "hard": {"must_include_notes": [1, 5]},
+        "soft": {"resolution_target": 1, "avoid_intervals": []},
+        "preferences": {"entry_notes": [1, 5], "exit_notes": [1]}
+      },
+      "musicxml": {
+        "default_tonic": {"step": "F", "octave": 4, "alter": 0},
+        "notes": [
+          {"step": "F", "octave": 4, "alter": 0},
+          {"step": "G", "octave": 4, "alter": 0},
+          {"step": "A", "octave": 4, "alter": 0},
+          {"step": "B", "octave": 4, "alter": -1},
+          {"step": "C", "octave": 5, "alter": 0}
+        ]
+      }
+    },
+    "lami": {
+      "name": "Lami",
+      "transliteration": "Lāmī",
+      "size": 4,
+      "intervals_semitones": [1, 2, 1.5],
+      "intervals_cents": [100, 200, 150],
+      "interval_pattern": "H W ¾",
+      "important_degrees": {
+        "tonic": {"degree": 1, "constraint": "hard"},
+        "ghammaz": {"degree": 4, "constraint": "hard"},
+        "emphasis_notes": [1, 3, 4]
+      },
+      "behavior": {
+        "typical_range": {"low": 1, "high": 4},
+        "melodic_direction": "descending",
+        "character": "rare, unusual quarter-tone ending"
+      },
+      "constraints": {
+        "hard": {"must_include_notes": [1, 4]},
+        "soft": {"resolution_target": 1, "avoid_intervals": []},
+        "preferences": {"entry_notes": [4], "exit_notes": [1]}
+      },
+      "musicxml": {
+        "default_tonic": {"step": "A", "octave": 3, "alter": 0},
+        "notes": [
+          {"step": "A", "octave": 3, "alter": 0},
+          {"step": "B", "octave": 3, "alter": -1},
+          {"step": "C", "octave": 4, "alter": 0},
+          {"step": "D", "octave": 4, "alter": -0.5}
+        ]
+      }
+    },
+    "sikah_baladi": {
+      "name": "Sikah Baladi",
+      "transliteration": "Sīkāh Baladī",
+      "size": 4,
+      "intervals_semitones": [1.5, 2, 1.5],
+      "intervals_cents": [150, 200, 150],
+      "interval_pattern": "¾ W ¾",
+      "important_degrees": {
+        "tonic": {"degree": 1, "constraint": "hard"},
+        "ghammaz": {"degree": 4, "constraint": "hard"},
+        "emphasis_notes": [1, 3, 4]
+      },
+      "behavior": {
+        "typical_range": {"low": 1, "high": 5},
+        "melodic_direction": "descending",
+        "character": "Egyptian folk variant of Sikah"
+      },
+      "constraints": {
+        "hard": {"must_include_notes": [1, 4]},
+        "soft": {"resolution_target": 1, "avoid_intervals": []},
+        "preferences": {"entry_notes": [4, 3], "exit_notes": [1]}
+      },
+      "musicxml": {
+        "default_tonic": {"step": "E", "octave": 4, "alter": -0.5},
+        "notes": [
+          {"step": "E", "octave": 4, "alter": -0.5},
+          {"step": "F", "octave": 4, "alter": 0},
+          {"step": "G", "octave": 4, "alter": 0},
+          {"step": "A", "octave": 4, "alter": -0.5}
+        ]
+      }
+    },
+    "nawa_athar": {
+      "name": "Nawa Athar",
+      "transliteration": "Nawā Athar",
+      "size": 5,
+      "intervals_semitones": [2, 1, 3, 1],
+      "intervals_cents": [200, 100, 300, 100],
+      "interval_pattern": "W H 1½ H",
+      "important_degrees": {
+        "tonic": {"degree": 1, "constraint": "hard"},
+        "ghammaz": {"degree": 5, "constraint": "hard"},
+        "emphasis_notes": [1, 4, 5]
+      },
+      "behavior": {
+        "typical_range": {"low": 1, "high": 6},
+        "melodic_direction": "ascending",
+        "character": "double augmented second, dramatic"
+      },
+      "constraints": {
+        "hard": {"must_include_notes": [1, 5]},
+        "soft": {"resolution_target": 1, "avoid_intervals": []},
+        "preferences": {"entry_notes": [1, 5], "exit_notes": [1, 5]}
+      },
+      "musicxml": {
+        "default_tonic": {"step": "C", "octave": 4, "alter": 0},
+        "notes": [
+          {"step": "C", "octave": 4, "alter": 0},
+          {"step": "D", "octave": 4, "alter": 0},
+          {"step": "E", "octave": 4, "alter": -1},
+          {"step": "F", "octave": 4, "alter": 1},
+          {"step": "G", "octave": 4, "alter": 0}
+        ]
+      }
+    },
+    "iraq": {
+      "name": "Iraq",
+      "transliteration": "'Irāq",
+      "size": 4,
+      "intervals_semitones": [1.5, 1.5, 1.5],
+      "intervals_cents": [150, 150, 150],
+      "interval_pattern": "¾ ¾ ¾",
+      "important_degrees": {
+        "tonic": {"degree": 1, "constraint": "hard"},
+        "ghammaz": {"degree": 4, "constraint": "hard"},
+        "emphasis_notes": [1, 2, 4]
+      },
+      "behavior": {
+        "typical_range": {"low": 1, "high": 4},
+        "melodic_direction": "descending",
+        "character": "symmetrical quarter-tones, mystical"
+      },
+      "constraints": {
+        "hard": {"must_include_notes": [1, 4]},
+        "soft": {"resolution_target": 1, "avoid_intervals": []},
+        "preferences": {"entry_notes": [4, 3], "exit_notes": [1]}
+      },
+      "musicxml": {
+        "default_tonic": {"step": "B", "octave": 3, "alter": -0.5},
+        "notes": [
+          {"step": "B", "octave": 3, "alter": -0.5},
+          {"step": "C", "octave": 4, "alter": 0},
+          {"step": "D", "octave": 4, "alter": -0.5},
+          {"step": "E", "octave": 4, "alter": -0.5}
+        ]
+      }
+    }
+  }
+}

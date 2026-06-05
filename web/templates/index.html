@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maqamatic - Arabic Maqam Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.2.96/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <!-- Decorative Pattern Overlay -->
+    <div class="pattern-overlay"></div>
+
+    <!-- Header -->
+    <header class="app-header">
+        <div class="logo">
+            <div class="logo-icon">
+                <svg viewBox="0 0 48 56" class="logo-svg">
+                    <ellipse cx="24" cy="35" rx="14" ry="18" fill="none" stroke="currentColor" stroke-width="1.6"/>
+                    <circle cx="24" cy="33" r="5" fill="none" stroke="currentColor" stroke-width="0.8" opacity="0.7"/>
+                    <circle cx="24" cy="33" r="2.5" fill="currentColor" opacity="0.25"/>
+                    <rect x="21" y="8" width="6" height="12" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/>
+                    <path d="M22 8 L21 3 Q24 1.5 27 3 L26 8" fill="none" stroke="currentColor" stroke-width="1.3"/>
+                    <line x1="20" y1="4" x2="18" y2="3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" opacity="0.6"/>
+                    <line x1="28" y1="4" x2="30" y2="3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" opacity="0.6"/>
+                    <line x1="23" y1="20" x2="23" y2="47" stroke="currentColor" stroke-width="0.4" opacity="0.35"/>
+                    <line x1="25" y1="20" x2="25" y2="47" stroke="currentColor" stroke-width="0.4" opacity="0.35"/>
+                    <line x1="20" y1="45" x2="28" y2="45" stroke="currentColor" stroke-width="1" opacity="0.5"/>
+                </svg>
+            </div>
+            <div class="logo-text">
+                <h1>Maqamatic</h1>
+                <span class="logo-tagline">مقامات عربية</span>
+            </div>
+        </div>
+        <nav class="header-nav">
+            <button class="nav-btn" id="btn-about" title="About">
+                <i class="mdi mdi-information-outline"></i>
+            </button>
+            <button class="nav-btn" id="btn-help" title="Help">
+                <i class="mdi mdi-help-circle-outline"></i>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="app-main">
+        <!-- Left Panel: Controls -->
+        <aside class="panel panel-controls">
+            <div class="panel-header">
+                <h2><i class="mdi mdi-tune-variant"></i> Settings</h2>
+                <button class="btn-icon" id="btn-reset" title="Reset to defaults">
+                    <i class="mdi mdi-refresh"></i>
+                </button>
+            </div>
+
+            <div class="panel-content">
+                <!-- ==================== PRESETS ==================== -->
+                <section class="control-section">
+                    <div class="section-header">
+                        <h3>Presets</h3>
+                        <span class="help-icon" data-tooltip="Quick starting points for different musical styles">
+                            <i class="mdi mdi-help-circle"></i>
+                        </span>
+                    </div>
+                    <div class="preset-grid" id="preset-grid"></div>
+                </section>
+
+                <!-- ==================== MAQAM ==================== -->
+                <section class="control-section">
+                    <div class="section-header">
+                        <h3>Maqam</h3>
+                        <span class="help-icon" data-tooltip="The melodic mode defining the scale, important notes, and characteristic phrases">
+                            <i class="mdi mdi-help-circle"></i>
+                        </span>
+                    </div>
+                    <div class="select-wrapper">
+                        <select id="select-maqam" class="styled-select">
+                            <option value="">Loading...</option>
+                        </select>
+                        <button class="btn-icon btn-info" id="btn-maqam-info" title="View maqam details">
+                            <i class="mdi mdi-information-outline"></i>
+                        </button>
+                    </div>
+                    <div class="maqam-preview" id="maqam-preview">
+                        <span class="preview-label">Mood:</span>
+                        <span class="preview-value" id="maqam-mood">&mdash;</span>
+                    </div>
+                </section>
+
+                <!-- ==================== IQA ==================== -->
+                <section class="control-section">
+                    <div class="section-header">
+                        <h3>Iqa' (Rhythm)</h3>
+                        <span class="help-icon" data-tooltip="The rhythmic cycle that provides the metric framework for the melody">
+                            <i class="mdi mdi-help-circle"></i>
+                        </span>
+                    </div>
+                    <div class="select-wrapper">
+                        <select id="select-iqa" class="styled-select">
+                            <option value="">Loading...</option>
+                        </select>
+                        <button class="btn-icon btn-info" id="btn-iqa-info" title="View iqa details">
+                            <i class="mdi mdi-information-outline"></i>
+                        </button>
+                    </div>
+                    <div class="iqa-override-notice" id="iqa-override-notice" style="display:none; padding: 4px 8px; font-size: 0.78em; color: var(--accent-gold, #d4a953); opacity: 0.85;">
+                        <i class="mdi mdi-information-outline"></i>
+                        <span id="iqa-override-text">Iqa set by form</span>
+                    </div>
+                    <div class="iqa-preview" id="iqa-preview">
+                        <span class="preview-label">Time:</span>
+                        <span class="preview-value" id="iqa-time">&mdash;</span>
+                    </div>
+                </section>
+
+                <!-- ==================== DURATION ==================== -->
+                <section class="control-section">
+                    <div class="section-header">
+                        <h3>Duration</h3>
+                        <span class="help-icon" data-tooltip="How long the generated piece will be, measured in beats">
+                            <i class="mdi mdi-help-circle"></i>
+                        </span>
+                    </div>
+                    <div class="slider-control">
+                        <input type="range" id="slider-beats" min="16" max="128" value="32" step="8">
+                        <div class="slider-labels">
+                            <span>16</span>
+                            <span class="slider-value" id="beats-value">32 beats</span>
+                            <span>128</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ==================== OVERALL STYLE ==================== -->
+                <section class="control-section">
+                    <div class="section-header collapsible" data-target="style-controls">
+                        <h3><i class="mdi mdi-chevron-down"></i> Overall Style</h3>
+                    </div>
+                    <div class="collapsible-content" id="style-controls">
+                        <div class="slider-group">
+                            <label>
+                                <span class="label-text">Tradition</span>
+                                <span class="help-icon" data-tooltip="How closely the melody follows classical maqam rules and conventions">
+                                    <i class="mdi mdi-help-circle"></i>
+                                </span>
+                            </label>
+                            <div class="slider-with-labels">
+                                <span class="label-min">Experimental</span>
+                                <input type="range" id="slider-tradition" min="0" max="100" value="70" step="5">
+                                <span class="label-max">Traditional</span>
+                            </div>
+                        </div>
+                        <div class="slider-group">
+                            <label>
+                                <span class="label-text">Energy</span>
+                                <span class="help-icon" data-tooltip="Overall intensity and activity level of the piece">
+                                    <i class="mdi mdi-help-circle"></i>
+                                </span>
+                            </label>
+                            <div class="slider-with-labels">
+                                <span class="label-min">Calm</span>
+                                <input type="range" id="slider-energy-level" min="0" max="100" value="50" step="5">
+                                <span class="label-max">Intense</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ==================== MELODIC BEHAVIOR ==================== -->
+                <section class="control-section">
+                    <div class="section-header collapsible" data-target="melodic-controls">
+                        <h3><i class="mdi mdi-chevron-down"></i> Melodic Behavior</h3>
+                    </div>
+                    <div class="collapsible-content" id="melodic-controls">
+                        <div class="slider-group">
+                            <label><span class="label-text">Density</span>
+                                <span class="help-icon" data-tooltip="How many notes are packed into each phrase"><i class="mdi mdi-help-circle"></i></span>
+                            </label>
+                            <div class="slider-with-labels">
+                                <span class="label-min">Sparse</span>
+                                <input type="range" id="slider-density" min="0" max="100" value="50" step="5">
+                                <span class="label-max">Dense</span>
+                            </div>
+                        </div>
+                        <div class="slider-group">
+                            <label><span class="label-text">Balance</span>
+                                <span class="help-icon" data-tooltip="How strictly ascending/descending motion is balanced"><i class="mdi mdi-help-circle"></i></span>
+                            </label>
+                            <div class="slider-with-labels">
+                                <span class="label-min">Free</span>
+                                <input type="range" id="slider-melodic-balance" min="0" max="100" value="75" step="5">
+                                <span class="label-max">Balanced</span>
+                            </div>
+                        </div>
+                        <div class="slider-group">
+                            <label><span class="label-text">Motion Type</span>
+                                <span class="help-icon" data-tooltip="Whether the melody moves by small steps or larger leaps"><i class="mdi mdi-help-circle"></i></span>
+                            </label>
+                            <div class="slider-with-labels">
+                                <span class="label-min">Leaping</span>
+                                <input type="range" id="slider-step-vs-jump" min="0" max="100" value="70" step="5">
+                                <span class="label-max">Stepwise</span>
+                            </div>
+                        </div>
+                        <div class="slider-group">
+                            <label><span class="label-text">Jins Adherence</span>
+                                <span class="help-icon" data-tooltip="How strictly phrases stay within jins (tetrachord) boundaries"><i class="mdi mdi-help-circle"></i></span>
+                            </label>
+                            <div class="slider-with-labels">
+                                <span class="label-min">Free</span>
+                                <input type="range" id="slider-jins-adherence" min="0" max="100" value="60" step="5">
+                                <span class="label-max">Strict</span>
+                            </div>
+                        </div>
+                        <div class="slider-group">
+                            <label><span class="label-text">Melodic Contour</span>
+                                <span class="help-icon" data-tooltip="Overall shape of the melodic lines"><i class="mdi mdi-help-circle"></i></span>
+                            </label>
+                            <div class="select-wrapper">
+                                <select id="select-contour-type" class="styled-select">
+                                    <option value="arch">Arch (up then down)</option>
+                                    <option value="wave">Wave (oscillating)</option>
+                                    <option value="ascending">Generally Ascending</option>
+                                    <option value="descending">Generally Descending</option>
+                                    <option value="flat">Centered</option>
+                                    <option value="free">Free</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="slider-group">
+                            <label><span class="label-text">Phrase Length</span>
+                                <span class="slider-numeric-value" id="val-phrase-length">8</span>
+                                <span class="help-icon" data-tooltip="Target number of notes per phrase"><i class="mdi mdi-help-circle"></i></span>
+                            </label>
+                            <div class="slider-with-labels">
+                                <span class="label-min">4</span>
+                                <input type="range" id="slider-phrase-length" min="4" max="16" value="8" step="1">
+                                <span class="label-max">16</span>
+                            </div>
+                        </div>
+                        <div class="slider-group">
+                            <label><span class="label-text">Repetition</span>
+                                <span class="help-icon" data-tooltip="How often motifs and phrases are repeated or varied"><i class="mdi mdi-help-circle"></i></span>
+                            </label>
+                            <div class="slider-with-labels">
+                                <span class="label-min">Varied</span>
+                                <input type="range" id="slider-repetition-amount" min="0" max="100" value="50" step="5">
+                                <span class="label-max">Repetitive</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ==================== FORM & STRUCTURE ==================== -->
+                <section class="control-section">
+                    <div class="section-header collapsible" data-target="structure-controls">
+                        <h3><i class="mdi mdi-chevron-down"></i> Form & Structure</h3>
+                    </div>
+                    <div class="collapsible-content" id="structure-controls">
+                        <div class="slider-group">
+                            <label><span class="label-text">Musical Form</span>
+                                <span class="help-icon" data-tooltip="Overall structure of the piece"><i class="mdi mdi-help-circle"></i></span>
+                            </label>
+                            <div class="select-wrapper">
+                                <select id="select-form-type" class="styled-select">
+                                    <option value="free">Free Form</option>
+                                    <option value="binary">Binary (AB)</option>
+                                    <option value="ternary">Ternary (ABA)</option>
+                                    <option value="rondo">Rondo (ABACA)</option>
+                                    <option value="through_composed">Through-composed</option>
+                                    <option value="strophic">Strophic (AAA)</option>
+                                    <option value="samai">Sama'i (K-T-K-T-K-T-K'-T)</option>
+                                    <option value="longa">Longa (K-T-K-T-K-T-K'-T)</option>
+                                    <option value="bashraf">Bashraf (K-T-K-T-K-T-K'-T)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="slider-group">
+                            <label><span class="label-text">Phase Structure</span>
+                                <span class="help-icon" data-tooltip="How rigidly the sayr (melodic journey) phases are applied"><i class="mdi mdi-help-circle"></i></span>
+                            </label>
+                            <div class="slider-with-labels">
+                                <span class="label-min">Fixed</span>
+                                <input type="range" id="slider-phase-mode" min="0" max="100" value="30" step="10">
+                                <span class="label-max">Dynamic</span>
+                            </div>
+                        </div>
+                        <div class="slider-group">
+                            <label><span class="label-text">Section Count</span>
+                                <span class="slider-numeric-value" id="val-section-count">4</span>
+                                <span class="help-icon" data-tooltip="Number of sections in the piece"><i class="mdi mdi-help-circle"></i></span>
+                            </label>
+                            <div class="slider-with-labels">
+                                <span class="label-min">2</span>
+                                <input type="range" id="slider-section-count" min="2" max="12" value="4" step="1">
+                                <span class="label-max">12</span>
+                            </div>
+                        </div>
+                        <div class="slider-group">
+                            <label><span class="label-text">Measures per Phrase</span>
+                                <span class="slider-numeric-value" id="val-phrase-measures">1</span>
+                                <span class="help-icon" data-tooltip="Number of measures in each phrase. Each section has 2 phrases."><i class="mdi mdi-help-circle"></i></span>
+                            </label>
+                            <div class="slider-with-labels">
+                                <span class="label-min">1</span>
+                                <input type="range" id="slider-phrase-measures" min="1" max="4" value="1" step="1">
+                                <span class="label-max">4</span>
+                            </div>
+                        </div>
+                        <div class="slider-group">
+                            <label><span class="label-text">Tension Arc</span>
+                                <span class="help-icon" data-tooltip="Overall tension shape across the piece"><i class="mdi mdi-help-circle"></i></span>
+                            </label>
+                            <div class="select-wrapper">
+                                <select id="select-tension-curve" class="styled-select">
+                                    <option value="arch">Arch (build and release)</option>
+                                    <option value="ascending">Rising tension</option>
+                                    <option value="descending">Falling tension</option>
+                                    <option value="flat">Even throughout</option>
+                                    <option value="wave">Multiple waves</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ==================== RHYTHM & DURATION ==================== -->
+                <section class="control-section">
+                    <div class="section-header collapsible" data-target="rhythm-controls">
+                        <h3><i class="mdi mdi-chevron-down"></i> Rhythm & Duration</h3>
+                    </div>
+                    <div class="collapsible-content" id="rhythm-controls">
+                        <div class="slider-group">
+                            <label><span class="label-text">Beat Alignment</span>
+                                <span class="help-icon" data-tooltip="How strictly notes align with the rhythmic grid"><i class="mdi mdi-help-circle"></i></span>
+                            </label>
+                            <div class="slider-with-labels">
+                                <span class="label-min">Syncopated</span>
+                                <input type="range" id="slider-rhythmic-alignment" min="0" max="100" value="70" step="5">
+                                <span class="label-max">On-beat</span>
+                            </div>
+                        </div>
+                        <div class="slider-group">
+                            <label><span class="label-text">Rhythmic Variety</span>
+                                <span class="help-icon" data-tooltip="Mix of different note durations"><i class="mdi mdi-help-circle"></i></span>
+                            </label>
+                            <div class="slider-with-labels">
+                                <span class="label-min">Uniform</span>
+                                <input type="range" id="slider-duration-variety" min="0" max="100" value="50" step="5">
+                                <span class="label-max">Varied</span>
+                            </div>
+                        </div>
+                        <div class="slider-group">
+                            <label><span class="label-text">Tempo Feel</span>
+                                <span class="help-icon" data-tooltip="How strictly the tempo is maintained"><i class="mdi mdi-help-circle"></i></span>
+                            </label>
+                            <div class="slider-with-labels">
+                                <span class="label-min">Rubato</span>
+                                <input type="range" id="slider-tempo-stability" min="0" max="100" value="70" step="5">
+                                <span class="label-max">Strict</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ==================== MODULATION ==================== -->
+                <section class="control-section">
+                    <div class="section-header collapsible" data-target="modulation-controls">
+                        <h3><i class="mdi mdi-chevron-down"></i> Modulation</h3>
+                    </div>
+                    <div class="collapsible-content" id="modulation-controls">
+                        <div class="slider-group">
+                            <label><span class="label-text">Modulation Amount</span>
+                                <span class="help-icon" data-tooltip="How often the melody shifts to related maqamat (0 = none)"><i class="mdi mdi-help-circle"></i></span>
+                            </label>
+                            <div class="slider-with-labels">
+                                <span class="label-min">None</span>
+                                <input type="range" id="slider-modulation-frequency" min="0" max="100" value="30" step="5">
+                                <span class="label-max">Frequent</span>
+                            </div>
+                        </div>
+                        <div class="slider-group">
+                            <label><span class="label-text">Distance</span>
+                                <span class="help-icon" data-tooltip="How far from the original maqam modulations can travel"><i class="mdi mdi-help-circle"></i></span>
+                            </label>
+                            <div class="slider-with-labels">
+                                <span class="label-min">Close</span>
+                                <input type="range" id="slider-modulation-distance" min="0" max="100" value="30" step="10">
+                                <span class="label-max">Distant</span>
+                            </div>
+                        </div>
+                        <div class="slider-group">
+                            <label><span class="label-text">Max Maqamat</span>
+                                <span class="slider-numeric-value" id="val-max-maqamat">2</span>
+                                <span class="help-icon" data-tooltip="Maximum number of different maqamat in the piece"><i class="mdi mdi-help-circle"></i></span>
+                            </label>
+                            <div class="slider-with-labels">
+                                <span class="label-min">1</span>
+                                <input type="range" id="slider-max-maqamat" min="1" max="5" value="2" step="1">
+                                <span class="label-max">5</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ==================== EXPRESSION ==================== -->
+                <section class="control-section">
+                    <div class="section-header collapsible" data-target="expression-controls">
+                        <h3><i class="mdi mdi-chevron-down"></i> Expression</h3>
+                    </div>
+                    <div class="collapsible-content" id="expression-controls">
+                        <div class="slider-group">
+                            <label><span class="label-text">Ornaments</span>
+                                <span class="help-icon" data-tooltip="Amount of melodic decoration like trills, mordents, and grace notes"><i class="mdi mdi-help-circle"></i></span>
+                            </label>
+                            <div class="slider-with-labels">
+                                <span class="label-min">Plain</span>
+                                <input type="range" id="slider-ornaments" min="0" max="100" value="50" step="5">
+                                <span class="label-max">Ornate</span>
+                            </div>
+                        </div>
+                        <div class="slider-group">
+                            <label><span class="label-text">Vibrato</span>
+                                <span class="help-icon" data-tooltip="Amount and depth of pitch vibrato on sustained notes"><i class="mdi mdi-help-circle"></i></span>
+                            </label>
+                            <div class="slider-with-labels">
+                                <span class="label-min">None</span>
+                                <input type="range" id="slider-vibrato-amount" min="0" max="100" value="40" step="5">
+                                <span class="label-max">Heavy</span>
+                            </div>
+                        </div>
+                        <div class="slider-group">
+                            <label><span class="label-text">Dynamics Range</span>
+                                <span class="help-icon" data-tooltip="Range from softest to loudest moments"><i class="mdi mdi-help-circle"></i></span>
+                            </label>
+                            <div class="slider-with-labels">
+                                <span class="label-min">Flat</span>
+                                <input type="range" id="slider-dynamics-range" min="0" max="100" value="60" step="5">
+                                <span class="label-max">Wide</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ==================== ADVANCED ==================== -->
+                <section class="control-section">
+                    <div class="section-header collapsible collapsed" data-target="advanced-controls">
+                        <h3><i class="mdi mdi-chevron-down"></i> Advanced</h3>
+                    </div>
+                    <div class="collapsible-content collapsed" id="advanced-controls">
+                        <div class="slider-group">
+                            <label><span class="label-text">Pitch Gravity</span>
+                                <span class="help-icon" data-tooltip="How strongly important scale degrees attract the melody"><i class="mdi mdi-help-circle"></i></span>
+                            </label>
+                            <div class="slider-with-labels">
+                                <span class="label-min">Weak</span>
+                                <input type="range" id="slider-pitch-gravity" min="0" max="100" value="70" step="5">
+                                <span class="label-max">Strong</span>
+                            </div>
+                        </div>
+                        <div class="slider-group">
+                            <label><span class="label-text">Transition Matrix</span>
+                                <span class="help-icon" data-tooltip="How much the statistical transition probabilities influence note selection"><i class="mdi mdi-help-circle"></i></span>
+                            </label>
+                            <div class="slider-with-labels">
+                                <span class="label-min">Low</span>
+                                <input type="range" id="slider-transition-weight" min="0" max="100" value="60" step="5">
+                                <span class="label-max">High</span>
+                            </div>
+                        </div>
+                        <div class="slider-group">
+                            <label><span class="label-text">Phrase Templates</span>
+                                <span class="help-icon" data-tooltip="How closely phrases follow characteristic maqam phrase patterns"><i class="mdi mdi-help-circle"></i></span>
+                            </label>
+                            <div class="slider-with-labels">
+                                <span class="label-min">Free</span>
+                                <input type="range" id="slider-phrase-adherence" min="0" max="100" value="50" step="5">
+                                <span class="label-max">Strict</span>
+                            </div>
+                        </div>
+                        <div class="slider-group">
+                            <label><span class="label-text">Random Seed</span>
+                                <span class="help-icon" data-tooltip="Set a number for reproducible generation (empty = random)"><i class="mdi mdi-help-circle"></i></span>
+                            </label>
+                            <div class="select-wrapper">
+                                <input type="text" id="input-randomness-seed" class="styled-select"
+                                       placeholder="Empty = random" inputmode="numeric" pattern="\d*">
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ==================== PERCUSSION ==================== -->
+                <section class="control-section">
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="check-percussion" checked>
+                            <span class="checkmark"></span>
+                            <span class="label-text">Include percussion track</span>
+                            <span class="help-icon" data-tooltip="Add a second track with the iqa rhythm pattern played on percussion"><i class="mdi mdi-help-circle"></i></span>
+                        </label>
+                    </div>
+                </section>
+
+                <!-- ==================== PARAMETER INSPECTOR ==================== -->
+                <section class="control-section">
+                    <div class="section-header collapsible" data-target="param-inspector">
+                        <h3><i class="mdi mdi-chevron-down"></i> Parameter Inspector</h3>
+                        <span class="help-icon" data-tooltip="See how the sliders map to the underlying generation parameters"><i class="mdi mdi-help-circle"></i></span>
+                    </div>
+                    <div class="collapsible-content" id="param-inspector">
+                        <div class="param-inspector-grid" id="inspector-grid">
+                            <!-- Style -->
+                            <div class="inspector-row">
+                                <span class="inspector-label">Rule Strictness</span>
+                                <span class="inspector-value" id="insp-rule-strictness">hard</span>
+                            </div>
+                            <div class="inspector-row">
+                                <span class="inspector-label">Violation Prob.</span>
+                                <div class="inspector-bar-wrap"><div class="inspector-bar" id="insp-bar-violation" style="width: 2%"></div></div>
+                                <span class="inspector-value" id="insp-violation-prob">0.02</span>
+                            </div>
+                            <div class="inspector-row">
+                                <span class="inspector-label">Energy Style</span>
+                                <span class="inspector-value" id="insp-energy-style">moderate</span>
+                            </div>
+                            <!-- Melodic -->
+                            <div class="inspector-divider"></div>
+                            <div class="inspector-row">
+                                <span class="inspector-label">Step Probability</span>
+                                <div class="inspector-bar-wrap"><div class="inspector-bar" id="insp-bar-step-prob" style="width: 70%"></div></div>
+                                <span class="inspector-value" id="insp-step-prob">0.70</span>
+                            </div>
+                            <div class="inspector-row">
+                                <span class="inspector-label">Note Density</span>
+                                <div class="inspector-bar-wrap"><div class="inspector-bar density" id="insp-bar-density" style="width: 50%"></div></div>
+                                <span class="inspector-value" id="insp-density">0.50</span>
+                            </div>
+                            <div class="inspector-row">
+                                <span class="inspector-label">Phrase Packing</span>
+                                <span class="inspector-value" id="insp-packing">normal</span>
+                            </div>
+                            <div class="inspector-row">
+                                <span class="inspector-label">Contour</span>
+                                <span class="inspector-value" id="insp-contour">arch</span>
+                            </div>
+                            <div class="inspector-row">
+                                <span class="inspector-label">Jins Boundary</span>
+                                <div class="inspector-bar-wrap"><div class="inspector-bar" id="insp-bar-jins" style="width: 60%"></div></div>
+                                <span class="inspector-value" id="insp-jins">moderate</span>
+                            </div>
+                            <!-- Structure -->
+                            <div class="inspector-divider"></div>
+                            <div class="inspector-row">
+                                <span class="inspector-label">Form</span>
+                                <span class="inspector-value" id="insp-form">free</span>
+                            </div>
+                            <div class="inspector-row">
+                                <span class="inspector-label">Sections</span>
+                                <span class="inspector-value" id="insp-sections">4</span>
+                            </div>
+                            <div class="inspector-row">
+                                <span class="inspector-label">Tension</span>
+                                <span class="inspector-value" id="insp-tension">arch</span>
+                            </div>
+                            <!-- Rhythm -->
+                            <div class="inspector-divider"></div>
+                            <div class="inspector-row">
+                                <span class="inspector-label">Rhythm Style</span>
+                                <span class="inspector-value" id="insp-rhythm-style">on-beat</span>
+                            </div>
+                            <div class="inspector-row">
+                                <span class="inspector-label">Tempo Feel</span>
+                                <span class="inspector-value" id="insp-tempo-feel">moderate</span>
+                            </div>
+                            <!-- Expression -->
+                            <div class="inspector-divider"></div>
+                            <div class="inspector-row">
+                                <span class="inspector-label">Ornament Preset</span>
+                                <span class="inspector-value" id="insp-ornament-preset">moderate</span>
+                            </div>
+                            <div class="inspector-row">
+                                <span class="inspector-label">Ornament Multiplier</span>
+                                <div class="inspector-bar-wrap"><div class="inspector-bar ornament" id="insp-bar-ornament" style="width: 30%"></div></div>
+                                <span class="inspector-value" id="insp-ornament-mult">0.60</span>
+                            </div>
+                            <!-- Modulation -->
+                            <div class="inspector-divider"></div>
+                            <div class="inspector-row">
+                                <span class="inspector-label">Modulations / Piece</span>
+                                <span class="inspector-value" id="insp-mod-count">1</span>
+                            </div>
+                            <div class="inspector-row">
+                                <span class="inspector-label">Mod. Depth</span>
+                                <span class="inspector-value" id="insp-mod-depth">brief tonicization</span>
+                            </div>
+                            <div class="inspector-row">
+                                <span class="inspector-label">Mod. Distance</span>
+                                <span class="inspector-value" id="insp-mod-distance">close</span>
+                            </div>
+                            <!-- Advanced -->
+                            <div class="inspector-divider"></div>
+                            <div class="inspector-row">
+                                <span class="inspector-label">Pitch Gravity</span>
+                                <div class="inspector-bar-wrap"><div class="inspector-bar" id="insp-bar-gravity" style="width: 70%"></div></div>
+                                <span class="inspector-value" id="insp-gravity">0.70</span>
+                            </div>
+                            <div class="inspector-row">
+                                <span class="inspector-label">Transition Wt.</span>
+                                <div class="inspector-bar-wrap"><div class="inspector-bar" id="insp-bar-transition" style="width: 60%"></div></div>
+                                <span class="inspector-value" id="insp-transition-weight">0.60</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Generate Button -->
+            <div class="panel-footer">
+                <button class="btn btn-primary btn-generate" id="btn-generate">
+                    <i class="mdi mdi-music-note-plus"></i>
+                    <span>Generate Melody</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Center Panel: Viewer -->
+        <section class="panel panel-viewer">
+            <div class="panel-header">
+                <h2><i class="mdi mdi-music-clef-treble"></i> Score</h2>
+                <div class="viewer-actions">
+                    <button class="btn-icon" id="btn-zoom-out" title="Zoom out"><i class="mdi mdi-magnify-minus"></i></button>
+                    <button class="btn-icon" id="btn-zoom-in" title="Zoom in"><i class="mdi mdi-magnify-plus"></i></button>
+                    <button class="btn-icon" id="btn-fullscreen" title="Fullscreen"><i class="mdi mdi-fullscreen"></i></button>
+                </div>
+            </div>
+            <div class="panel-content viewer-content" id="viewer-content">
+                <div class="empty-state" id="empty-state">
+                    <div class="empty-icon">
+                        <svg viewBox="0 0 120 140" class="arabesque-icon">
+                            <circle cx="60" cy="80" r="50" fill="none" stroke="currentColor" stroke-width="0.8" opacity="0.15"/>
+                            <ellipse cx="60" cy="88" rx="32" ry="42" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.6"/>
+                            <circle cx="60" cy="82" r="12" fill="none" stroke="currentColor" stroke-width="0.8" opacity="0.5"/>
+                            <circle cx="60" cy="82" r="8" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.35"/>
+                            <circle cx="60" cy="82" r="4" fill="currentColor" opacity="0.15"/>
+                            <rect x="55" y="18" width="10" height="30" rx="2" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.6"/>
+                            <path d="M56 18 L54 6 Q60 3 66 6 L64 18" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.6"/>
+                            <line x1="57" y1="48" x2="57" y2="118" stroke="currentColor" stroke-width="0.4" opacity="0.25"/>
+                            <line x1="60" y1="48" x2="60" y2="120" stroke="currentColor" stroke-width="0.4" opacity="0.25"/>
+                            <line x1="63" y1="48" x2="63" y2="118" stroke="currentColor" stroke-width="0.4" opacity="0.25"/>
+                            <line x1="54" y1="110" x2="66" y2="110" stroke="currentColor" stroke-width="1" opacity="0.45"/>
+                            <text x="88" y="36" font-size="14" fill="currentColor" opacity="0.25" font-family="serif">&#9834;</text>
+                            <text x="28" y="50" font-size="10" fill="currentColor" opacity="0.2" font-family="serif">&#9835;</text>
+                        </svg>
+                    </div>
+                    <h3>No melody generated yet</h3>
+                    <p>Configure your settings and click "Generate Melody" to create a new piece</p>
+                </div>
+                <div class="score-container" id="score-container" style="display: none;">
+                    <div id="osmd-container"></div>
+                </div>
+                <div class="loading-state" id="loading-state" style="display: none;">
+                    <div class="loading-spinner"></div>
+                    <p>Generating melody...</p>
+                </div>
+            </div>
+            <div class="panel-footer playback-controls" id="playback-controls">
+                <div class="transport">
+                    <button class="btn-icon btn-transport" id="btn-stop" title="Stop" disabled><i class="mdi mdi-stop"></i></button>
+                    <button class="btn-icon btn-transport btn-play" id="btn-play" title="Play" disabled><i class="mdi mdi-play"></i></button>
+                    <button class="btn-icon btn-transport" id="btn-loop" title="Loop" disabled><i class="mdi mdi-repeat"></i></button>
+                </div>
+                <div class="tempo-control">
+                    <label for="slider-tempo"><i class="mdi mdi-metronome"></i></label>
+                    <input type="range" id="slider-tempo" min="40" max="200" value="90" disabled>
+                    <span class="tempo-value" id="tempo-value">90 BPM</span>
+                </div>
+                <div class="export-controls">
+                    <button class="btn btn-secondary" id="btn-download" disabled><i class="mdi mdi-download"></i><span>Download</span></button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Right Panel: Info -->
+        <aside class="panel panel-info" id="panel-info">
+            <div class="panel-header">
+                <h2><i class="mdi mdi-book-open-page-variant"></i> Info</h2>
+                <button class="btn-icon" id="btn-close-info" title="Close"><i class="mdi mdi-close"></i></button>
+            </div>
+            <div class="panel-content" id="info-content">
+                <div class="info-placeholder"><p>Select a maqam or iqa to view detailed information</p></div>
+            </div>
+        </aside>
+    </main>
+
+    <!-- About Modal -->
+    <div class="modal" id="modal-about">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>About Maqamatic</h2>
+                <button class="btn-icon btn-close-modal"><i class="mdi mdi-close"></i></button>
+            </div>
+            <div class="modal-body">
+                <p>Maqamatic is a generative music tool for creating melodies in the Arabic Maqam tradition.</p>
+                <h4>Features</h4>
+                <ul>
+                    <li><strong>22 Maqamat</strong> - Complete modal definitions with quarter-tone support</li>
+                    <li><strong>20 Ajnas</strong> - The building blocks of maqam scales</li>
+                    <li><strong>38 Iqa'at</strong> - Traditional rhythmic cycles</li>
+                    <li><strong>Intelligent Generation</strong> - Uses sayr (melodic path) rules and transition matrices</li>
+                    <li><strong>24+ Parameters</strong> - Full control over melody, form, rhythm, modulation, and expression</li>
+                </ul>
+                <h4>How It Works</h4>
+                <p>The generator follows traditional rules for melodic motion, phrase structure, and maqam modulation, creating authentic-sounding melodies while allowing creative exploration through 24+ adjustable parameters.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Help Modal -->
+    <div class="modal" id="modal-help">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2>Help & Documentation</h2>
+                <button class="btn-icon btn-close-modal"><i class="mdi mdi-close"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="help-tabs">
+                    <button class="help-tab active" data-tab="basics">Basics</button>
+                    <button class="help-tab" data-tab="maqam">Maqam</button>
+                    <button class="help-tab" data-tab="iqa">Iqa'</button>
+                    <button class="help-tab" data-tab="parameters">Parameters</button>
+                </div>
+                <div class="help-content" id="help-basics">
+                    <h3>Getting Started</h3>
+                    <ol>
+                        <li><strong>Choose a Maqam</strong> - Select the melodic mode for your piece</li>
+                        <li><strong>Select an Iqa'</strong> - Pick a rhythmic cycle</li>
+                        <li><strong>Adjust Settings</strong> - Fine-tune style, melody, structure, and expression</li>
+                        <li><strong>Generate</strong> - Click to create your melody</li>
+                        <li><strong>Listen & Export</strong> - Play back and download as MusicXML</li>
+                    </ol>
+                </div>
+                <div class="help-content" id="help-maqam" style="display: none;">
+                    <h3>Understanding Maqam</h3>
+                    <p>A <strong>maqam</strong> (plural: maqamat) is a melodic mode used in Arabic music. Each maqam defines:</p>
+                    <ul>
+                        <li><strong>Scale</strong> - The specific pitches used, including quarter tones</li>
+                        <li><strong>Ajnas</strong> - Component tetrachords/pentachords</li>
+                        <li><strong>Important Degrees</strong> - Notes that receive special emphasis</li>
+                        <li><strong>Sayr</strong> - The characteristic melodic path and phrases</li>
+                    </ul>
+                </div>
+                <div class="help-content" id="help-iqa" style="display: none;">
+                    <h3>Understanding Iqa'</h3>
+                    <p>An <strong>iqa'</strong> (plural: iqa'at) is a rhythmic cycle providing the metric framework:</p>
+                    <ul>
+                        <li><strong>Dum</strong> - Low, resonant stroke (bass)</li>
+                        <li><strong>Tak</strong> - High, sharp stroke (treble)</li>
+                        <li><strong>Ka</strong> - Light filler stroke</li>
+                    </ul>
+                </div>
+                <div class="help-content" id="help-parameters" style="display: none;">
+                    <h3>Parameter Guide</h3>
+                    <dl>
+                        <dt>Tradition</dt><dd>Controls how strictly the generator follows classical maqam rules.</dd>
+                        <dt>Energy</dt><dd>Overall intensity. Low = calm, high = agitated.</dd>
+                        <dt>Density</dt><dd>Note density per phrase. Sparse = contemplative, dense = lively.</dd>
+                        <dt>Motion Type</dt><dd>Balance between stepwise motion and larger interval leaps.</dd>
+                        <dt>Musical Form</dt><dd>Structure: free, binary (AB), ternary (ABA), rondo (ABACA).</dd>
+                        <dt>Ornaments</dt><dd>Amount of melodic decoration like trills and mordents.</dd>
+                        <dt>Modulation</dt><dd>How often and how far the melody shifts to related maqamat.</dd>
+                        <dt>Pitch Gravity</dt><dd>How strongly important scale degrees attract the melody.</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/opensheetmusicdisplay@1.7.6/build/opensheetmusicdisplay.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tone@14.7.77/build/Tone.min.js"></script>
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

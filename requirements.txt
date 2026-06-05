@@ -1,0 +1,11 @@
+# Maqamatic - Python Dependencies
+
+# Web Framework
+Flask>=2.3.0
+flask-cors>=4.0.0
+
+# Production Server
+gunicorn>=21.0.0
+
+# Utilities (if needed for future features)
+# numpy>=1.24.0  # Uncomment if statistical analysis is needed

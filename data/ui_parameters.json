@@ -1,0 +1,833 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "description": "UI parameter definitions mapping musical concepts to user controls"
+  },
+
+  "parameter_groups": [
+    {
+      "id": "global_style",
+      "name": "Overall Style",
+      "description": "High-level controls affecting the entire generation",
+      "icon": "music_note",
+      "order": 1
+    },
+    {
+      "id": "melodic_behavior",
+      "name": "Melodic Behavior",
+      "description": "How the melody moves and shapes itself",
+      "icon": "show_chart",
+      "order": 2
+    },
+    {
+      "id": "structure",
+      "name": "Form & Structure",
+      "description": "Overall piece organization",
+      "icon": "view_module",
+      "order": 3
+    },
+    {
+      "id": "rhythm_duration",
+      "name": "Rhythm & Duration",
+      "description": "Timing and rhythmic feel",
+      "icon": "timer",
+      "order": 4
+    },
+    {
+      "id": "modulation",
+      "name": "Modulation & Maqam",
+      "description": "Maqam selection and modulation behavior",
+      "icon": "swap_horiz",
+      "order": 5
+    },
+    {
+      "id": "expression",
+      "name": "Expression & Ornaments",
+      "description": "Ornamentation and expressive elements",
+      "icon": "brush",
+      "order": 6
+    },
+    {
+      "id": "advanced",
+      "name": "Advanced",
+      "description": "Fine-tuning and expert controls",
+      "icon": "tune",
+      "order": 7
+    }
+  ],
+
+  "parameters": {
+
+    "tradition_vs_experimental": {
+      "id": "tradition_vs_experimental",
+      "group": "global_style",
+      "name": "Style",
+      "description": "How strictly to follow traditional maqam rules",
+      "type": "slider",
+      "min": 0,
+      "max": 100,
+      "default": 70,
+      "step": 5,
+      "labels": {
+        "0": "Experimental",
+        "50": "Balanced",
+        "100": "Traditional"
+      },
+      "affects": [
+        "universal_rules.melodic_motion.balance_principle.rules[*].strictness",
+        "characteristic_phrases.adherence",
+        "forbidden_patterns.enforcement"
+      ],
+      "mapping": {
+        "0-30": {"rule_strictness": "soft", "violation_probability": 0.4},
+        "31-70": {"rule_strictness": "medium", "violation_probability": 0.15},
+        "71-100": {"rule_strictness": "hard", "violation_probability": 0.02}
+      }
+    },
+
+    "energy_level": {
+      "id": "energy_level",
+      "group": "global_style",
+      "name": "Energy",
+      "description": "Overall intensity and activity level",
+      "type": "slider",
+      "min": 0,
+      "max": 100,
+      "default": 50,
+      "step": 5,
+      "labels": {
+        "0": "Calm",
+        "50": "Moderate",
+        "100": "Intense"
+      },
+      "affects": [
+        "duration_logic.factors.global_style",
+        "phase_system.fixed_phases[*].intensity_range",
+        "ornamentation.style_presets"
+      ],
+      "mapping": {
+        "0-25": {"style": "sustained", "base_tempo": 0.7, "ornament_density": 0.3},
+        "26-50": {"style": "flowing", "base_tempo": 1.0, "ornament_density": 0.6},
+        "51-75": {"style": "flowing", "base_tempo": 1.2, "ornament_density": 0.8},
+        "76-100": {"style": "agitated", "base_tempo": 1.4, "ornament_density": 1.0}
+      }
+    },
+
+    "melodic_balance": {
+      "id": "melodic_balance",
+      "group": "melodic_behavior",
+      "name": "Melodic Balance",
+      "description": "How balanced ascending/descending motion should be",
+      "type": "slider",
+      "min": 0,
+      "max": 100,
+      "default": 75,
+      "step": 5,
+      "labels": {
+        "0": "Free",
+        "50": "Moderate",
+        "100": "Strictly Balanced"
+      },
+      "affects": [
+        "universal_rules.melodic_motion.balance_principle"
+      ],
+      "mapping": {
+        "0-30": {"max_imbalance_ratio": 0.9, "return_probability": 0.3},
+        "31-70": {"max_imbalance_ratio": 0.7, "return_probability": 0.6},
+        "71-100": {"max_imbalance_ratio": 0.55, "return_probability": 0.85}
+      }
+    },
+
+    "step_vs_jump": {
+      "id": "step_vs_jump",
+      "group": "melodic_behavior",
+      "name": "Motion Type",
+      "description": "Preference for stepwise motion vs. jumps",
+      "type": "slider",
+      "min": 0,
+      "max": 100,
+      "default": 70,
+      "step": 5,
+      "labels": {
+        "0": "Leaping",
+        "50": "Mixed",
+        "100": "Stepwise"
+      },
+      "affects": [
+        "universal_rules.melodic_motion.step_vs_jump"
+      ],
+      "mapping": {
+        "0-30": {"step_probability": 0.4, "small_jump_probability": 0.4, "large_jump_probability": 0.2},
+        "31-70": {"step_probability": 0.6, "small_jump_probability": 0.3, "large_jump_probability": 0.1},
+        "71-100": {"step_probability": 0.8, "small_jump_probability": 0.18, "large_jump_probability": 0.02}
+      }
+    },
+
+    "jins_adherence": {
+      "id": "jins_adherence",
+      "group": "melodic_behavior",
+      "name": "Jins Adherence",
+      "description": "How strictly phrases stay within jins (tetrachord/pentachord) boundaries",
+      "type": "slider",
+      "min": 0,
+      "max": 100,
+      "default": 60,
+      "step": 5,
+      "labels": {
+        "0": "Free",
+        "50": "Moderate",
+        "100": "Strict"
+      },
+      "affects": [
+        "rule_engine.jins_rules.boundary_adjustment"
+      ],
+      "mapping": {
+        "0-30": {"same_jins_boost": 1.0, "cross_jins_penalty": 0.85, "behavior": "free_movement"},
+        "31-65": {"same_jins_boost": 1.15, "cross_jins_penalty": 0.5, "behavior": "moderate_respect"},
+        "66-100": {"same_jins_boost": 1.35, "cross_jins_penalty": 0.15, "behavior": "strict_boundaries"}
+      }
+    },
+
+    "contour_type": {
+      "id": "contour_type",
+      "group": "melodic_behavior",
+      "name": "Melodic Contour",
+      "description": "Overall shape of melodic lines",
+      "type": "dropdown",
+      "options": [
+        {"value": "arch", "label": "Arch (up then down)", "description": "Classic melodic shape"},
+        {"value": "wave", "label": "Wave (oscillating)", "description": "Multiple ups and downs"},
+        {"value": "ascending", "label": "Generally Ascending", "description": "Trending upward"},
+        {"value": "descending", "label": "Generally Descending", "description": "Trending downward"},
+        {"value": "flat", "label": "Centered", "description": "Stays in middle register"},
+        {"value": "free", "label": "Free", "description": "No contour preference"}
+      ],
+      "default": "arch",
+      "affects": [
+        "transition_matrices.direction_modifiers",
+        "phase_system.fixed_phases[*].direction_bias"
+      ]
+    },
+
+    "phrase_length": {
+      "id": "phrase_length",
+      "group": "melodic_behavior",
+      "name": "Phrase Length",
+      "description": "How long melodic phrases tend to be",
+      "type": "slider",
+      "min": 4,
+      "max": 16,
+      "default": 8,
+      "step": 1,
+      "unit": "notes",
+      "labels": {
+        "4": "Short",
+        "8": "Medium",
+        "16": "Long"
+      },
+      "affects": [
+        "universal_rules.phrase_structure.typical_length_notes"
+      ]
+    },
+
+    "repetition_amount": {
+      "id": "repetition_amount",
+      "group": "melodic_behavior",
+      "name": "Repetition",
+      "description": "How much melodic material is repeated",
+      "type": "slider",
+      "min": 0,
+      "max": 100,
+      "default": 50,
+      "step": 5,
+      "labels": {
+        "0": "Always New",
+        "50": "Balanced",
+        "100": "Very Repetitive"
+      },
+      "affects": [
+        "universal_rules.repetition_variation.types[*].probability_weight"
+      ],
+      "mapping": {
+        "0-30": {"exact_repetition": 0.05, "variation": 0.4, "development": 0.35, "new_material": 0.2},
+        "31-70": {"exact_repetition": 0.2, "variation": 0.35, "development": 0.25, "new_material": 0.2},
+        "71-100": {"exact_repetition": 0.4, "variation": 0.35, "development": 0.15, "new_material": 0.1}
+      }
+    },
+
+    "form_type": {
+      "id": "form_type",
+      "group": "structure",
+      "name": "Form",
+      "description": "Overall structure of the piece",
+      "type": "dropdown",
+      "options": [
+        {"value": "binary", "label": "Binary (AB)", "description": "Two contrasting sections"},
+        {"value": "ternary", "label": "Ternary (ABA)", "description": "Statement, contrast, return"},
+        {"value": "rondo", "label": "Rondo (ABACA)", "description": "Recurring theme with episodes"},
+        {"value": "through_composed", "label": "Through-composed", "description": "Continuous development"},
+        {"value": "strophic", "label": "Strophic (AAA)", "description": "Repeated with variations"},
+        {"value": "free", "label": "Free form", "description": "Generated structure"},
+        {"value": "samai", "label": "Sama'i (K-T-K-T-K-T-K'-T)", "description": "Ottoman classical, 10/8 with K4 in 3/4"},
+        {"value": "longa", "label": "Longa (K-T-K-T-K-T-K'-T)", "description": "Short jumpy form, 2/4 with K4 in 3/4"},
+        {"value": "bashraf", "label": "Bashraf (K-T-K-T-K-T-K'-T)", "description": "Didactic form, 4/4 with K4 in 3/4"}
+      ],
+      "default": "ternary",
+      "affects": [
+        "structure_grammar.base_forms"
+      ]
+    },
+
+    "phase_mode": {
+      "id": "phase_mode",
+      "group": "structure",
+      "name": "Phase Structure",
+      "description": "How the sayr phases are organized",
+      "type": "slider",
+      "min": 0,
+      "max": 100,
+      "default": 30,
+      "step": 10,
+      "labels": {
+        "0": "Fixed (5 phases)",
+        "50": "Semi-dynamic",
+        "100": "Fully Dynamic"
+      },
+      "affects": [
+        "phase_system.dynamic_nesting"
+      ],
+      "mapping": {
+        "0-30": {"nesting_enabled": false, "max_depth": 0},
+        "31-70": {"nesting_enabled": true, "max_depth": 1},
+        "71-100": {"nesting_enabled": true, "max_depth": 2}
+      }
+    },
+
+    "section_count": {
+      "id": "section_count",
+      "group": "structure",
+      "name": "Piece Length",
+      "description": "Approximate number of sections",
+      "type": "slider",
+      "min": 2,
+      "max": 12,
+      "default": 4,
+      "step": 1,
+      "unit": "sections",
+      "labels": {
+        "2": "Short",
+        "6": "Medium",
+        "12": "Long"
+      },
+      "affects": [
+        "structure_grammar.expansion_rules.max_total_sections"
+      ]
+    },
+
+    "phrase_length_measures": {
+      "id": "phrase_length_measures",
+      "group": "structure",
+      "name": "Measures per Phrase",
+      "description": "Number of measures in each phrase. Each section has 2 phrases.",
+      "type": "slider",
+      "min": 1,
+      "max": 4,
+      "default": 1,
+      "step": 1,
+      "unit": "measures",
+      "labels": {
+        "1": "Short",
+        "2": "Medium",
+        "4": "Long"
+      },
+      "affects": [
+        "phrase_structure.typical_length_measures"
+      ]
+    },
+
+    "tension_curve": {
+      "id": "tension_curve",
+      "group": "structure",
+      "name": "Tension Arc",
+      "description": "How tension builds and releases over the piece",
+      "type": "dropdown",
+      "options": [
+        {"value": "gradual_build", "label": "Gradual Build", "description": "Slowly increasing to late climax"},
+        {"value": "early_climax", "label": "Early Climax", "description": "Quick peak, long descent"},
+        {"value": "multiple_peaks", "label": "Multiple Peaks", "description": "Several climaxes"},
+        {"value": "arch", "label": "Arch", "description": "Build to middle, then resolve"},
+        {"value": "plateau", "label": "Plateau", "description": "Sustained intensity"},
+        {"value": "wave", "label": "Wave", "description": "Oscillating tension"}
+      ],
+      "default": "arch",
+      "affects": [
+        "phase_system.fixed_phases[*].intensity_range"
+      ]
+    },
+
+    "rhythmic_alignment": {
+      "id": "rhythmic_alignment",
+      "group": "rhythm_duration",
+      "name": "Beat Alignment",
+      "description": "How closely melody aligns with iqa' beats",
+      "type": "slider",
+      "min": 0,
+      "max": 100,
+      "default": 70,
+      "step": 5,
+      "labels": {
+        "0": "Syncopated",
+        "50": "Mixed",
+        "100": "On-beat"
+      },
+      "affects": [
+        "duration_logic.factors.metric_position"
+      ],
+      "mapping": {
+        "0-30": {"downbeat_multiplier": 0.8, "syncopation_probability": 0.6},
+        "31-70": {"downbeat_multiplier": 1.2, "syncopation_probability": 0.3},
+        "71-100": {"downbeat_multiplier": 1.6, "syncopation_probability": 0.1}
+      }
+    },
+
+    "duration_variety": {
+      "id": "duration_variety",
+      "group": "rhythm_duration",
+      "name": "Rhythmic Variety",
+      "description": "How varied note durations are",
+      "type": "slider",
+      "min": 0,
+      "max": 100,
+      "default": 50,
+      "step": 5,
+      "labels": {
+        "0": "Uniform",
+        "50": "Moderate",
+        "100": "Highly Varied"
+      },
+      "affects": [
+        "duration_logic.factors.neighbor_context",
+        "duration_logic.rhythmic_patterns"
+      ],
+      "mapping": {
+        "0-30": {"same_duration_tendency": 0.8, "pattern_variety": 0.3},
+        "31-70": {"same_duration_tendency": 0.5, "pattern_variety": 0.6},
+        "71-100": {"same_duration_tendency": 0.2, "pattern_variety": 0.9}
+      }
+    },
+
+    "tempo_stability": {
+      "id": "tempo_stability",
+      "group": "rhythm_duration",
+      "name": "Tempo Feel",
+      "description": "How steady the tempo feels",
+      "type": "slider",
+      "min": 0,
+      "max": 100,
+      "default": 70,
+      "step": 5,
+      "labels": {
+        "0": "Free (Rubato)",
+        "50": "Flexible",
+        "100": "Strict"
+      },
+      "affects": [
+        "duration_logic.factors.global_style.styles[*].variance"
+      ],
+      "mapping": {
+        "0-30": {"tempo_variance": 0.4, "rubato_enabled": true},
+        "31-70": {"tempo_variance": 0.2, "rubato_enabled": true},
+        "71-100": {"tempo_variance": 0.05, "rubato_enabled": false}
+      }
+    },
+
+    "iqa_selection": {
+      "id": "iqa_selection",
+      "group": "rhythm_duration",
+      "name": "Rhythmic Cycle",
+      "description": "Which iqa' to use",
+      "type": "dropdown_searchable",
+      "options_source": "iqaat.json",
+      "default": "maqsum",
+      "show_info": true,
+      "info_fields": ["time_signature.display", "characteristics.feel"]
+    },
+
+    "maqam_selection": {
+      "id": "maqam_selection",
+      "group": "modulation",
+      "name": "Starting Maqam",
+      "description": "Primary maqam for the piece",
+      "type": "dropdown_searchable",
+      "options_source": "maqamat.json",
+      "default": "bayati",
+      "show_info": true,
+      "info_fields": ["family", "characteristics.mood"]
+    },
+
+    "modulation_frequency": {
+      "id": "modulation_frequency",
+      "group": "modulation",
+      "name": "Modulation Amount",
+      "description": "How often to modulate to other maqamat",
+      "type": "slider",
+      "min": 0,
+      "max": 100,
+      "default": 30,
+      "step": 5,
+      "labels": {
+        "0": "None",
+        "50": "Moderate",
+        "100": "Frequent"
+      },
+      "affects": [
+        "modulation_system.modulation_depth",
+        "sayr.modulation_points[*].modulation_probability"
+      ],
+      "mapping": {
+        "0-15": {"modulations_per_piece": 0, "depth": "none"},
+        "16-40": {"modulations_per_piece": 1, "depth": "brief_tonicization"},
+        "41-70": {"modulations_per_piece": 2, "depth": "short_modulation"},
+        "71-100": {"modulations_per_piece": 4, "depth": "full_modulation"}
+      }
+    },
+
+    "modulation_distance": {
+      "id": "modulation_distance",
+      "group": "modulation",
+      "name": "Modulation Distance",
+      "description": "How distantly related modulation targets are",
+      "type": "slider",
+      "min": 0,
+      "max": 100,
+      "default": 30,
+      "step": 10,
+      "labels": {
+        "0": "Closely Related",
+        "50": "Moderate",
+        "100": "Distant"
+      },
+      "affects": [
+        "modulation_system.modulation_types"
+      ],
+      "mapping": {
+        "0-30": {"allowed_targets": "same_family", "pivot_required": true},
+        "31-70": {"allowed_targets": "related_families", "pivot_required": false},
+        "71-100": {"allowed_targets": "any", "pivot_required": false}
+      }
+    },
+
+    "max_maqamat": {
+      "id": "max_maqamat",
+      "group": "modulation",
+      "name": "Maximum Maqamat",
+      "description": "Maximum number of different maqamat to use",
+      "type": "slider",
+      "min": 1,
+      "max": 5,
+      "default": 2,
+      "step": 1,
+      "unit": "maqamat",
+      "labels": {
+        "1": "One only",
+        "3": "Several",
+        "5": "Many"
+      },
+      "affects": [
+        "modulation_system.modulation_depth"
+      ]
+    },
+
+    "ornamentation_density": {
+      "id": "ornamentation_density",
+      "group": "expression",
+      "name": "Ornamentation",
+      "description": "How much melodic decoration to add",
+      "type": "slider",
+      "min": 0,
+      "max": 100,
+      "default": 50,
+      "step": 5,
+      "labels": {
+        "0": "Plain",
+        "50": "Moderate",
+        "100": "Ornate"
+      },
+      "affects": [
+        "ornamentation.style_presets",
+        "ornamentation.types[*].probability"
+      ],
+      "mapping": {
+        "0-25": {"preset": "plain", "multiplier": 0.2},
+        "26-50": {"preset": "moderate", "multiplier": 0.6},
+        "51-75": {"preset": "ornate", "multiplier": 1.0},
+        "76-100": {"preset": "virtuosic", "multiplier": 1.5}
+      }
+    },
+
+    "vibrato_amount": {
+      "id": "vibrato_amount",
+      "group": "expression",
+      "name": "Vibrato",
+      "description": "Amount of pitch vibrato on sustained notes",
+      "type": "slider",
+      "min": 0,
+      "max": 100,
+      "default": 40,
+      "step": 5,
+      "labels": {
+        "0": "None",
+        "50": "Moderate",
+        "100": "Heavy"
+      },
+      "affects": [
+        "ornamentation.types.vibrato"
+      ],
+      "mapping": {
+        "0-20": {"probability": 0.1, "depth_cents": [5, 10]},
+        "21-50": {"probability": 0.4, "depth_cents": [10, 20]},
+        "51-80": {"probability": 0.6, "depth_cents": [15, 30]},
+        "81-100": {"probability": 0.8, "depth_cents": [20, 40]}
+      }
+    },
+
+    "dynamics_range": {
+      "id": "dynamics_range",
+      "group": "expression",
+      "name": "Dynamic Range",
+      "description": "Variation in loudness",
+      "type": "slider",
+      "min": 0,
+      "max": 100,
+      "default": 60,
+      "step": 5,
+      "labels": {
+        "0": "Flat",
+        "50": "Moderate",
+        "100": "Wide"
+      },
+      "affects": [
+        "expression.dynamics"
+      ],
+      "mapping": {
+        "0-30": {"min_velocity": 70, "max_velocity": 90},
+        "31-70": {"min_velocity": 50, "max_velocity": 110},
+        "71-100": {"min_velocity": 30, "max_velocity": 127}
+      }
+    },
+
+    "randomness_seed": {
+      "id": "randomness_seed",
+      "group": "advanced",
+      "name": "Random Seed",
+      "description": "Seed for reproducible generation (empty for random)",
+      "type": "text",
+      "default": "",
+      "placeholder": "Leave empty for random",
+      "validation": "integer_or_empty"
+    },
+
+    "pitch_gravity_strength": {
+      "id": "pitch_gravity_strength",
+      "group": "advanced",
+      "name": "Pitch Gravity",
+      "description": "How strongly important pitches attract the melody",
+      "type": "slider",
+      "min": 0,
+      "max": 100,
+      "default": 70,
+      "step": 5,
+      "labels": {
+        "0": "Weak",
+        "50": "Normal",
+        "100": "Strong"
+      },
+      "affects": [
+        "universal_rules.pitch_hierarchy",
+        "sayr.pitch_properties[*].gravity"
+      ]
+    },
+
+    "transition_matrix_weight": {
+      "id": "transition_matrix_weight",
+      "group": "advanced",
+      "name": "Transition Probability Weight",
+      "description": "How much the Markov matrix influences note selection",
+      "type": "slider",
+      "min": 0,
+      "max": 100,
+      "default": 60,
+      "step": 5,
+      "labels": {
+        "0": "Ignored",
+        "50": "Balanced",
+        "100": "Dominant"
+      },
+      "affects": [
+        "transition_matrices"
+      ]
+    },
+
+    "characteristic_phrase_adherence": {
+      "id": "characteristic_phrase_adherence",
+      "group": "advanced",
+      "name": "Phrase Template Adherence",
+      "description": "How closely to follow characteristic phrase patterns",
+      "type": "slider",
+      "min": 0,
+      "max": 100,
+      "default": 50,
+      "step": 5,
+      "labels": {
+        "0": "Free",
+        "50": "Guided",
+        "100": "Strict Templates"
+      },
+      "affects": [
+        "sayr.characteristic_phrases"
+      ]
+    }
+  },
+
+  "presets": {
+    "traditional_taqsim": {
+      "name": "Traditional Taqsim",
+      "description": "Free-form improvisational style following classical rules",
+      "values": {
+        "tradition_vs_experimental": 85,
+        "energy_level": 40,
+        "melodic_balance": 80,
+        "step_vs_jump": 75,
+        "jins_adherence": 80,
+        "contour_type": "arch",
+        "repetition_amount": 30,
+        "form_type": "through_composed",
+        "phase_mode": 20,
+        "rhythmic_alignment": 30,
+        "tempo_stability": 20,
+        "modulation_frequency": 40,
+        "ornamentation_density": 70
+      }
+    },
+    "composed_piece": {
+      "name": "Composed Piece",
+      "description": "Structured composition with clear form",
+      "values": {
+        "tradition_vs_experimental": 70,
+        "energy_level": 60,
+        "melodic_balance": 70,
+        "step_vs_jump": 65,
+        "jins_adherence": 70,
+        "contour_type": "wave",
+        "repetition_amount": 60,
+        "form_type": "ternary",
+        "phase_mode": 40,
+        "rhythmic_alignment": 75,
+        "tempo_stability": 70,
+        "modulation_frequency": 30,
+        "ornamentation_density": 50
+      }
+    },
+    "modern_fusion": {
+      "name": "Modern Fusion",
+      "description": "Contemporary take with more freedom",
+      "values": {
+        "tradition_vs_experimental": 40,
+        "energy_level": 65,
+        "melodic_balance": 50,
+        "step_vs_jump": 55,
+        "jins_adherence": 30,
+        "contour_type": "free",
+        "repetition_amount": 45,
+        "form_type": "free",
+        "phase_mode": 70,
+        "rhythmic_alignment": 50,
+        "tempo_stability": 60,
+        "modulation_frequency": 60,
+        "ornamentation_density": 40
+      }
+    },
+    "meditative": {
+      "name": "Meditative",
+      "description": "Slow, contemplative, minimal",
+      "values": {
+        "tradition_vs_experimental": 60,
+        "energy_level": 20,
+        "melodic_balance": 85,
+        "step_vs_jump": 85,
+        "jins_adherence": 75,
+        "contour_type": "wave",
+        "repetition_amount": 70,
+        "form_type": "strophic",
+        "phase_mode": 10,
+        "rhythmic_alignment": 40,
+        "tempo_stability": 30,
+        "modulation_frequency": 10,
+        "ornamentation_density": 30
+      }
+    },
+    "energetic_dance": {
+      "name": "Energetic Dance",
+      "description": "Upbeat, rhythmic, driving",
+      "values": {
+        "tradition_vs_experimental": 65,
+        "energy_level": 85,
+        "melodic_balance": 60,
+        "step_vs_jump": 60,
+        "jins_adherence": 40,
+        "contour_type": "wave",
+        "repetition_amount": 70,
+        "form_type": "rondo",
+        "phase_mode": 30,
+        "rhythmic_alignment": 85,
+        "tempo_stability": 85,
+        "modulation_frequency": 20,
+        "ornamentation_density": 45
+      }
+    }
+  },
+
+  "ui_layout": {
+    "description": "Suggested UI organization",
+    "main_view": {
+      "top_bar": ["presets_dropdown", "maqam_selection", "iqa_selection"],
+      "left_panel": {
+        "title": "Quick Controls",
+        "parameters": [
+          "tradition_vs_experimental",
+          "energy_level",
+          "melodic_balance",
+          "ornamentation_density"
+        ]
+      },
+      "center_panel": {
+        "title": "Visualization",
+        "content": ["piano_roll", "waveform", "maqam_diagram"]
+      },
+      "right_panel": {
+        "title": "Structure",
+        "parameters": [
+          "form_type",
+          "section_count",
+          "phrase_length_measures",
+          "tension_curve",
+          "modulation_frequency"
+        ]
+      },
+      "bottom_panel": {
+        "title": "Transport",
+        "content": ["play_button", "tempo_slider", "export_buttons"]
+      }
+    },
+    "advanced_view": {
+      "tabs": [
+        {"name": "Melody", "parameters": ["melodic_behavior"]},
+        {"name": "Rhythm", "parameters": ["rhythm_duration"]},
+        {"name": "Structure", "parameters": ["structure"]},
+        {"name": "Modulation", "parameters": ["modulation"]},
+        {"name": "Expression", "parameters": ["expression"]},
+        {"name": "Advanced", "parameters": ["advanced"]}
+      ]
+    }
+  }
+}
