@@ -59,8 +59,20 @@ Note: Unlike most ajnas, the tonic is at the TOP of the scale.
 | Upper 'Ajam (4-note) | Inverted | G A B C | Last (top) |
 
 ## Usage
-
 - **Second jins** in Maqam 'Ajam
 - Occurs on the **3rd degree of Maqam Bayati**
 - Used as an upper jins when the melody needs to resolve upward to a higher tonic
 - Creates a sense of ascent and arrival at the upper tonic
+
+## Generator Notes
+
+- **Pattern**: W - W - H | **Semitones**: 2 2 1 | **Cents**: 200 200 100
+- **Tonic**: G4 → C5 | **Notes**: G4 A4 B4 C5
+- **Tonic (degree 1)**: hard
+- **Ghammaz (degree 4)**: hard
+- **Emphasis**: [1, 3, 4]
+- **Must include**: [1, 4]
+- **Resolution target**: 1
+- **Entry notes**: [4, 3]
+- **Exit notes**: [1]
+- **Behavior**: descending, range 1–4

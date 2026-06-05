@@ -50,7 +50,6 @@ Note: E𝄳 represents E half-flat
 - The name "Sikah" comes from the Persian "se-gah" meaning "third position"
 
 ## Usage
-
 - **Root jins** of Maqam Sikah
 - **Root jins** of Maqam Huzam
 - **Root jins** of Maqam 'Iraq
@@ -58,3 +57,19 @@ Note: E𝄳 represents E half-flat
 - Expresses mysticism, spirituality, and ethereal beauty
 - Very common in Sufi music and religious contexts
 - Creates a floating, otherworldly atmosphere
+
+## Generator Notes
+
+- **Pattern**: ¾ - ¾ - W | **Semitones**: 1.5 1.5 2 | **Cents**: 150 150 200
+- **Tonic**: E½♭4 → A4 | **Notes**: E½♭4 F4 G4 A4
+- **Tonic (degree 1)**: hard
+- **Ghammaz (degree 4)**: hard
+- **Leading tone (degree 7 below)**: soft
+- **Emphasis**: [1, 3, 4]
+- **Must include**: [1, 4]
+- **Resolution target**: 1
+- **Entry notes**: [4, 3]
+- **Exit notes**: [1]
+- **Behavior**: descending, range 1–5
+
+Note: The reference (MAQAMATIC_REFERENCE.md) lists Sikah as size 4, but `data/ajnas.json` and traditional musicology treat Sikah as a 3-note jins (E half-flat, F, G). The 4-note version (E half-flat, F, G, A) is treated as the secondary jins in some maqamat. The generator's 3-note treatment matches the data.

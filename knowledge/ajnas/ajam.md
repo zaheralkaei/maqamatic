@@ -51,6 +51,22 @@ The 5-note version of Jins 'Ajam is the most common version, and is the first ji
 - First jins in Maqam 'Ajam
 - First jins in Maqam Shawq Afza
 
+## Generator Notes
+
+The generator uses the 4-note version (size 4, intervals 2-2-1) as the primary Ajam jins, matching `data/ajnas.json` and most usage in maqamat. The 5-note version above is treated as a separate conceptualization where the 4th degree is included in the basic jins.
+
+- **Pattern**: W - W - H | **Semitones**: 2 2 1 | **Cents**: 200 200 100
+- **Tonic**: B♭3 → E♭4 | **Notes**: B♭3 C4 D4 E♭4
+- **Tonic (degree 1)**: hard
+- **Ghammaz (degree 4)**: hard
+- **Leading tone (degree 7 below)**: soft
+- **Emphasis**: [1, 3, 4]
+- **Must include**: [1, 4]
+- **Resolution target**: 1
+- **Entry notes**: [1, 5]
+- **Exit notes**: [1, 4]
+- **Behavior**: ascending, range 1–5
+
 ---
 
 ## 3-Note Version (Secondary)

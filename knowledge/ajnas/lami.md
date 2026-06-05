@@ -52,7 +52,19 @@ Tonic                 Ghammaz         (Baggage)
 The basic scale is identical to Jins Kurd. The key difference is Lami has A♭ (not A natural) in the baggage, which adds a darker, more lamenting quality when the melody extends above the ghammaz.
 
 ## Usage
-
 - **Root jins** of Maqam Lami
 - Expresses deep sadness, lamentation
 - The A♭ above the ghammaz intensifies the sorrowful character
+
+## Generator Notes
+
+- **Pattern**: H - W - ¾ | **Semitones**: 1 2 1.5 | **Cents**: 100 200 150
+- **Tonic**: A3 → D½♭4 | **Notes**: A3 B♭3 C4 D½♭4
+- **Tonic (degree 1)**: hard
+- **Ghammaz (degree 4)**: hard
+- **Emphasis**: [1, 3, 4]
+- **Must include**: [1, 4]
+- **Resolution target**: 1
+- **Entry notes**: [4]
+- **Exit notes**: [1]
+- **Behavior**: descending, range 1–4

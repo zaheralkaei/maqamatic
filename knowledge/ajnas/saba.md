@@ -62,8 +62,23 @@ Note: E𝄳 and B𝄳 represent E half-flat and B half-flat
 - B𝄳 in the baggage connects to the Bayati/Rast family sound below
 
 ## Usage
-
 - **Root jins** of Maqam Saba
 - Expresses deep grief, mourning, and lamentation
 - Often used for sad occasions and emotional expression
 - The ambiguous ghammaz allows for flexible melodic development
+
+## Generator Notes
+
+The reference (MAQAMATIC_REFERENCE.md) lists Saba as size 4 with pattern ¾ ¾ W and tonic D4 → G♭4. The intervals ¾ ¾ W (150 150 200 cents) starting from D would yield D E½♭ F G, not D E½♭ F G♭. So the reference's listed notes imply a different interval pattern (N2 m2 m2) than its stated pattern. The knowledge file's interval structure (which produces the canonical G♭ at the 4th degree) is what traditional sources use, but the generator uses the 4-note size and D-tonic.
+
+- **Pattern**: ¾ - ¾ - W (per reference) | **Semitones**: 1.5 1.5 2 | **Cents**: 150 150 200
+- **Tonic**: D4 → G♭4 | **Notes**: D4 E½♭4 F4 G♭4
+- **Tonic (degree 1)**: hard
+- **Ghammaz (degree 4)**: hard
+- **Leading tone (degree 3)**: soft
+- **Emphasis**: [1, 2, 4]
+- **Must include**: [1, 4]
+- **Resolution target**: 1
+- **Entry notes**: [4, 3]
+- **Exit notes**: [1]
+- **Behavior**: descending, range 1–5

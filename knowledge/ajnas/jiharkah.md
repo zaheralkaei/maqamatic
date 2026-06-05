@@ -56,6 +56,19 @@ Note: E𝄳 represents E half-flat. A and B♭ are often played slightly lower i
 - The baggage includes E𝄳 (E half-flat) which connects to Rast-family sounds
 
 ## Usage
-
 - **Root jins** of Maqam Jiharkah
+- Creates a bright, major sound with subtle Arabic character from the lowered notes
+
+## Generator Notes
+- **Pattern**: W - W - H - W | **Semitones**: 2 2 1 2 | **Cents**: 200 200 100 200
+- **Tonic**: F4 → C5 | **Notes**: F4 G4 A4 B♭4 C5
+- **Tonic (degree 1)**: hard
+- **Ghammaz (degree 5)**: hard
+- **Leading tone (degree 4)**: soft
+- **Emphasis**: [1, 3, 5]
+- **Must include**: [1, 5]
+- **Resolution target**: 1
+- **Entry notes**: [1, 5]
+- **Exit notes**: [1]
+- **Behavior**: ascending, range 1–5
 - Creates a bright, major sound with subtle Arabic character from the lowered notes

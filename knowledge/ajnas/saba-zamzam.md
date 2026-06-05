@@ -65,7 +65,20 @@ The key difference: Saba Zamzam uses a **minor second** (E♭) instead of Saba's
 - "Zamzam" variant trades the ethereal neutral second for a more definite minor second
 
 ## Usage
-
 - **Root jins** of Maqam Saba Zamzam
 - Expresses deep sorrow similar to Saba, but with a darker, more grounded quality
 - The ambiguous ghammaz allows for flexible melodic development
+
+## Generator Notes
+
+- **Pattern**: H - ¾ - ¾ | **Semitones**: 1 1.5 1.5 | **Cents**: 100 150 150
+- **Tonic**: D4 → G♭4 | **Notes**: D4 E♭4 F4 G♭4
+- **Tonic (degree 1)**: hard
+- **Ghammaz (degree 4)**: hard
+- **Leading tone (degree 3)**: soft
+- **Emphasis**: [1, 2, 4]
+- **Must include**: [1, 4]
+- **Resolution target**: 1
+- **Entry notes**: [4, 3]
+- **Exit notes**: [1]
+- **Behavior**: descending, range 1–5

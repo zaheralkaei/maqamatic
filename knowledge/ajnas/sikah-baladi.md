@@ -49,7 +49,19 @@ Note: 𝄳 = half-flat, 𝄲 = half-sharp
 The intervals in Jins Sikah Baladi are particularly fluid and expressive. Performers often bend and inflect these notes in ways that defy precise notation. The written intervals should be considered approximate guides rather than fixed values.
 
 ## Usage
-
 - Occurs on the **octave of Maqam Sikah Baladi**
 - Expresses a deep, folk-rooted, earthy quality
 - Carries the characteristic Sikah ethereal quality but with a more grounded, traditional flavor
+
+## Generator Notes
+
+- **Pattern**: ¾ - W - ¾ | **Semitones**: 1.5 2 1.5 | **Cents**: 150 200 150
+- **Tonic**: E½♭4 → A½♭4 | **Notes**: E½♭4 F4 G4 A½♭4
+- **Tonic (degree 1)**: hard
+- **Ghammaz (degree 4)**: hard
+- **Emphasis**: [1, 3, 4]
+- **Must include**: [1, 4]
+- **Resolution target**: 1
+- **Entry notes**: [4, 3]
+- **Exit notes**: [1]
+- **Behavior**: descending, range 1–5

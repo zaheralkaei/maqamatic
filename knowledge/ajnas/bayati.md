@@ -53,8 +53,21 @@ Note: E𝄳 and B𝄳 represent E half-flat and B half-flat
 - The half-flat on the 2nd degree is essential to the Bayati character
 
 ## Usage
-
 - **Root jins** of Maqam Bayati
 - One of the most common and beloved ajnas in Arabic music
 - Expresses tenderness, longing, and gentle melancholy
 - Very common in love songs and emotional pieces
+
+## Generator Notes
+
+- **Pattern**: ¾ - ¾ - W | **Semitones**: 1.5 1.5 2 | **Cents**: 150 150 200
+- **Tonic**: D4 → G4 | **Notes**: D4 E½♭4 F4 G4
+- **Tonic (degree 1)**: hard
+- **Ghammaz (degree 4)**: hard
+- **Leading tone (degree 7 below)**: soft
+- **Emphasis**: [1, 3, 4]
+- **Must include**: [1, 4]
+- **Resolution target**: 1
+- **Entry notes**: [4, 3]
+- **Exit notes**: [1]
+- **Behavior**: descending, range 1–5

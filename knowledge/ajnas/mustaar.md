@@ -51,7 +51,19 @@ Note: E𝄳 represents E half-flat
 - The F# creates an unexpected major second from the half-flat tonic
 
 ## Usage
-
 - **Root jins** of Maqam Musta'ar
 - Creates an unusual, distinctive melodic color
 - The extensive baggage notes (D#, A, B♭) expand the melodic vocabulary
+
+## Generator Notes
+
+- **Pattern**: ¾ - W | **Semitones**: 1.5 2 | **Cents**: 150 200
+- **Tonic**: E½♭4 → G4 | **Notes**: E½♭4 F4 G4
+- **Tonic (degree 1)**: hard
+- **Ghammaz (degree 3)**: hard
+- **Emphasis**: [1, 3]
+- **Must include**: [1, 3]
+- **Resolution target**: 1
+- **Entry notes**: [3]
+- **Exit notes**: [1]
+- **Behavior**: ascending, range 1–3

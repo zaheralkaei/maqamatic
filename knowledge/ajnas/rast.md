@@ -54,10 +54,24 @@ Note: E𝄳 and B𝄳 represent E half-flat and B half-flat
 - The name "Rast" means "straight" or "correct" in Persian
 
 ## Usage
-
+## Usage
 - **Root jins** of Maqam Rast
 - **Root jins** of Maqam Suznak
 - **Root jins** of other maqamat in the Rast Family
 - Expresses balance, confidence, nobility, and brightness
 - Often used to open musical performances (wasla)
 - Common in religious recitation and celebratory music
+
+## Generator Notes
+
+- **Pattern**: W - ¾ - ¾ - W | **Semitones**: 2 1.5 1.5 2 | **Cents**: 200 150 150 200
+- **Tonic**: C4 → G4 | **Notes**: C4 D4 E½♭4 F4 G4
+- **Tonic (degree 1)**: hard
+- **Ghammaz (degree 5)**: hard
+- **Leading tone (degree 7 below)**: soft
+- **Emphasis**: [1, 3, 5]
+- **Must include**: [1, 5]
+- **Resolution target**: 1
+- **Entry notes**: [1, 5]
+- **Exit notes**: [1]
+- **Behavior**: ascending, range 1–6

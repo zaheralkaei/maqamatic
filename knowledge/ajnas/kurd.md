@@ -58,7 +58,20 @@ Jins Kurd is a 4-note jins. It is the first jins in Maqam Kurd.
 | Bayati | N2 - N2 - M2 | D E𝄳 F G | Tender, melancholic |
 
 ## Usage
-
 - **Root jins** of Maqam Kurd
 - Expresses introspection, solemnity, and restrained sadness
 - Less dramatic than Hijaz, more grounded
+
+## Generator Notes
+
+- **Pattern**: H - W - W | **Semitones**: 1 2 2 | **Cents**: 100 200 200
+- **Tonic**: D4 → G4 | **Notes**: D4 E♭4 F4 G4
+- **Tonic (degree 1)**: hard
+- **Ghammaz (degree 4)**: hard
+- **Leading tone (degree 7 below)**: soft
+- **Emphasis**: [1, 3, 4]
+- **Must include**: [1, 4]
+- **Resolution target**: 1
+- **Entry notes**: [4, 3]
+- **Exit notes**: [1]
+- **Behavior**: descending, range 1–5

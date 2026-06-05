@@ -52,7 +52,23 @@ Jins Nahawand is a 5-note jins. It is the first jins in Maqam Nahawand. It has a
 - The A♭ baggage above the ghammaz adds darker coloring
 
 ## Usage
-
+## Usage
 - **Root jins** of Maqam Nahawand
 - Expresses gentle sadness, beauty with melancholy
 - Familiar to Western ears due to similarity to minor mode
+
+## Generator Notes
+
+- **Pattern**: W - H - W | **Semitones**: 2 1 2 | **Cents**: 200 100 200
+- **Tonic**: C4 → F4 | **Notes**: C4 D4 E♭4 F4
+- **Tonic (degree 1)**: hard
+- **Ghammaz (degree 4)**: hard
+- **Leading tone (degree 7 below)**: hard
+- **Emphasis**: [1, 3, 4]
+- **Must include**: [1, 4]
+- **Resolution target**: 1
+- **Entry notes**: [1, 5]
+- **Exit notes**: [1]
+- **Behavior**: ascending, range 1–5
+
+Note: The reference (MAQAMATIC_REFERENCE.md) lists Nahawand as size 4 with intervals 2 1 2. `data/ajnas.json` and most theoretical sources treat the 5-note version (C D E♭ F G) as the primary Nahawand jins, with the 4th degree as part of the basic scale rather than the ghammaz. The generator's 4-note treatment matches the data and the reference, but the 5-note narrative here is the broader musicological view.

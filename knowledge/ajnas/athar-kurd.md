@@ -52,6 +52,18 @@ Jins Athar Kurd is a 5-note jins. It is the first jins in Maqam Athar Kurd.
 - Combines Kurd and Hijaz characteristics
 
 ## Usage
-
 - **Root jins** of Maqam Athar Kurd
+- Creates a dark, mysterious mood with exotic tension
+
+## Generator Notes
+- **Pattern**: H - 1½ - H | **Semitones**: 1 3 1 | **Cents**: 100 300 100
+- **Tonic**: D4 → G4 | **Notes**: D4 E♭4 F♯4 G4
+- **Tonic (degree 1)**: hard
+- **Ghammaz (degree 4)**: hard
+- **Emphasis**: [1, 3, 4]
+- **Must include**: [1, 4]
+- **Resolution target**: 1
+- **Entry notes**: [4, 3]
+- **Exit notes**: [1]
+- **Behavior**: descending, range 1–5
 - Creates a dark, mysterious mood with exotic tension
