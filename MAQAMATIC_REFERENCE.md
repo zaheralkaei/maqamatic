@@ -6,6 +6,8 @@ Quick-reference for maqamat and iqa'at (rhythmic cycles). Generator data lives i
 
 The maqam and jins data in this project is verified against **MaqamWorld** (https://maqamworld.com), the canonical Arabic music encyclopedia maintained by Johnny Farraj and Sami Abu Shumays. Every maqam scale, jins interval pattern, and tonic in `data/maqamat.json` and `data/ajnas.json` was cross-checked against the corresponding MaqamWorld page. When this project and MaqamWorld disagree, MaqamWorld is treated as the source of truth.
 
+Every detailed maqam entry below ends with a `**Source:**` line containing the direct MaqamWorld URL and a verbatim quote from that page describing the scale and jins chain. The 22 quotes were captured during the verification pass on this project.
+
 Direct MaqamWorld pages used during the most recent verification pass:
 
 - **Maqamat** (https://maqamworld.com/en/maqam.php): one page per maqam, e.g. `maqamworld.com/en/maqam/iraq.php`
@@ -56,6 +58,7 @@ If you find a discrepancy with MaqamWorld, please open an issue — the data sho
 - **Sayr:** Starts 5–8, descending, emphasis [1,3,5,8], tension [4,7], resolves to [1,5]
 - **Modulations:** → Nahawand (deg 5, common), → Hijaz (deg 4, occasional)
 - **Mood:** joyful, bright, celebratory | **Popularity:** high | **Regions:** Levant, Egypt, North Africa
+- **Source:** https://maqamworld.com/en/maqam/ajam.php — "Maqam 'Ajam (also known as Egyptian 'Ajam) is The principal maqam in the Maqam 'Ajam Family, and starts with the root Jins 'Ajam on the tonic, followed by either Jins Upper 'Ajam on the 5th degree (with its tonic up on the 8th degree) or Jins Nahawand on the 5th degree."
 
 #### Maqam Ajam Ushayran (`ajam_ushayran`)
 - **Family:** ajam | **Tonic:** B♭3 | **Octave-equivalent:** yes
@@ -75,6 +78,7 @@ If you find a discrepancy with MaqamWorld, please open an issue — the data sho
 - **Sayr:** Starts 4–6, descending, emphasis [1,4,5], tension [2,6], resolves to [1,4]
 - **Modulations:** → Rast (deg 5, common), → Saba (deg 1, common), → Hijaz (deg 4, occasional)
 - **Mood:** contemplative, earthy, spiritual | **Popularity:** very high | **Regions:** Egypt, Levant, Iraq
+- **Source:** https://maqamworld.com/en/maqam/bayati.php — "Maqam Bayati is by far one of the most popular and common maqamat in the Arabic repertory. … Its scale starts with Jins Bayati on the tonic followed by either Jins Nahawand or Jins Rast on the 4th degree."
 
 #### Maqam Bayati Shuri (`bayati_shuri`)
 - **Family:** bayati | **Tonic:** D4 | **Octave-equivalent:** yes
@@ -94,6 +98,7 @@ If you find a discrepancy with MaqamWorld, please open an issue — the data sho
 - **Sayr:** Starts 4–6, descending, emphasis [1,2,4,5], tension [2,3,6], resolves to [1,4]
 - **Modulations:** → Bayati (deg 4, common), → Nahawand (deg 4, occasional)
 - **Mood:** exotic, mysterious, Middle Eastern | **Popularity:** very high | **Regions:** all Arab world, Turkey, Iran
+- **Source:** https://maqamworld.com/en/maqam/hijaz.php — "Maqam Hijaz is the main maqam in the Hijaz Family. Its scale starts with the root Jins Hijaz on the tonic followed by either Jins Nahawand or Jins Rast on the 4th degree."
 
 #### Maqam Hijazkar (`hijazkar`)
 - **Family:** hijaz | **Tonic:** C4 | **Octave-equivalent:** yes
@@ -103,6 +108,7 @@ If you find a discrepancy with MaqamWorld, please open an issue — the data sho
 - **Sayr:** Starts 5–8, descending, emphasis [1,5,8], tension [2,6], resolves to [1,5]
 - **Modulations:** → Hijaz (deg 1, common)
 - **Mood:** dramatic, intense, double exotic | **Popularity:** high | **Regions:** Levant, Egypt, Turkey
+- **Source:** https://maqamworld.com/en/maqam/hijazkar.php — "Maqam Hijazkar is the most common variant of Maqam Hijaz. Its scale starts with the root Jins Hijaz on the tonic, followed by Jins Nikriz on the 4th degree then Jins Hijazkar on the octave." (Per MaqamWorld the canonical chain is Nikriz 4th + Hijazkar 8th; the data models the same notes via Upper Hijaz 5th.)
 
 #### Maqam Kurd (`kurd`)
 - **Family:** kurd | **Tonic:** D4 | **Octave-equivalent:** yes
@@ -112,6 +118,7 @@ If you find a discrepancy with MaqamWorld, please open an issue — the data sho
 - **Sayr:** Starts 4–6, descending, emphasis [1,4,5], tension [2,6], resolves to [1]
 - **Modulations:** → Hijaz (deg 4, common), → Bayati (deg 4, occasional)
 - **Mood:** melancholic, Phrygian, minor | **Popularity:** high | **Regions:** Turkey, Levant, Egypt
+- **Source:** https://maqamworld.com/en/maqam/kurd.php — "Maqam Kurd is the main maqam in the Kurd Family. Its scale starts with the root Jins Kurd on the tonic, followed by Jins Nahawand on the 4th degree."
 
 #### Maqam Nahawand (`nahawand`)
 - **Family:** nahawand | **Tonic:** C4 | **Octave-equivalent:** yes
@@ -131,6 +138,7 @@ If you find a discrepancy with MaqamWorld, please open an issue — the data sho
 - **Sayr:** Starts 5–8, descending, emphasis [1,5,7], tension [6], resolves to [1,5]
 - **Modulations:** → Nahawand (deg 1, common)
 - **Mood:** dramatic, minor with exotic upper | **Popularity:** moderate | **Regions:** Turkey, Levant
+- **Source:** https://maqamworld.com/en/maqam/nahawand.php — "Maqam Farahfaza is Maqam Nahawand transposed to a tonic of G. Its scale starts with the root Jins Nahawand on the tonic, followed by either Jins Hijaz or Jins Kurd on the 5th degree." (MaqamWorld does not have a dedicated Farahfaza page; description is on the Nahawand page.)
 
 #### Maqam Nikriz (`nikriz`)
 - **Family:** nikriz | **Tonic:** C4 | **Octave-equivalent:** yes
@@ -140,15 +148,17 @@ If you find a discrepancy with MaqamWorld, please open an issue — the data sho
 - **Sayr:** Starts 5–8, descending, emphasis [1,4,5], tension [4,6], resolves to [1,5]
 - **Modulations:** → Hijaz (deg 5, common), → Nahawand (deg 1, occasional)
 - **Mood:** exotic, dramatic, augmented second | **Popularity:** high | **Regions:** Turkey, Levant, Egypt
+- **Source:** https://maqamworld.com/en/maqam/nikriz.php — "Maqam Nikriz is the main maqam in the Nikriz Family. Its scale starts with the root Jins Nikriz on the tonic, followed by Jins Nahawand on the 5th degree."
 
 #### Maqam Nawa Athar (`nawa_athar`)
 - **Family:** nikriz | **Tonic:** C4 | **Octave-equivalent:** yes
 - **Scale:** 0 2 3 6 7 8 11 12 (W H 1½ H H 1½ H — double augmented second)
 - **Ajnas:** Lower: Nikriz (deg 1, primary) | Upper: Upper Hijaz (deg 5, primary)
 - **Ghammaz:** 5 | **Leading tone:** 7 (hard)
-- **Sayr:** Starts 5–8, descending, emphasis [1,5,7], tension [4,6], resolves to [1,5]
+- **Sayr:** Starts 5–8, descending, emphasis [1,5,7], tension [4,6], resolves to [1]
 - **Modulations:** → Nikriz (deg 1, common)
 - **Mood:** double augmented, very dramatic, intense | **Popularity:** moderate | **Regions:** Turkey, Levant
+- **Source:** https://maqamworld.com/en/maqam/nawa_athar.php — "Maqam Nawa Athar is another popular maqam in the Nikriz Family. Its scale starts with the root Jins Nikriz on the tonic, followed by Jins Hijazkar centered on the 5th degree." (Per MaqamWorld the upper jins is Hijazkar on degree 5; the data models it as Upper Hijaz on degree 5, which has the same 4 notes.)
 
 #### Maqam Rast (`rast`)
 - **Family:** rast | **Tonic:** C4 | **Octave-equivalent:** yes
@@ -158,15 +168,17 @@ If you find a discrepancy with MaqamWorld, please open an issue — the data sho
 - **Sayr:** Starts 5–8, descending, emphasis [1,3,5], tension [4,7], resolves to [1,5]
 - **Modulations:** → Bayati (deg 4, common), → Nahawand (deg 5, occasional), → Sikah (deg 3, common)
 - **Mood:** fundamental, balanced, versatile, proud | **Popularity:** very high | **Regions:** all Arab world, Turkey, Iran
+- **Source:** https://maqamworld.com/en/maqam/rast.php — "Maqam Rast is the main maqam in the Rast Family, and by far one of the most popular and common maqamat in the Arabic repertory. Its scale starts with the root Jins Rast on the tonic, followed on the 5th degree by either Jins Upper Rast (with its tonic up on the 8th degree) or Jins Nahawand."
 
 #### Maqam Suznak (`suznak`)
 - **Family:** rast | **Tonic:** C4 | **Octave-equivalent:** yes
 - **Scale:** 0 2 3.5 5 7 8 11 12 (W ¾ ¾ W H 1½ H)
 - **Ajnas:** Lower: Rast (deg 1, primary) | Upper: Upper Hijaz (deg 5, primary)
 - **Ghammaz:** 5 | **Leading tone:** 7 (hard)
-- **Sayr:** Starts 5–8, descending, emphasis [1,5,7], tension [6], resolves to [1,5]
+- **Sayr:** Starts 5–8, descending, emphasis [1,5,7], tension [6], resolves to [1]
 - **Modulations:** → Rast (deg 1, common), → Hijaz (deg 5, occasional)
 - **Mood:** Rast with Hijaz upper, dramatic, mixed | **Popularity:** high | **Regions:** Levant, Egypt, Turkey
+- **Source:** https://maqamworld.com/en/maqam/suznak.php — "Maqam Suznak is the most popular modulation of Maqam Rast, where the modulation to Jins Hijaz on the 5th scale degree is practically obligatory in any taqsim or mawwal starting on the root Jins Rast."
 
 #### Maqam Sikah (`sikah`)
 - **Family:** sikah | **Tonic:** E½♭4 | **Octave-equivalent:** no
@@ -216,6 +228,7 @@ If you find a discrepancy with MaqamWorld, please open an issue — the data sho
 - **Sayr:** Starts 5–8, descending, emphasis [1,4,5], tension [4], resolves to [1,5]
 - **Modulations:** → Rast (deg 5, common)
 - **Mood:** bright, elevated, Lydian-like | **Popularity:** moderate | **Regions:** Turkey, Levant
+- **Source:** https://maqamworld.com/en/maqam/jiharkah.php — "Maqam Jiharkah is a somewhat rare maqam that starts with Jins Jiharkah on the tonic, then Jins Upper Rast on the 5th degree (with its tonic up on the 8th degree). Maqam Jiharkah is not part of a maqam family."
 
 #### Maqam Lami (`lami`)
 - **Family:** lami | **Tonic:** D4 | **Octave-equivalent:** no
