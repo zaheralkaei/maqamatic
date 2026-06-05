@@ -4,6 +4,10 @@ A Flask web app that generates Arabic maqam melodies as MusicXML. Pick a maqam (
 
 By Zaher Alkaei.
 
+## Sources
+
+All maqam and jins data in this project is verified against [MaqamWorld](https://maqamworld.com), the canonical Arabic music encyclopedia maintained by Johnny Farraj and Sami Abu Shumays. See [MAQAMATIC_REFERENCE.md](MAQAMATIC_REFERENCE.md) for the full per-maqam reference with direct MaqamWorld source links.
+
 ## Running it
 
 Requires Python 3.10+ and pip.

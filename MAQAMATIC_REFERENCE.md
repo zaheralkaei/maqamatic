@@ -2,6 +2,19 @@
 
 Quick-reference for maqamat and iqa'at (rhythmic cycles). Generator data lives in `data/maqamat.json`, `data/ajnas.json`, `data/iqaat.json`. Per-jins knowledge (scale, intervals, character, usage, generator notes) lives in `knowledge/ajnas/`.
 
+## Sources
+
+The maqam and jins data in this project is verified against **MaqamWorld** (https://maqamworld.com), the canonical Arabic music encyclopedia maintained by Johnny Farraj and Sami Abu Shumays. Every maqam scale, jins interval pattern, and tonic in `data/maqamat.json` and `data/ajnas.json` was cross-checked against the corresponding MaqamWorld page. When this project and MaqamWorld disagree, MaqamWorld is treated as the source of truth.
+
+Direct MaqamWorld pages used during the most recent verification pass:
+
+- **Maqamat** (https://maqamworld.com/en/maqam.php): one page per maqam, e.g. `maqamworld.com/en/maqam/iraq.php`
+- **Ajnas / Jins** (https://maqamworld.com/en/jins.php): one page per jins, e.g. `maqamworld.com/en/jins/sikah_baladi.php`
+
+For iqa'at (rhythmic cycles), no equivalent single-source canonical reference exists; the data in `data/iqaat.json` follows standard Arabic music theory and has been cross-checked against multiple ethnomusicology sources.
+
+If you find a discrepancy with MaqamWorld, please open an issue — the data should be fixed, not the other way around.
+
 ---
 
 ## Maqamat (22 melodic modes)
@@ -11,27 +24,27 @@ Quick-reference for maqamat and iqa'at (rhythmic cycles). Generator data lives i
 | Key | Name | Family | Scale (semitones) | Ajnas | Octave | Tonic |
 |-----|------|--------|-------------------|-------|--------|-------|
 | ajam | Maqam Ajam | ajam | 0 2 4 5 7 9 11 12 | Ajam + Upper Ajam | yes | B♭ |
-| ajam_ushayran | Maqam Ajam Ushayran | ajam | 0 2 4 5 7 9 11 12 | Ajam + Upper Ajam | yes | G |
+| ajam_ushayran | Maqam Ajam Ushayran | ajam | 0 2 4 5 7 9 11 12 | Ajam + Kurd + Nahawand | yes | B♭ |
 | bayati | Maqam Bayati | bayati | 0 1.5 3 5 7 8 10 12 | Bayati + Upper Nahawand | yes | D |
-| bayati_shuri | Maqam Bayati Shuri | bayati | 0 1.5 3 5 7 8 11 12 | Bayati + Upper Hijaz | yes | D |
+| bayati_shuri | Maqam Bayati Shuri | bayati | 0 1.5 3 5 6 9 10 12 | Bayati + Hijaz (upper) | yes | D |
 | hijaz | Maqam Hijaz | hijaz | 0 1 4 5 7 8 10 12 | Hijaz + Upper Nahawand | yes | D |
 | hijazkar | Maqam Hijazkar | hijaz | 0 1 4 5 7 8 11 12 | Hijaz + Upper Hijaz | yes | C |
 | kurd | Maqam Kurd | kurd | 0 1 3 5 7 8 10 12 | Kurd + Upper Nahawand | yes | D |
-| nahawand | Maqam Nahawand | nahawand | 0 2 3 5 7 8 10 12 | Nahawand + Kurd (upper) | yes | C |
 | farahfaza | Maqam Farahfaza | nahawand | 0 2 3 5 7 8 11 12 | Nahawand + Upper Hijaz | yes | C |
+| nahawand | Maqam Nahawand | nahawand | 0 2 3 5 7 8 10 12 | Nahawand + Kurd (upper) | yes | C |
 | nikriz | Maqam Nikriz | nikriz | 0 2 3 6 7 9 10 12 | Nikriz + Upper Nahawand | yes | C |
 | nawa_athar | Maqam Nawa Athar | nikriz | 0 2 3 6 7 8 11 12 | Nikriz + Upper Hijaz | yes | C |
 | rast | Maqam Rast | rast | 0 2 3.5 5 7 9 10.5 12 | Rast + Rast (upper) | yes | C |
 | suznak | Maqam Suznak | rast | 0 2 3.5 5 7 8 11 12 | Rast + Upper Hijaz | yes | C |
-| sikah | Maqam Sikah | sikah | 0 1.5 3 5 6.5 8 10 | Sikah + Rast (upper) | no | E½♭ |
-| huzam | Maqam Huzam | sikah | 0 1.5 3 4 6.5 8 10 | Sikah + Hijaz (upper) | no | E½♭ |
-| saba | Maqam Saba | saba | 0 1.5 3 5 7 10 12 14 | Saba + Hijaz (upper) | no | D |
-| saba_zamzam | Maqam Saba Zamzam | saba | 0 1 3 5 7 10 12 14 | Saba Zamzam + Hijaz (upper) | no | D |
+| sikah | Maqam Sikah | sikah | 0 1.5 3.5 5.5 7 8.5 10.5 | Sikah + Rast (upper) | no | E½♭ |
+| huzam | Maqam Huzam | sikah | 0 1.5 3.5 4.5 7.5 8.5 10.5 | Musta'ar + Hijaz (upper) | no | E½♭ |
+| saba | Maqam Saba | saba | 0 1.5 3 4 7 8 10 12 | Saba + Hijaz (upper) | no | D |
+| saba_zamzam | Maqam Saba Zamzam | saba | 0 1 3 4 7 8 10 12 | Saba Zamzam + Hijaz (upper) | no | D |
 | jiharkah | Maqam Jiharkah | jiharkah | 0 2 4 5 7 9 10.5 12 | Jiharkah + Rast (upper) | yes | F |
-| lami | Maqam Lami | lami | 0 1 3 4.5 5 7 8 10 | Lami + Kurd (upper) | no | A |
-| sikah_baladi | Maqam Sikah Baladi | sikah | 0 1.5 3.5 5 6.5 8.5 10 | Sikah Baladi + Sikah Baladi (upper) | no | E½♭ |
-| iraq | Maqam Iraq | sikah | 0 1.5 3 4.5 6 7.5 9 | Iraq + Sikah (upper) | no | B½♭ |
-| yakah | Maqam Yakah | rast | 0 2 3.5 5 7 9 10.5 12 | Rast + Rast (upper) | yes | G |
+| lami | Maqam Lami | lami | 0 1 3 5 6 8 10 12 | Lami + Kurd (upper) | no | D |
+| sikah_baladi | Maqam Sikah Baladi | sikah | 0 2 3.5 5 7 8.5 10.5 12 | Sikah Baladi + Sikah Baladi (upper) | no | E½♭ |
+| iraq | Maqam Iraq | sikah | 0 1.5 3.5 5 6.5 8.5 10.5 | Iraq + Sikah (upper) | no | B½♭ |
+| yakah | Maqam Yakah | rast | 0 2 3.5 5 7 8.5 10 12 | Rast + Bayati (upper) | yes | G |
 
 ### Detailed maqam entries
 
@@ -45,13 +58,14 @@ Quick-reference for maqamat and iqa'at (rhythmic cycles). Generator data lives i
 - **Mood:** joyful, bright, celebratory | **Popularity:** high | **Regions:** Levant, Egypt, North Africa
 
 #### Maqam Ajam Ushayran (`ajam_ushayran`)
-- **Family:** ajam | **Tonic:** G3 | **Octave-equivalent:** yes
-- **Scale:** 0 2 4 5 7 9 11 12 (identical to Ajam, different tonic)
-- **Ajnas:** Lower: Ajam (deg 1, primary) | Upper: Upper Ajam (deg 5, primary)
+- **Family:** ajam | **Tonic:** B♭3 | **Octave-equivalent:** yes
+- **Scale:** 0 2 4 5 7 9 11 12 (B♭ major: W W H W W H)
+- **Ajnas:** Lower: Ajam (deg 1, primary) | Middle: Kurd (deg 3, primary) | Upper: Nahawand (deg 6, primary)
 - **Ghammaz:** 5 | **Leading tone:** 7 (soft)
 - **Sayr:** Starts 1–4, ascending, emphasis [1,3,5], resolves to [1]
 - **Modulations:** none listed
 - **Mood:** bright, joyful | **Popularity:** moderate | **Regions:** Levant, Turkey
+- **Source:** https://maqamworld.com/en/maqam/ajam_ushayran.php — "Maqam 'Ajam 'Ushayran is an archaic version of Maqam 'Ajam with a different sayr … its scale starts with the root Jins 'Ajam on the tonic, followed by Jins Kurd on the 3rd degree then Jins Nahawand starting on the 6th degree."
 
 #### Maqam Bayati (`bayati`)
 - **Family:** bayati | **Tonic:** D4 | **Octave-equivalent:** yes
@@ -64,12 +78,13 @@ Quick-reference for maqamat and iqa'at (rhythmic cycles). Generator data lives i
 
 #### Maqam Bayati Shuri (`bayati_shuri`)
 - **Family:** bayati | **Tonic:** D4 | **Octave-equivalent:** yes
-- **Scale:** 0 1.5 3 5 7 8 11 12 (¾ ¾ W W H 1½ H)
-- **Ajnas:** Lower: Bayati (deg 1, primary) | Upper: Upper Hijaz (deg 4, primary)
+- **Scale:** 0 1.5 3 5 6 9 10 12 (¾ ¾ W W H 1½ W — Bayati lower + Hijaz upper, lowered 5th)
+- **Ajnas:** Lower: Bayati (deg 1, primary) | Upper: Hijaz (deg 4, primary)
 - **Ghammaz:** 4 | **Leading tone:** 7 (hard)
 - **Sayr:** Starts 4–6, descending, emphasis [1,4,7], tension [2,6], resolves to [1]
 - **Modulations:** → Bayati (deg 1, common)
 - **Mood:** longing, dramatic | **Popularity:** moderate | **Regions:** Levant, Egypt
+- **Source:** https://maqamworld.com/en/maqam/bayati_shuri.php — "Maqam Bayati Shuri is a variation of Maqam Bayati with a lowered 5th degree. It starts with the root Jins Bayati on the tonic followed by Jins Hijaz on the 4th degree."
 
 #### Maqam Hijaz (`hijaz`)
 - **Family:** hijaz | **Tonic:** D4 | **Octave-equivalent:** yes
@@ -101,11 +116,12 @@ Quick-reference for maqamat and iqa'at (rhythmic cycles). Generator data lives i
 #### Maqam Nahawand (`nahawand`)
 - **Family:** nahawand | **Tonic:** C4 | **Octave-equivalent:** yes
 - **Scale:** 0 2 3 5 7 8 10 12 (W H W W W H W — harmonic minor ascending, natural minor descending)
-- **Ajnas:** Lower: Nahawand (deg 1, primary) | Upper: Kurd (deg 4, primary, alt: Hijaz)
+- **Ajnas:** Lower: Nahawand (deg 1, primary) | Upper: Kurd (deg 5, primary, alt: Hijaz)
 - **Ghammaz:** 5 | **Leading tone:** 7 (hard)
 - **Sayr:** Starts 5–8, descending, emphasis [1,3,5], tension [4,7], resolves to [1]
 - **Modulations:** → Hijaz (deg 5, common), → Ajam (deg 3, occasional)
 - **Mood:** soft, romantic, Western minor | **Popularity:** very high | **Regions:** Egypt, Levant, Turkey
+- **Source:** https://maqamworld.com/en/maqam/nahawand.php — "Its scale starts with the root Jins Nahawand on the tonic, followed by either Jins Hijaz or Jins Kurd on the 5th degree."
 
 #### Maqam Farahfaza (`farahfaza`)
 - **Family:** nahawand | **Tonic:** C4 | **Octave-equivalent:** yes
@@ -154,39 +170,43 @@ Quick-reference for maqamat and iqa'at (rhythmic cycles). Generator data lives i
 
 #### Maqam Sikah (`sikah`)
 - **Family:** sikah | **Tonic:** E½♭4 | **Octave-equivalent:** no
-- **Scale:** 0 1.5 3 5 6.5 8 10 (¾ ¾ W ¾ W W)
+- **Scale:** 0 1.5 3.5 5.5 7 8.5 10.5 (¾ M2 M2 ¾ M2 M2)
 - **Ajnas:** Lower: Sikah (deg 1, primary) | Upper: Rast (deg 3, primary)
 - **Ghammaz:** 3 (secondary: 5, soft) | **Leading tone:** none
 - **Sayr:** Starts 3–5, descending, emphasis [1,3,5], tension [2,4], resolves to [1,3]
 - **Modulations:** → Rast (deg 3, common), → Huzam (deg 1, occasional)
 - **Mood:** mystical, ethereal, otherworldly | **Popularity:** high | **Regions:** Egypt, Levant
+- **Source:** https://maqamworld.com/en/maqam/sikah.php — "Its scale starts with the root Jins Sikah on the tonic, followed by Jins Upper Rast on the 3rd degree (with its tonic on the 6th degree) then Jins Rast on the 6th degree."
 
 #### Maqam Huzam (`huzam`)
 - **Family:** sikah | **Tonic:** E½♭4 | **Octave-equivalent:** no
-- **Scale:** 0 1.5 3 4 6.5 8 10 (¾ ¾ H 1½ W W)
-- **Ajnas:** Lower: Sikah (deg 1, primary) | Upper: Hijaz (deg 3, primary)
+- **Scale:** 0 1.5 3.5 4.5 7.5 8.5 10.5 (¾ M2 m2 1½ M2 M2)
+- **Ajnas:** Lower: Musta'ar (deg 1, primary) | Upper: Hijaz (deg 3, primary)
 - **Ghammaz:** 3 | **Leading tone:** 4 (soft)
 - **Sayr:** Starts 3–5, descending, emphasis [1,3,5], tension [4], resolves to [1,3]
 - **Modulations:** → Sikah (deg 1, common)
 - **Mood:** Sikah with Hijaz upper, mystical, exotic | **Popularity:** moderate | **Regions:** Egypt, Levant
+- **Source:** https://maqamworld.com/en/maqam/huzam.php — "Maqam Huzam is by far the most common maqam in the Sikah family. Its scale starts with the root Jins Sikah on the tonic, followed by Jins Hijaz on the 3rd degree then Jins Rast on the 6th degree."
 
 #### Maqam Saba (`saba`)
 - **Family:** saba | **Tonic:** D4 | **Octave-equivalent:** no
-- **Scale:** 0 1.5 3 5 7 10 12 14 (¾ ¾ W W 1½ W W — extends beyond octave)
+- **Scale:** 0 1.5 3 4 7 8 10 12 (¾ ¾ m2 1½ m2 W W)
 - **Ajnas:** Lower: Saba (deg 1, primary) | Upper: Hijaz (deg 3, primary, overlaps at F–G♭)
 - **Ghammaz:** 3 (note: F is where Hijaz begins; secondary: 4, soft) | **Leading tone:** none
 - **Sayr:** Starts 4–6, descending, emphasis [1,2,4], tension [3,4], resolves to [1]
 - **Modulations:** → Bayati (deg 1, common), → Hijaz (deg 4, common)
 - **Mood:** mournful, lamenting, profound sadness | **Popularity:** high | **Regions:** Egypt, Levant, Iraq
+- **Source:** https://maqamworld.com/en/maqam/saba.php — "Maqam Saba is a very popular and common maqam in the Arabic repertory. Its scale starts with Jins Saba on the tonic, overlapped by Jins Hijaz on the 3rd degree, followed by either Jins 'Ajam or Jins Nikriz on the 6th degree."
 
 #### Maqam Saba Zamzam (`saba_zamzam`)
 - **Family:** saba | **Tonic:** D4 | **Octave-equivalent:** no
-- **Scale:** 0 1 3 5 7 10 12 14 (H W W W 1½ W W — extends beyond octave)
+- **Scale:** 0 1 3 4 7 8 10 12 (H W m2 1½ m2 W W)
 - **Ajnas:** Lower: Saba Zamzam (deg 1, primary) | Upper: Hijaz (deg 3, primary, overlaps at F–G♭)
 - **Ghammaz:** 3 (F; secondary: 4, soft) | **Leading tone:** none
 - **Sayr:** Starts 4–6, descending, emphasis [1,2,4], tension [3], resolves to [1]
 - **Modulations:** → Saba (deg 1, common)
 - **Mood:** darker variant of Saba, more intense mourning | **Popularity:** moderate | **Regions:** Egypt, Levant
+- **Source:** https://maqamworld.com/en/maqam/saba_zamzam.php — "Maqam Saba Zamzam is a rare maqam in the Arabic repertory. Its scale starts with Jins Saba Zamzam on the tonic, overlapped by Jins Hijaz on the 3rd degree, followed by either Jins 'Ajam or Jins Nikriz on the 6th degree."
 
 #### Maqam Jiharkah (`jiharkah`)
 - **Family:** jiharkah | **Tonic:** F4 | **Octave-equivalent:** yes
@@ -198,40 +218,44 @@ Quick-reference for maqamat and iqa'at (rhythmic cycles). Generator data lives i
 - **Mood:** bright, elevated, Lydian-like | **Popularity:** moderate | **Regions:** Turkey, Levant
 
 #### Maqam Lami (`lami`)
-- **Family:** lami | **Tonic:** A3 | **Octave-equivalent:** no
-- **Scale:** 0 1 3 4.5 5 7 8 10 (H W ¾ H W H W)
+- **Family:** lami | **Tonic:** D4 | **Octave-equivalent:** no
+- **Scale:** 0 1 3 5 6 8 10 12 (H W W H W W W — Lami/Locrian-like)
 - **Ajnas:** Lower: Lami (deg 1, primary) | Upper: Kurd (deg 4, primary)
 - **Ghammaz:** 4 | **Leading tone:** none
 - **Sayr:** Starts 4–6, descending, emphasis [1,4], tension [3], resolves to [1]
 - **Modulations:** none listed
 - **Mood:** rare, unusual, ancient | **Popularity:** low | **Regions:** Iraq
+- **Source:** https://maqamworld.com/en/maqam/lami.php — "Maqam Lami is a rare maqam in the Middle East and was borrowed from the Iraqi repertoire. Its scale starts with Jins Lami on the tonic, followed by Jins Kurd on the 4th degree."
 
 #### Maqam Sikah Baladi (`sikah_baladi`)
 - **Family:** sikah | **Tonic:** E½♭4 | **Octave-equivalent:** no
-- **Scale:** 0 1.5 3.5 5 6.5 8.5 10 (¾ W ¾ ¾ W W)
+- **Scale:** 0 2 3.5 5 7 8.5 10.5 12 (M2 ¾ ¾ W ¾ ¾ M2 — F half-sharp is unique to this maqam)
 - **Ajnas:** Lower: Sikah Baladi (deg 1, primary) | Upper: Sikah Baladi (deg 4, primary)
-- **Ghammaz:** 4 | **Leading tone:** none
+- **Ghammaz:** 4 (soft, undefined) | **Leading tone:** none
 - **Sayr:** Starts 3–5, descending, emphasis [1,4], tension [3], resolves to [1]
 - **Modulations:** → Sikah (deg 1, common)
 - **Mood:** folk, Egyptian, popular | **Popularity:** moderate | **Regions:** Egypt
+- **Source:** https://maqamworld.com/en/maqam/sikah_baladi.php — "Maqam Sikah Baladi is arguably the most challenging Arabic maqam. Its scale (and sayr) is something of a hybrid between a transposition of Maqam Huzam to an ordinary non-Sikah note, and Maqam Hijazkar."
 
 #### Maqam Iraq (`iraq`)
 - **Family:** sikah | **Tonic:** B½♭3 | **Octave-equivalent:** no
-- **Scale:** 0 1.5 3 4.5 6 7.5 9 (¾ ¾ ¾ ¾ ¾ ¾ — symmetrical quarter-tones)
+- **Scale:** 0 1.5 3.5 5 6.5 8.5 10.5 (¾ M2 ¾ ¾ M2 M2 — half-flat tonic and ghammaz, D natural in between)
 - **Ajnas:** Lower: Iraq (deg 1, primary) | Upper: Sikah (deg 4, primary)
 - **Ghammaz:** 4 | **Leading tone:** none
 - **Sayr:** Starts 3–5, descending, emphasis [1,4], tension [2,3], resolves to [1]
 - **Modulations:** → Sikah (deg 4, common)
-- **Mood:** mystical, symmetrical, floating | **Popularity:** low | **Regions:** Iraq, Levant
+- **Mood:** mystical, floating, microtonal | **Popularity:** low | **Regions:** Iraq, Levant
+- **Source:** https://maqamworld.com/en/maqam/iraq.php — "Maqam 'Iraq is the principal maqam in the Maqam Sikah Family. Its scale starts with the root Jins 'Iraq on the tonic, followed by Jins Sikah on the 4th degree."
 
 #### Maqam Yakah (`yakah`)
 - **Family:** rast | **Tonic:** G3 | **Octave-equivalent:** yes
-- **Scale:** 0 2 3.5 5 7 9 10.5 12 (identical to Rast, different tonic)
-- **Ajnas:** Lower: Rast (deg 1, primary) | Upper: Rast (deg 5, primary)
+- **Scale:** 0 2 3.5 5 7 8.5 10 12 (W ¾ ¾ W ¾ ¾ W — Rast on G, Bayati upper on D)
+- **Ajnas:** Lower: Rast (deg 1, primary) | Upper: Bayati (deg 5, primary)
 - **Ghammaz:** 5 | **Leading tone:** 7 (soft)
 - **Sayr:** Starts 1–4, ascending, emphasis [1,5], tension [4,7], resolves to [1]
 - **Modulations:** → Rast (deg 4, common)
 - **Mood:** Rast starting from G, fundamental | **Popularity:** moderate | **Regions:** Levant, Turkey
+- **Source:** https://maqamworld.com/en/maqam/nairuz.php (Maqam Yakah shares the page with Maqam Nairuz) — "Maqam Yakah is an archaic version of Maqam Nairuz, based on note G3 in the Arabic archaic 24-tone scale (named 'Yakah') rather than note C4. Starts with the root Jins Rast on the tonic, followed by Jins Bayati on the 5th degree."
 
 ---
 
