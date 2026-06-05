@@ -12,11 +12,11 @@ Jins Sikah is a 3-note jins. It is the first jins in Maqam Sikah, Maqam Huzam, M
 (Baggage)        Tonic          Ghammaz
     ↓              ↓               ↓
    (C) -- (D) -- E𝄳 ------- F ------- G
-                      m2        M2
-                     (100¢)    (200¢)
+                      ¾          M2
+                     (150¢)    (200¢)
 ```
 
-Note: E𝄳 represents E half-flat
+Note: E𝄳 represents E half-flat. The interval from E half-flat to F is a neutral 2nd (¾ tone, 150 cents), not a minor 2nd as standard Western notation might suggest.
 
 ## Notes
 
@@ -24,7 +24,7 @@ Note: E𝄳 represents E half-flat
 | Degree | Note | Interval from previous |
 |--------|------|------------------------|
 | 1 (Tonic) | E𝄳 (E half-flat) | - |
-| 2 | F | m2 (100¢) |
+| 2 | F | N2 (150¢) |
 | 3 (Ghammaz) | G | M2 (200¢) |
 
 ### Extended Scale (with Baggage)
@@ -60,7 +60,7 @@ Note: E𝄳 represents E half-flat
 
 ## Generator Notes
 
-- **Pattern**: ¾ - ¾ - W | **Semitones**: 1.5 1.5 2 | **Cents**: 150 150 200
+- **Pattern**: ¾ - M2 - M2 | **Semitones**: 1.5 2 2 | **Cents**: 150 200 200
 - **Tonic**: E½♭4 → A4 | **Notes**: E½♭4 F4 G4 A4
 - **Tonic (degree 1)**: hard
 - **Ghammaz (degree 4)**: hard
@@ -72,4 +72,4 @@ Note: E𝄳 represents E half-flat
 - **Exit notes**: [1]
 - **Behavior**: descending, range 1–5
 
-Note: The reference (MAQAMATIC_REFERENCE.md) lists Sikah as size 4, but `data/ajnas.json` and traditional musicology treat Sikah as a 3-note jins (E half-flat, F, G). The 4-note version (E half-flat, F, G, A) is treated as the secondary jins in some maqamat. The generator's 3-note treatment matches the data.
+Note: The reference (MAQAMATIC_REFERENCE.md) listed Sikah as size 4 with intervals ¾ ¾ W, but those intervals don't actually produce the listed notes (E half-flat, F, G, A) — the correct pattern is ¾ M2 M2. The 4-note version (E half-flat, F, G, A) is treated as the secondary jins in some maqamat; the canonical 3-note jins (E half-flat, F, G) is the primary. The generator's 4-note treatment (matching `data/ajnas.json`) covers the upper jins use case.

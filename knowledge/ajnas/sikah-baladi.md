@@ -9,31 +9,29 @@ Jins Sikah Baladi has no ghammaz, and therefore no defined size. Its melody is c
 ## Scale (on G)
 
 ```
-                         Tonic
-                           ↓
-  E𝄳 ------- F𝄲 --------- G ------- A𝄳 ------- B𝄳 ------- C
-       N2        N2            N2        M2          m2
-      (150¢)   (150¢)        (150¢)    (200¢)      (100¢)
+                       Tonic
+                         ↓
+  E𝄳 ------- F𝄲 --------- G ------- A𝄳
+       M2        N2            N2
+      (200¢)   (150¢)        (150¢)
 ```
 
-Note: 𝄳 = half-flat, 𝄲 = half-sharp
+Note: 𝄳 = half-flat, 𝄲 = half-sharp. The E𝄳-F𝄲 interval is a major second (M2, 200¢) — the half-sharp on F is necessary to get the characteristic 1.5-semitone step from F𝄲 to G (otherwise F natural to G would be 2 semitones, which is too wide for this jins).
 
 ## Notes
 
 | Position | Note | Interval from previous |
 |----------|------|------------------------|
-| Below tonic | E𝄳 (E half-flat) | - |
-| Below tonic | F𝄲 (F half-sharp) | N2 (~150¢) |
-| Tonic | G | N2 (~150¢) |
-| 2 | A𝄳 (A half-flat) | N2 (~150¢) |
-| 3 | B𝄳 (B half-flat) | M2 (~200¢) |
-| 4 | C | m2 (~100¢) |
+| 1 (Tonic) | E𝄳 (E half-flat) | - |
+| 2 | F𝄲 (F half-sharp) | M2 (~200¢) |
+| 3 | G | N2 (~150¢) |
+| 4 | A𝄳 (A half-flat) | N2 (~150¢) |
 
 ## Interval Structure
 
 - **No ghammaz**: Melody centers around the tonic
 - **No defined size**: Due to lack of ghammaz
-- **Pattern**: Features multiple neutral seconds and half-flat/half-sharp notes
+- **Pattern**: M2 - N2 - N2 (200¢ - 150¢ - 150¢)
 - **Character**: Deeply folk/rural, earthy, microtonal
 
 ## Distinctive Features
@@ -55,10 +53,10 @@ The intervals in Jins Sikah Baladi are particularly fluid and expressive. Perfor
 
 ## Generator Notes
 
-- **Pattern**: ¾ - W - ¾ | **Semitones**: 1.5 2 1.5 | **Cents**: 150 200 150
-- **Tonic**: E½♭4 → A½♭4 | **Notes**: E½♭4 F4 G4 A½♭4
+- **Pattern**: M2 - ¾ - ¾ | **Semitones**: 2 1.5 1.5 | **Cents**: 200 150 150
+- **Tonic**: E½♭4 → A½♭4 | **Notes**: E½♭4 F½♯4 G4 A½♭4
 - **Tonic (degree 1)**: hard
-- **Ghammaz (degree 4)**: hard
+- **Ghammaz (degree 4)**: soft
 - **Emphasis**: [1, 3, 4]
 - **Must include**: [1, 4]
 - **Resolution target**: 1

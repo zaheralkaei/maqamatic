@@ -85,7 +85,8 @@
       "octave_equivalent": true,
       "ajnas": [
         {"jins_id": "ajam", "position": "lower", "start_degree": 1, "is_primary": true, "alternatives": []},
-        {"jins_id": "ajam_upper", "position": "upper", "start_degree": 5, "is_primary": true, "alternatives": []}
+        {"jins_id": "kurd", "position": "middle", "start_degree": 3, "is_primary": true, "alternatives": []},
+        {"jins_id": "nahawand", "position": "upper", "start_degree": 6, "is_primary": true, "alternatives": []}
       ],
       "important_degrees": {
         "tonic": {"degree": 1, "constraint": "hard"},
@@ -116,18 +117,18 @@
         "preferences": {"ornament_degrees": [3, 5], "vibrato_degrees": [1], "phrase_endings": [1, 5]}
       },
       "musicxml": {
-        "default_tonic": {"step": "G", "octave": 3, "alter": 0},
-        "key_signature_fifths": 0,
-        "custom_accidentals": [{"step": "F", "alter": 1}],
+        "default_tonic": {"step": "B", "octave": 3, "alter": -1},
+        "key_signature_fifths": -2,
+        "custom_accidentals": [{"step": "B", "alter": -1}, {"step": "E", "alter": -1}],
         "scale_notes": [
-          {"step": "G", "octave": 3, "alter": 0},
-          {"step": "A", "octave": 3, "alter": 0},
-          {"step": "B", "octave": 3, "alter": 0},
+          {"step": "B", "octave": 3, "alter": -1},
           {"step": "C", "octave": 4, "alter": 0},
           {"step": "D", "octave": 4, "alter": 0},
-          {"step": "E", "octave": 4, "alter": 0},
-          {"step": "F", "octave": 4, "alter": 1},
-          {"step": "G", "octave": 4, "alter": 0}
+          {"step": "E", "octave": 4, "alter": -1},
+          {"step": "F", "octave": 4, "alter": 0},
+          {"step": "G", "octave": 4, "alter": 0},
+          {"step": "A", "octave": 4, "alter": 0},
+          {"step": "B", "octave": 4, "alter": -1}
         ]
       }
     },
@@ -194,8 +195,8 @@
       "name": "Maqam Bayati Shuri",
       "transliteration": "Maqām Bayātī Shūrī",
       "family": "bayati",
-      "scale_semitones": [0, 1.5, 3, 5, 7, 8, 11, 12],
-      "scale_cents": [0, 150, 300, 500, 700, 800, 1100, 1200],
+      "scale_semitones": [0, 1.5, 3, 5, 6, 9, 10, 12],
+      "scale_cents": [0, 150, 300, 500, 600, 900, 1000, 1200],
       "octave_equivalent": true,
       "ajnas": [
         {"jins_id": "bayati", "position": "lower", "start_degree": 1, "is_primary": true, "alternatives": []},
@@ -234,15 +235,15 @@
       "musicxml": {
         "default_tonic": {"step": "D", "octave": 4, "alter": 0},
         "key_signature_fifths": 0,
-        "custom_accidentals": [{"step": "E", "alter": -0.5}, {"step": "B", "alter": 0}],
+        "custom_accidentals": [{"step": "E", "alter": -0.5}, {"step": "A", "alter": -1}],
         "scale_notes": [
           {"step": "D", "octave": 4, "alter": 0},
           {"step": "E", "octave": 4, "alter": -0.5},
           {"step": "F", "octave": 4, "alter": 0},
           {"step": "G", "octave": 4, "alter": 0},
-          {"step": "A", "octave": 4, "alter": 0},
-          {"step": "B", "octave": 4, "alter": -1},
-          {"step": "C", "octave": 5, "alter": 1},
+          {"step": "A", "octave": 4, "alter": -1},
+          {"step": "B", "octave": 4, "alter": 0},
+          {"step": "C", "octave": 5, "alter": 0},
           {"step": "D", "octave": 5, "alter": 0}
         ]
       }
@@ -429,7 +430,7 @@
       "octave_equivalent": true,
       "ajnas": [
         {"jins_id": "nahawand", "position": "lower", "start_degree": 1, "is_primary": true, "alternatives": []},
-        {"jins_id": "kurd", "position": "upper", "start_degree": 4, "is_primary": true, "alternatives": ["hijaz"]}
+        {"jins_id": "kurd", "position": "upper", "start_degree": 5, "is_primary": true, "alternatives": ["hijaz"]}
       ],
       "important_degrees": {
         "tonic": {"degree": 1, "constraint": "hard"},
@@ -771,8 +772,8 @@
       "name": "Maqam Sikah",
       "transliteration": "Maqām Sīkāh",
       "family": "sikah",
-      "scale_semitones": [0, 1.5, 3, 5, 6.5, 8, 10],
-      "scale_cents": [0, 150, 300, 500, 650, 800, 1000],
+      "scale_semitones": [0, 1.5, 3.5, 5.5, 7, 8.5, 10.5],
+      "scale_cents": [0, 150, 350, 550, 700, 850, 1050],
       "octave_equivalent": false,
       "ajnas": [
         {"jins_id": "sikah", "position": "lower", "start_degree": 1, "is_primary": true, "alternatives": []},
@@ -828,11 +829,11 @@
       "name": "Maqam Huzam",
       "transliteration": "Maqām Huzām",
       "family": "sikah",
-      "scale_semitones": [0, 1.5, 3, 4, 6.5, 8, 10],
-      "scale_cents": [0, 150, 300, 400, 650, 800, 1000],
+      "scale_semitones": [0, 1.5, 3.5, 4.5, 7.5, 8.5, 10.5],
+      "scale_cents": [0, 150, 350, 450, 750, 850, 1050],
       "octave_equivalent": false,
       "ajnas": [
-        {"jins_id": "sikah", "position": "lower", "start_degree": 1, "is_primary": true, "alternatives": []},
+        {"jins_id": "mustaar", "position": "lower", "start_degree": 1, "is_primary": true, "alternatives": []},
         {"jins_id": "hijaz", "position": "upper", "start_degree": 3, "is_primary": true, "alternatives": []}
       ],
       "important_degrees": {
@@ -884,8 +885,8 @@
       "name": "Maqam Saba",
       "transliteration": "Maqām Ṣabā",
       "family": "saba",
-      "scale_semitones": [0, 1.5, 3, 5, 7, 10, 12, 14],
-      "scale_cents": [0, 150, 300, 500, 700, 1000, 1200, 1400],
+      "scale_semitones": [0, 1.5, 3, 4, 7, 8, 10, 12],
+      "scale_cents": [0, 150, 300, 400, 700, 800, 1000, 1200],
       "octave_equivalent": false,
       "ajnas": [
         {"jins_id": "saba", "position": "lower", "start_degree": 1, "is_primary": true, "alternatives": []},
@@ -942,8 +943,8 @@
       "name": "Maqam Saba Zamzam",
       "transliteration": "Maqām Ṣabā Zamzam",
       "family": "saba",
-      "scale_semitones": [0, 1, 3, 5, 7, 10, 12, 14],
-      "scale_cents": [0, 100, 300, 500, 700, 1000, 1200, 1400],
+      "scale_semitones": [0, 1, 3, 4, 7, 8, 10, 12],
+      "scale_cents": [0, 100, 300, 400, 700, 800, 1000, 1200],
       "octave_equivalent": false,
       "ajnas": [
         {"jins_id": "saba_zamzam", "position": "lower", "start_degree": 1, "is_primary": true, "alternatives": []},
@@ -1056,8 +1057,8 @@
       "name": "Maqam Lami",
       "transliteration": "Maqām Lāmī",
       "family": "lami",
-      "scale_semitones": [0, 1, 3, 4.5, 5, 7, 8, 10],
-      "scale_cents": [0, 100, 300, 450, 500, 700, 800, 1000],
+      "scale_semitones": [0, 1, 3, 5, 6, 8, 10, 12],
+      "scale_cents": [0, 100, 300, 500, 600, 800, 1000, 1200],
       "octave_equivalent": false,
       "ajnas": [
         {"jins_id": "lami", "position": "lower", "start_degree": 1, "is_primary": true, "alternatives": []},
@@ -1092,17 +1093,18 @@
         "preferences": {"ornament_degrees": [], "vibrato_degrees": [1], "phrase_endings": [1]}
       },
       "musicxml": {
-        "default_tonic": {"step": "A", "octave": 3, "alter": 0},
-        "key_signature_fifths": -1,
-        "custom_accidentals": [{"step": "D", "alter": -0.5}],
+        "default_tonic": {"step": "D", "octave": 4, "alter": 0},
+        "key_signature_fifths": -2,
+        "custom_accidentals": [],
         "scale_notes": [
-          {"step": "A", "octave": 3, "alter": 0},
-          {"step": "B", "octave": 3, "alter": -1},
-          {"step": "C", "octave": 4, "alter": 0},
-          {"step": "D", "octave": 4, "alter": -0.5},
+          {"step": "D", "octave": 4, "alter": 0},
           {"step": "E", "octave": 4, "alter": -1},
           {"step": "F", "octave": 4, "alter": 0},
-          {"step": "G", "octave": 4, "alter": 0}
+          {"step": "G", "octave": 4, "alter": 0},
+          {"step": "A", "octave": 4, "alter": -1},
+          {"step": "B", "octave": 4, "alter": -1},
+          {"step": "C", "octave": 5, "alter": 0},
+          {"step": "D", "octave": 5, "alter": 0}
         ]
       }
     },
@@ -1110,9 +1112,9 @@
       "name": "Maqam Sikah Baladi",
       "transliteration": "Maqām Sīkāh Baladī",
       "family": "sikah",
-      "scale_semitones": [0, 1.5, 3.5, 5, 6.5, 8.5, 10],
-      "scale_cents": [0, 150, 350, 500, 650, 850, 1000],
-      "octave_equivalent": false,
+      "scale_semitones": [0, 2, 3.5, 5, 7, 8.5, 10.5, 12],
+      "scale_cents": [0, 200, 350, 500, 700, 850, 1050, 1200],
+      "octave_equivalent": true,
       "ajnas": [
         {"jins_id": "sikah_baladi", "position": "lower", "start_degree": 1, "is_primary": true, "alternatives": []},
         {"jins_id": "sikah_baladi", "position": "upper", "start_degree": 4, "is_primary": true, "alternatives": []}
@@ -1150,15 +1152,16 @@
       "musicxml": {
         "default_tonic": {"step": "E", "octave": 4, "alter": -0.5},
         "key_signature_fifths": 0,
-        "custom_accidentals": [{"step": "E", "alter": -0.5}, {"step": "A", "alter": -0.5}],
+        "custom_accidentals": [{"step": "E", "alter": -0.5}, {"step": "F", "alter": 0.5}, {"step": "A", "alter": -0.5}],
         "scale_notes": [
           {"step": "E", "octave": 4, "alter": -0.5},
-          {"step": "F", "octave": 4, "alter": 0},
+          {"step": "F", "octave": 4, "alter": 0.5},
           {"step": "G", "octave": 4, "alter": 0},
           {"step": "A", "octave": 4, "alter": -0.5},
           {"step": "B", "octave": 4, "alter": -0.5},
           {"step": "C", "octave": 5, "alter": 0},
-          {"step": "D", "octave": 5, "alter": 0}
+          {"step": "D", "octave": 5, "alter": 0},
+          {"step": "E", "octave": 5, "alter": -0.5}
         ]
       }
     },
@@ -1166,8 +1169,8 @@
       "name": "Maqam Iraq",
       "transliteration": "Maqām 'Irāq",
       "family": "sikah",
-      "scale_semitones": [0, 1.5, 3, 4.5, 6, 7.5, 9],
-      "scale_cents": [0, 150, 300, 450, 600, 750, 900],
+      "scale_semitones": [0, 1.5, 3.5, 5, 6.5, 8.5, 10.5],
+      "scale_cents": [0, 150, 350, 500, 650, 850, 1050],
       "octave_equivalent": false,
       "ajnas": [
         {"jins_id": "iraq", "position": "lower", "start_degree": 1, "is_primary": true, "alternatives": []},
@@ -1206,15 +1209,15 @@
       "musicxml": {
         "default_tonic": {"step": "B", "octave": 3, "alter": -0.5},
         "key_signature_fifths": 0,
-        "custom_accidentals": [{"step": "B", "alter": -0.5}, {"step": "D", "alter": -0.5}, {"step": "E", "alter": -0.5}],
+        "custom_accidentals": [{"step": "B", "alter": -0.5}, {"step": "E", "alter": -0.5}],
         "scale_notes": [
           {"step": "B", "octave": 3, "alter": -0.5},
           {"step": "C", "octave": 4, "alter": 0},
-          {"step": "D", "octave": 4, "alter": -0.5},
+          {"step": "D", "octave": 4, "alter": 0},
           {"step": "E", "octave": 4, "alter": -0.5},
           {"step": "F", "octave": 4, "alter": 0},
           {"step": "G", "octave": 4, "alter": 0},
-          {"step": "A", "octave": 4, "alter": -0.5}
+          {"step": "A", "octave": 4, "alter": 0}
         ]
       }
     },
@@ -1222,12 +1225,12 @@
       "name": "Maqam Yakah",
       "transliteration": "Maqām Yakāh",
       "family": "rast",
-      "scale_semitones": [0, 2, 3.5, 5, 7, 9, 10.5, 12],
-      "scale_cents": [0, 200, 350, 500, 700, 900, 1050, 1200],
+      "scale_semitones": [0, 2, 3.5, 5, 7, 8.5, 10, 12],
+      "scale_cents": [0, 200, 350, 500, 700, 850, 1000, 1200],
       "octave_equivalent": true,
       "ajnas": [
         {"jins_id": "rast", "position": "lower", "start_degree": 1, "is_primary": true, "alternatives": []},
-        {"jins_id": "rast", "position": "upper", "start_degree": 5, "is_primary": true, "alternatives": []}
+        {"jins_id": "bayati", "position": "upper", "start_degree": 5, "is_primary": true, "alternatives": []}
       ],
       "important_degrees": {
         "tonic": {"degree": 1, "constraint": "hard"},
@@ -1269,7 +1272,7 @@
           {"step": "B", "octave": 3, "alter": -0.5},
           {"step": "C", "octave": 4, "alter": 0},
           {"step": "D", "octave": 4, "alter": 0},
-          {"step": "E", "octave": 4, "alter": 0},
+          {"step": "E", "octave": 4, "alter": -0.5},
           {"step": "F", "octave": 4, "alter": 0},
           {"step": "G", "octave": 4, "alter": 0}
         ]

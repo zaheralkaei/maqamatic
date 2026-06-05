@@ -28,6 +28,8 @@ Jins Saba Zamzam (like Jins Saba) has an ambiguous size due to having two possib
 | 5 | A | A2 (300¢) |
 | 6 (Ghammaz option 2) | B♭ | m2 (100¢) |
 
+The basic 4-note jins (D E♭ F G♭) uses the first three intervals here: m2 - M2 - m2.
+
 ## Ghammaz Options
 
 ### Option 1: Ghammaz on F (3rd degree)
@@ -45,7 +47,7 @@ Jins Saba Zamzam (like Jins Saba) has an ambiguous size due to having two possib
 - **Ambiguous size**: 3 notes (to F) or 6 notes (to B♭)
 - **Key features**:
   - Minor second (D to E♭) instead of Saba's neutral second
-  - Two consecutive minor seconds (E♭-F, F-G♭... wait, F to G♭ is m2)
+  - Major 2nd (E♭ to F) followed by a minor 2nd (F to G♭) — a "wide-narrow" pattern that gives Saba Zamzam a distinctive shape different from Saba's two consecutive neutral seconds
   - Augmented second (G♭ to A)
 - **Character**: Sorrowful, lamenting, similar to Saba but with Kurd-like opening
 
@@ -53,7 +55,7 @@ Jins Saba Zamzam (like Jins Saba) has an ambiguous size due to having two possib
 
 | Jins | 2nd degree | Pattern from tonic |
 |------|------------|-------------------|
-| Saba | E𝄳 (half-flat) | N2 - m2 - m2 - A2 - m2 |
+| Saba | E𝄳 (half-flat) | N2 - N2 - m2 - A2 - m2 |
 | Saba Zamzam | E♭ (flat) | m2 - M2 - m2 - A2 - m2 |
 
 The key difference: Saba Zamzam uses a **minor second** (E♭) instead of Saba's **neutral second** (E half-flat), giving it a more Kurd-like character at the beginning.
@@ -71,7 +73,7 @@ The key difference: Saba Zamzam uses a **minor second** (E♭) instead of Saba's
 
 ## Generator Notes
 
-- **Pattern**: H - ¾ - ¾ | **Semitones**: 1 1.5 1.5 | **Cents**: 100 150 150
+- **Pattern**: H - M2 - m2 | **Semitones**: 1 2 1 | **Cents**: 100 200 100
 - **Tonic**: D4 → G♭4 | **Notes**: D4 E♭4 F4 G♭4
 - **Tonic (degree 1)**: hard
 - **Ghammaz (degree 4)**: hard
