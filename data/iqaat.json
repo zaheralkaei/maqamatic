@@ -488,63 +488,6 @@
       },
       "midi": {"dum_note": 36, "tak_note": 42, "ka_note": 39}
     },
-    "thaqil": {
-      "name": "Thaqil",
-      "transliteration": "Thaqīl",
-      "time_signature": {"beats": 4, "beat_type": 4, "display": "4/4"},
-      "base_unit": "eighth",
-      "total_eighths": 8,
-      "pattern": {
-        "notation_string": "D - T - T - T -",
-        "events": [
-          {"position": 0,  "duration": 4, "stroke": "dum", "accent": 2},
-          {"position": 4,  "duration": 4, "stroke": "rest", "accent": 0},
-          {"position": 8,  "duration": 4, "stroke": "tak", "accent": 1},
-          {"position": 12, "duration": 4, "stroke": "rest", "accent": 0},
-          {"position": 16, "duration": 4, "stroke": "tak", "accent": 1},
-          {"position": 20, "duration": 4, "stroke": "rest", "accent": 0},
-          {"position": 24, "duration": 4, "stroke": "tak", "accent": 1},
-          {"position": 28, "duration": 4, "stroke": "rest", "accent": 0}
-        ],
-        "total_divisions": 32
-      },
-      "characteristics": {
-        "feel": "heavy, slow",
-        "tempo_range": {"min_bpm": 50, "max_bpm": 80, "typical_bpm": 65}
-      },
-      "usage": {
-        "genres": ["classical"],
-        "regions": ["Egypt", "Levant"]
-      },
-      "midi": {"dum_note": 36, "tak_note": 42, "ka_note": 39}
-    },
-    "sofyan": {
-      "name": "Sofyan",
-      "transliteration": "Sofyān",
-      "time_signature": {"beats": 2, "beat_type": 4, "display": "2/4"},
-      "base_unit": "eighth",
-      "total_eighths": 4,
-      "pattern": {
-        "notation_string": "D - T k",
-        "events": [
-          {"position": 0,  "duration": 4, "stroke": "dum", "accent": 2},
-          {"position": 4,  "duration": 4, "stroke": "rest", "accent": 0},
-          {"position": 8,  "duration": 4, "stroke": "tak", "accent": 1},
-          {"position": 12, "duration": 2, "stroke": "ka",  "accent": 0},
-          {"position": 14, "duration": 2, "stroke": "rest", "accent": 0}
-        ],
-        "total_divisions": 16
-      },
-      "characteristics": {
-        "feel": "Turkish, syncopated",
-        "tempo_range": {"min_bpm": 80, "max_bpm": 130, "typical_bpm": 105}
-      },
-      "usage": {
-        "genres": ["Turkish classical"],
-        "regions": ["Turkey"]
-      },
-      "midi": {"dum_note": 36, "tak_note": 42, "ka_note": 39}
-    },
     "karachi": {
       "name": "Karachi",
       "transliteration": "Karachī",

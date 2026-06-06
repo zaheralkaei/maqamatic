@@ -13,7 +13,7 @@ Direct MaqamWorld pages used during the most recent verification pass:
 - **Maqamat** (https://maqamworld.com/en/maqam.php): one page per maqam, e.g. `maqamworld.com/en/maqam/iraq.php`
 - **Ajnas / Jins** (https://maqamworld.com/en/jins.php): one page per jins, e.g. `maqamworld.com/en/jins/sikah_baladi.php`
 
-For iqa'at (rhythmic cycles), no equivalent single-source canonical reference exists; the data in `data/iqaat.json` follows standard Arabic music theory and has been cross-checked against multiple ethnomusicology sources.
+For iqa'at (rhythmic cycles), the data in `data/iqaat.json` is verified against MaqamWorld (https://maqamworld.com/en/iqaa.php), which is the canonical Arabic music encyclopedia. Every iqa'at in the project has a corresponding page on MaqamWorld; see the per-iqaat knowledge files in `knowledge/iqaat/` for the direct URL and verbatim quote from each page.
 
 If you find a discrepancy with MaqamWorld, please open an issue — the data should be fixed, not the other way around.
 
@@ -272,7 +272,7 @@ If you find a discrepancy with MaqamWorld, please open an issue — the data sho
 
 ---
 
-## Iqaat (20 rhythmic cycles)
+## Iqaat (21 rhythmic cycles)
 
 ### Notation legend
 - **D** = Dum (bass stroke) | **T** = Tak (sharp stroke) | **k** = Ka (ghost note / light tap)
@@ -297,8 +297,6 @@ If you find a discrepancy with MaqamWorld, please open an issue — the data sho
 | zaffa | Zaffa | 4/4 | 8 | D kT kT kD kT k | celebratory, processional | 100–150 (125) | wedding, celebration |
 | masmoudi_kabir | Masmoudi Kabir | 4/4 | 16 | D D - - T - - - D - - T D - T - | heavy, majestic, classical | 60–100 (80) | classical, belly dance |
 | masmoudi_saghir | Masmoudi Saghir | 4/4 | 8 | D D - T D - T - | similar to baladi, lighter | 80–130 (100) | classical, belly dance |
-| thaqil | Thaqil | 4/4 | 8 | D - T - T - T - | heavy, slow | 50–80 (65) | classical |
-| sofyan | Sofyan | 2/4 | 4 | D - T k | Turkish, syncopated | 80–130 (105) | Turkish classical |
 | karachi | Karachi | 2/4 | 4 | D T D T | simple, driving, pop | 100–160 (130) | pop, modern |
 | bambi | Bambi | 4/4 | 8 | D - T k T - D T | lilting, Egyptian folk | 90–140 (115) | folk, shaabi |
 | nawakht | Nawakht | 7/8 | 7 | D T T D T D - | asymmetric, lively | 90–140 (115) | Turkish classical, folk |
@@ -398,18 +396,6 @@ If you find a discrepancy with MaqamWorld, please open an issue — the data sho
 - **Feel:** similar to baladi, lighter | **Tempo:** 80–130, typical 100
 - **Genres:** classical, belly dance | **Regions:** Egypt
 
-#### Thaqil (`thaqil`) — 4/4, 8 eighths
-- **Pattern:** `D - T - T - T -` (8 events, 32 divisions)
-- **Events:** D(0,4,2) rest(4) T(8,4,1) rest(12) T(16,4,1) rest(20) T(24,4,1) rest(28)
-- **Feel:** heavy, slow | **Tempo:** 50–80, typical 65
-- **Genres:** classical | **Regions:** Egypt, Levant
-
-#### Sofyan (`sofyan`) — 2/4, 4 eighths
-- **Pattern:** `D - T k` (5 events, 16 divisions)
-- **Events:** D(0,4,2) rest(4) T(8,4,1) k(12,2) rest(14)
-- **Feel:** Turkish, syncopated | **Tempo:** 80–130, typical 105
-- **Genres:** Turkish classical | **Regions:** Turkey
-
 #### Karachi (`karachi`) — 2/4, 4 eighths
 - **Pattern:** `D T D T` (4 events, 16 divisions)
 - **Events:** D(0,4,2) T(4,4,1) D(8,4,1) T(12,4,1)
@@ -483,7 +469,7 @@ If you find a discrepancy with MaqamWorld, please open an issue — the data sho
 |------|---------|-------|
 | `data/maqamat.json` | Maqamat definitions | 22 |
 | `data/ajnas.json` | Ajnas (jins) definitions | 20 |
-| `data/iqaat.json` | Iqaat (rhythmic cycle) definitions | 20 |
+| `data/iqaat.json` | Iqaat (rhythmic cycle) definitions | 21 |
 | `data/sayr_definitions.json` | Melodic path per maqam | 22 + template |
 | `data/transition_matrices.json` | Pitch transition probabilities | 22 maqamat |
 | `data/generator_config.json` | Universal rules & structure grammar | 1 |
