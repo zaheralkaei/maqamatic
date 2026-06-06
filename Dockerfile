@@ -32,12 +32,14 @@ RUN useradd --create-home --shell /bin/bash maqamatic \
 
 USER maqamatic
 
-# Expose port
+# Expose port (Railway and other PaaS set $PORT dynamically; default
+# to 5025 for local Docker use).
 EXPOSE 5025
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:5025/')" || exit 1
+    CMD python -c "import urllib.request,os; urllib.request.urlopen('http://localhost:'+os.environ.get('PORT','5025')+'/')" || exit 1
 
-# Run the application
-CMD ["gunicorn", "--bind", "0.0.0.0:5025", "--workers", "2", "--threads", "4", "web.app:app"]
+# Run the application. Use $PORT (set by Railway/Render/Heroku) when
+# available, otherwise 5025 for local Docker.
+CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:${PORT:-5025} --workers 2 --threads 4 web.app:app"]
