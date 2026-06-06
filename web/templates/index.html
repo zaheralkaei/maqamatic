@@ -18,22 +18,39 @@
     <header class="app-header">
         <div class="logo">
             <div class="logo-icon">
-                <svg viewBox="0 0 48 48" class="logo-svg" aria-label="Maqamatic">
-                    <!-- Abstract melody: a single rising-and-falling curve
-                         threaded through three pitch "anchors" (the dots).
-                         No reference to any instrument. The shape is
-                         the shape of a phrase, not the shape of an oud. -->
-                    <path d="M 6 36
-                             C 12 36, 16 18, 24 18
-                             C 32 18, 36 32, 42 32"
+                <svg viewBox="0 0 64 64" class="logo-svg" aria-label="Maqamatic">
+                    <!--
+                        Abstract melody, composed as a single thread that
+                        visits five nodes. The thread arcs gracefully
+                        between them; the nodes vary in size and fill so
+                        the eye finds anchors to settle on. Two "rest"
+                        nodes (open rings) break the rhythm of filled
+                        nodes — the way silences shape a maqam phrase.
+                    -->
+                    <!-- The thread: one continuous path, sweeping up
+                         and over, never closing on itself. -->
+                    <path d="M 8 44
+                             C 16 44, 18 16, 28 16
+                             C 38 16, 38 46, 48 46
+                             C 56 46, 56 22, 60 22"
                           fill="none"
                           stroke="currentColor"
                           stroke-width="2"
                           stroke-linecap="round"/>
-                    <!-- Three pitch anchors: tonic, climax, resolution. -->
-                    <circle cx="6"  cy="36" r="3" fill="currentColor"/>
-                    <circle cx="24" cy="18" r="3" fill="currentColor"/>
-                    <circle cx="42" cy="32" r="3" fill="currentColor"/>
+
+                    <!-- Five nodes: filled at phrase points, open at rests.
+                         Open rings use a 2px stroke so they read clearly
+                         even at small display sizes. -->
+                    <!-- Node 1: tonic (largest filled) -->
+                    <circle cx="8"  cy="44" r="5" fill="currentColor"/>
+                    <!-- Node 2: climax (medium filled) -->
+                    <circle cx="28" cy="16" r="4" fill="currentColor"/>
+                    <!-- Node 3: rest (medium open ring) -->
+                    <circle cx="42" cy="46" r="3.5" fill="none" stroke="currentColor" stroke-width="2"/>
+                    <!-- Node 4: pickup (small filled) -->
+                    <circle cx="54" cy="46" r="3" fill="currentColor"/>
+                    <!-- Node 5: resolution (medium open ring) -->
+                    <circle cx="60" cy="22" r="4" fill="none" stroke="currentColor" stroke-width="2"/>
                 </svg>
             </div>
             <div class="logo-text">
