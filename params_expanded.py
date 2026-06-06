@@ -127,7 +127,7 @@ def create_generator_from_ui_params(ui_values: Dict):
         tempo_stability=norm("tempo_stability", 70),
 
         # Modulation
-        allow_modulation=ui_values.get("modulation_frequency", 30) > 15,
+        allow_modulation=ui_values.get("modulation_frequency", 30) > 0,
         modulation_frequency=norm("modulation_frequency", 30),
         modulation_depth=norm("modulation_frequency", 30),
         modulation_distance=norm("modulation_distance", 30),
@@ -145,7 +145,7 @@ def create_generator_from_ui_params(ui_values: Dict):
         characteristic_phrase_adherence=norm(
             "characteristic_phrase_adherence", 50),
         random_seed=(int(ui_values["randomness_seed"])
-                     if ui_values.get("randomness_seed") else None),
+                     if ui_values.get("randomness_seed") is not None else None),
     )
 
     from maqam_generator import MaqamGenerator

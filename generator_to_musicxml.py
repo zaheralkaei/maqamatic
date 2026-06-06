@@ -66,24 +66,24 @@ class PitchConverter:
         if not self.scale_notes:
             return self._fallback_pitch(degree)
 
-        # Handle degrees outside octave
-        octave_shift = 0
-        normalized_degree = degree
-
-        while normalized_degree > len(self.scale_notes):
-            normalized_degree -= len(self.scale_notes)
-            octave_shift += 1
-        while normalized_degree < 1:
-            normalized_degree += len(self.scale_notes)
-            octave_shift -= 1
+        # Clamp out-of-range degrees to the valid octave range [1, N].
+        # Without this, a degree of 9 with an 8-note scale (e.g. maqam
+        # Rast's [1..8]) would silently wrap to index 1 (E½♭, octave+1)
+        # and produce wrong notes — see issue with the "sequence" motif
+        # variation in maqam_generator._maybe_repeat_motif.
+        n = len(self.scale_notes)
+        if degree < 1:
+            degree = 1
+        elif degree > n:
+            degree = n
 
         # Get base pitch from scale
-        idx = normalized_degree - 1
+        idx = degree - 1
         if 0 <= idx < len(self.scale_notes):
             base = self.scale_notes[idx]
             return MusicXMLNote(
                 step=base.get("step", "C"),
-                octave=base.get("octave", 4) + octave_shift,
+                octave=base.get("octave", 4),
                 alter=base.get("alter", 0),
                 duration=0
             )

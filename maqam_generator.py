@@ -1045,14 +1045,17 @@ class PhraseGenerator:
             return source.copy()
         elif var_type == "sequence":
             transposition = random.choice([-3, -2, -1, 1, 2, 3])
-            return [d + transposition for d in source]
+            # Clamp to valid degree range [1, 8] — out-of-range degrees
+            # would otherwise produce wrong notes via the pitch converter
+            # (see generator_to_musicxml.PitchConverter.degree_to_pitch).
+            return [max(1, min(8, d + transposition)) for d in source]
         elif var_type == "rhythmic_variation":
             return source.copy()  # Same pitches, rhythm regenerated
         elif var_type == "melodic_variation":
             varied = source.copy()
             for j in range(len(varied)):
                 if random.random() < 0.3:
-                    varied[j] += random.choice([-1, 1])
+                    varied[j] = max(1, min(8, varied[j] + random.choice([-1, 1])))
             return varied
         elif var_type == "development":
             start = random.randint(0, max(0, len(source) - 3))
