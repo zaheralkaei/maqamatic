@@ -176,7 +176,11 @@ class MusicXMLGenerator:
         emitted at section boundaries in both melody and percussion parts.
         """
         # Check if we have per-section iqaat (composed forms with different meters)
-        section_iqaat = set(s.iqa_id for s in sections if s.iqa_id)
+        # M5 (audit): include empty iqa_id values by falling back to the
+        # request's iqa_id parameter; otherwise two sections with empty
+        # iqa_id are silently treated as "no per-section iqa" even when
+        # the request's default differs.
+        section_iqaat = set(s.iqa_id or iqa_id or "maqsum" for s in sections)
         has_per_section_iqa = len(section_iqaat) > 1
 
         # Build annotated note list: each note tagged with iqa_id and section label
@@ -654,9 +658,18 @@ class MusicXMLGenerator:
                     placed = True
                     break
             if not placed:
-                # Shouldn't happen, but safety: emit remainder as-is
-                parts.append(remaining)
-                break
+                # M4 (audit): previously this was a silent safety
+                # branch that emitted an invalid duration and broke
+                # MusicXML readers. With the full VALID_DURATIONS set
+                # and the largest-first greedy, this branch is
+                # unreachable. If you ever hit it, something is wrong
+                # with VALID_DURATIONS or the input, and silently
+                # emitting a bad value hides that.
+                raise ValueError(
+                    f"_decompose_duration: no VALID_DURATIONS entry fits "
+                    f"in remainder={remaining} (started with total={total}). "
+                    f"VALID_DURATIONS={sorted(cls.VALID_DURATIONS.keys())}"
+                )
         return parts
 
     def _generate_melody_part(self, notes: List[MusicXMLNote],

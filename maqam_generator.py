@@ -17,12 +17,33 @@ from params_expanded import GeneratorParams, create_generator_from_ui_params
 
 
 class Phase(Enum):
-    """Melodic journey phases"""
+    """Melodic journey phases. The canonical definition lives in
+    rule_engine.py; this alias is kept so the rest of this module
+    can keep using `Phase.EXPOSITION` etc. without changing every
+    callsite."""
     EXPOSITION = "exposition"
     EXPLORATION = "exploration"
     CLIMAX = "climax"
     DESCENT = "descent"
     RESOLUTION = "resolution"
+
+
+# Re-bind to the canonical enum from rule_engine so the two are
+# guaranteed identical. Importing at module level would be circular
+# (rule_engine doesn't import this file today, but might in the
+# future), so do it lazily here.
+def _sync_phase_alias():
+    import rule_engine
+    if set(Phase.__members__) != set(rule_engine.Phase.__members__):
+        raise RuntimeError(
+            f"rule_engine.Phase and maqam_generator.Phase drifted: "
+            f"{set(rule_engine.Phase.__members__)} vs "
+            f"{set(Phase.__members__)}"
+        )
+    return rule_engine.Phase
+
+Phase = _sync_phase_alias()
+del _sync_phase_alias
 
 
 class PhraseType(Enum):
@@ -121,6 +142,10 @@ class PitchSelector:
         # State tracking
         self.recent_notes: List[int] = []
         self.direction_history: List[int] = []  # +1 ascending, -1 descending, 0 same
+        # Single shared history window. M3 (audit): previously
+        # recent_notes kept 8 entries and direction_history kept 5,
+        # so the two were asymmetric and information was lost.
+        self.HISTORY_WINDOW = 8
         self.current_zone = "tonic"
         self.current_phase = Phase.EXPOSITION
         self.visited_degrees: set = set()
@@ -516,7 +541,11 @@ class PitchSelector:
         base_probs = transitions.get(deg_str, {})
 
         if not base_probs:
-            base_probs = {str(d): 0.1 for d in range(-1, 9)}
+            # L3 (audit): was range(-1, 9), which included invalid
+            # degrees -1 and 0. Valid maqam scale degrees are 1..N;
+            # for an 8-note maqam, 1..8. Use 1..9 as a safe upper
+            # bound (clamped downstream by PitchConverter).
+            base_probs = {str(d): 0.1 for d in range(1, 9)}
             base_probs[str(current_degree)] = 0.15
             if current_degree > 1:
                 base_probs[str(current_degree - 1)] = 0.25
@@ -564,7 +593,7 @@ class PitchSelector:
 
         # Update state
         self.recent_notes.append(next_degree)
-        if len(self.recent_notes) > 8:
+        if len(self.recent_notes) > self.HISTORY_WINDOW:
             self.recent_notes.pop(0)
 
         direction = 0
@@ -573,7 +602,7 @@ class PitchSelector:
         elif next_degree < current_degree:
             direction = -1
         self.direction_history.append(direction)
-        if len(self.direction_history) > 5:
+        if len(self.direction_history) > self.HISTORY_WINDOW:
             self.direction_history.pop(0)
 
         self.visited_degrees.add(next_degree)
@@ -1275,6 +1304,11 @@ class MaqamGenerator:
                         current_maqam = new_maqam
                         self.pitch_selector.set_maqam(current_maqam)
             elif section_props.get("maqam") == "tonic_maqam":
+                # L4 (audit): reset to the original tonic maqam, not
+                # the last modulation target. This matches traditional
+                # Arabic practice (the piece returns to its starting
+                # maqam). If a future "tonic follow modulation" mode
+                # is added, this is the line to revisit.
                 if current_maqam != self.params.maqam_id:
                     current_maqam = self.params.maqam_id
                     self.pitch_selector.set_maqam(current_maqam)

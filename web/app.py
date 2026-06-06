@@ -29,22 +29,42 @@ CORS(app)
 
 # Simple in-memory rate limiter for generation endpoint
 class RateLimiter:
-    """Per-IP rate limiter: max `limit` requests per `window_seconds`."""
-    def __init__(self, limit=10, window_seconds=60):
+    """Per-IP rate limiter: max `limit` requests per `window_seconds`.
+
+    Bounded memory: cap at `max_keys` distinct IPs; evict the
+    least-recently-used IP when full. Without this, an attacker
+    making one request from many IPs would grow the dict forever.
+    """
+    def __init__(self, limit=10, window_seconds=60, max_keys=10000):
         self.limit = limit
         self.window = window_seconds
-        self.requests = defaultdict(list)
+        self.max_keys = max_keys
+        # OrderedDict so we can pop the oldest (LRU eviction) without
+        # an extra data structure.
+        from collections import OrderedDict
+        self.requests = OrderedDict()
+
+    def _evict_if_over(self):
+        """Drop the least-recently-used IP until under max_keys."""
+        while len(self.requests) > self.max_keys:
+            self.requests.popitem(last=False)
 
     def is_allowed(self, key):
+        import time
         now = time.time()
-        self.requests[key] = [t for t in self.requests[key] if now - t < self.window]
+        # Prune this key's expired timestamps.
+        self.requests[key] = [t for t in self.requests.get(key, [])
+                              if now - t < self.window]
         if len(self.requests[key]) >= self.limit:
             return False
         self.requests[key].append(now)
+        # Touch the key to mark it as most-recently-used.
+        self.requests.move_to_end(key)
+        self._evict_if_over()
         return True
 
-rate_limiter = RateLimiter(limit=10, window_seconds=60)
 
+rate_limiter = RateLimiter(limit=10, window_seconds=60)
 # Initialize data loader
 DATA_DIR = Path(__file__).parent.parent / "data"
 data_loader = DataLoader(str(DATA_DIR))
@@ -151,7 +171,22 @@ def generate_melody():
 
     cleanup_old_files()
     try:
-        data = request.get_json()
+        data = request.get_json() or {}
+
+        # Validate maqam_id and iqa_id up front so a typo returns 400
+        # instead of silently falling back to defaults.
+        maqam_id = data.get("maqam_selection") or data.get("maqam", "bayati")
+        if maqam_id not in data_loader.maqamat:
+            return jsonify({
+                'error': f'Unknown maqam: {maqam_id}',
+                'valid_maqamat': sorted(data_loader.maqamat.keys()),
+            }), 400
+        iqa_id = data.get("iqa_selection") or data.get("iqa", "maqsum")
+        if iqa_id not in data_loader.iqaat:
+            return jsonify({
+                'error': f'Unknown iqa: {iqa_id}',
+                'valid_iqaat': sorted(data_loader.iqaat.keys()),
+            }), 400
 
         # Pass full UI JSON through to create_generator_from_ui_params
         # which maps all 20+ UI parameters to GeneratorParams fields.

@@ -319,6 +319,11 @@
     "description": "Formal structure generation rules",
 
     "base_forms": {
+      "free": {
+        "pattern": "A",
+        "composed": false,
+        "description": "Free form: single section that repeats until duration is filled. No K/T structure."
+      },
       "binary": {
         "pattern": "AB",
         "description": "Two contrasting sections"

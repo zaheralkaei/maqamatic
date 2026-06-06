@@ -117,8 +117,11 @@ def create_generator_from_ui_params(ui_values: Dict):
 
         # Structure
         form_type=ui_values.get("form_type", "free"),
+        # Wider dead band so a single slider tick doesn't flip
+        # use_fixed_phases. Below 50 = fixed (deterministic K-phase
+        # sequence), 50+ = dynamic (phases sampled from data).
         phase_mode=norm("phase_mode", 30),
-        use_fixed_phases=ui_values.get("phase_mode", 30) <= 30,
+        use_fixed_phases=ui_values.get("phase_mode", 30) < 50,
         tension_curve=ui_values.get("tension_curve", "arch"),
 
         # Rhythm

@@ -12,8 +12,10 @@ from enum import Enum
 
 
 class Phase(Enum):
-    """Melodic journey phases — mirrors maqam_generator.Phase to avoid
-    circular imports.  Kept in sync by convention."""
+    """Melodic journey phases. This is the canonical definition;
+    maqam_generator.py imports this enum at module load time and
+    uses it directly. If you add or rename a phase here, the generator
+    will fail to import unless you update both sides."""
     EXPOSITION = "exposition"
     EXPLORATION = "exploration"
     CLIMAX = "climax"
