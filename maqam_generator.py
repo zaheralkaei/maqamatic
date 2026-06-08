@@ -1401,6 +1401,14 @@ class MaqamGenerator:
         K3      → CLIMAX
         K' (K4) → DESCENT (different meter, often virtuosic)
         T       → RESOLUTION (refrain)
+
+        Audit v3: the previous implementation hardcoded
+        intensity=(0.3, 0.7) for every section, ignoring the
+        phase config's per-phase intensity_range. As a result,
+        every section in a samai/longa/bashraf got the same
+        dynamics (mf). Now we look up the actual intensity_range
+        from the phase config so different phases (climax, etc.)
+        produce the right dynamics.
         """
         phase_map = {
             "K": Phase.EXPOSITION,
@@ -1409,12 +1417,36 @@ class MaqamGenerator:
             "K'": Phase.DESCENT,
             "T": Phase.RESOLUTION,
         }
+        # Read the phase config to get per-phase intensity ranges
+        fixed_phases = (
+            self.rules.phase_system._fixed_phases
+            if hasattr(self.rules.phase_system, '_fixed_phases')
+            else []
+        )
+        phase_intensity = {}
+        for pf in fixed_phases:
+            phase_id = pf.get("id")
+            if phase_id:
+                # Resolve intensity with energy_level shift
+                base_range = pf.get("intensity_range", [0.3, 0.7])
+                low, high = base_range[0], base_range[1]
+                energy = getattr(self.params, "energy_level", 0.5)
+                energy_shift = (energy - 0.5) * 0.3
+                phase_intensity[phase_id] = (
+                    max(0.0, low + energy_shift),
+                    min(1.0, high + energy_shift),
+                )
+
         sequence = []
         for label in section_labels:
             phase = phase_map.get(label, Phase.EXPOSITION)
+            phase_id = phase.value
+            # Use the phase's intensity range; fall back to
+            # a neutral (0.3, 0.7) only if not found.
+            intensity = phase_intensity.get(phase_id, (0.3, 0.7))
             sequence.append({
                 "phase": phase,
-                "intensity": (0.3, 0.7),
+                "intensity": intensity,
                 "direction": "neutral",
                 "zone_focus": ["tonic"],
                 "allowed_cadences": ["half", "full"],
@@ -1505,28 +1537,45 @@ class MaqamGenerator:
 
         Audit v2: previously the dynamics_range slider (0-100) was
         sent by the UI but never used. Now: each section's
-        dynamics_level is computed from the phase's intensity_range
-        (from generator_config.json) and widened/narrowed by the
-        dynamics_range slider. The result is later converted to a
-        MusicXML dynamic marking (pp/p/mp/mf/f/ff).
+        dynamics_level is computed from the phase's intensity
+        (from the rule engine) and shifted by the dynamics_range
+        slider. The result is later converted to a MusicXML
+        dynamic marking (pp/p/mp/mf/f/ff).
+
+        Audit v2.1: the original implementation computed a 'spread'
+        but never used it — only the centre was returned, so the
+        slider had no effect. Now the slider shifts the centre up
+        or down: 0 = lowest, 50 = neutral (centre), 100 = highest.
+
+        Audit v3: the function read phase_info['intensity_range']
+        but the rule engine actually stores the resolved intensity
+        in phase_info['intensity'] (a (low, high) tuple). Reading
+        the wrong key caused every section to fall through to the
+        default [0.3, 0.7], making all dynamics 'mf'. Now we read
+        'intensity' which is the correct key.
         """
         if not phase_info:
             return 0.5
-        intensity = phase_info.get("intensity_range", [0.3, 0.7])
+        # The rule engine stores the resolved intensity tuple
+        # under 'intensity', not 'intensity_range'. The latter is
+        # the raw config field, never copied into phase_info.
+        intensity = phase_info.get("intensity", [0.3, 0.7])
         if not intensity or len(intensity) < 2:
             return 0.5
         low, high = intensity[0], intensity[1]
-        # Centre of the phase's natural intensity range
+        # Centre of the phase's resolved intensity range
         centre = (low + high) / 2.0
-        # The dynamics_range slider (0-1) widens the spread;
-        # 0.5 = neutral, 0 = narrow, 1 = wide
+        # The dynamics_range slider (0-1, sent as 0-100 from UI):
+        # 0.0 = shift toward the LOW end of the phase intensity
+        # 0.5 = neutral (use centre as-is)
+        # 1.0 = shift toward the HIGH end of the phase intensity
         dyn_range = getattr(self.params, "dynamics_range", 0.6)
-        # The slider currently sits at 0.6 by default (the user
-        # tested with no change); shift the centre slightly upward
-        # for higher values, downward for lower, and widen/narrow
-        # by a small amount.
-        spread = max(0.05, (high - low) * (0.5 + dyn_range))
-        return max(0.05, min(0.95, centre))
+        # Map slider 0-1 to -1..+1 around the centre, scaled by
+        # half the phase's natural spread.
+        half_spread = (high - low) / 2.0
+        shift = (dyn_range - 0.5) * 2.0 * half_spread
+        level = centre + shift
+        return max(0.05, min(0.95, level))
 
     def _get_phrase_types_for_phase(self, phase: Phase) -> List[PhraseType]:
         """Get phrase types appropriate for the phase"""
