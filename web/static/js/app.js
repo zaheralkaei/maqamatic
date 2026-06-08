@@ -111,12 +111,31 @@ const API = {
     },
 
     async generate(params) {
-        const response = await fetch(`${this.baseUrl}/api/generate`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(params)
-        });
-        return response.json();
+        // Audit v3: a bare fetch() on Railway's free tier can hit
+        // a cold start where the service takes 30+ seconds to
+        // respond, which the browser interprets as a network
+        // failure. Use AbortController with a 90s timeout so the
+        // user sees a real error instead of "Failed to fetch".
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 90000);
+        try {
+            const response = await fetch(`${this.baseUrl}/api/generate`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(params),
+                signal: controller.signal
+            });
+            clearTimeout(timeout);
+            return response.json();
+        } catch (err) {
+            clearTimeout(timeout);
+            if (err.name === 'AbortError') {
+                throw new Error('Request timed out after 90s. The service may be cold-starting — try again in a moment.');
+            }
+            // Browser's "Failed to fetch" is uninformative; add
+            // guidance so the user knows what to try.
+            throw new Error('Network error: ' + err.message + '. Check your connection and the Railway service status.');
+        }
     }
 };
 

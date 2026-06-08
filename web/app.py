@@ -25,7 +25,23 @@ from generator_to_musicxml import generate_and_export, MusicXMLGenerator
 app = Flask(__name__,
             static_folder='static',
             template_folder='templates')
-CORS(app)
+# Audit v3 (post-Railway): CORS was permissive but the
+# Access-Control-Allow-Headers default didn't always include
+# Content-Type on some proxies (Railway edge). Be explicit so
+# the browser's preflight OPTIONS request always succeeds.
+CORS(app, resources={r"/*": {
+    "origins": "*",
+    "methods": ["GET", "POST", "OPTIONS"],
+    "allow_headers": ["Content-Type", "Authorization"],
+    "max_age": 600,
+}})
+
+# A /health endpoint that just returns 200. Railway uses this to
+# detect when the service is "up" so it doesn't route traffic
+# during cold start.
+@app.route('/health')
+def health():
+    return jsonify({'status': 'ok'}), 200
 
 # Simple in-memory rate limiter for generation endpoint
 class RateLimiter:
