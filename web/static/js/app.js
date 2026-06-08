@@ -640,7 +640,22 @@ const Playback = {
                             if (displayStep === 'F' && displayOctave === 4) strokeType = 'dum';
                             else if (displayStep === 'C' && displayOctave === 5) strokeType = 'tak';
                             else if (displayStep === 'E' && displayOctave === 4) strokeType = 'ka';
-                            this.percussionNotes.push({ time: currentTime, duration: durationBeats, strokeType });
+                            // Audit v3: read velocity/accent from the
+                            // MusicXML so the audio playback gets the
+                            // same dynamic shape as the visual score.
+                            // MusicXML stores <velocity>1-127</velocity>
+                            // and an optional <accent/> articulation.
+                            const velText = note.querySelector('velocity')?.textContent;
+                            const vel = velText ? parseInt(velText) : 80;
+                            const hasAccent = note.querySelector('notations articulations accent') !== null;
+                            const accent = hasAccent ? 1.0 : 0.6;
+                            this.percussionNotes.push({
+                                time: currentTime,
+                                duration: durationBeats,
+                                strokeType,
+                                velocity: vel,
+                                accent,
+                            });
                         } else if (pitch) {
                             const step = pitch.querySelector('step')?.textContent || 'C';
                             const octave = parseInt(pitch.querySelector('octave')?.textContent) || 4;
@@ -698,22 +713,55 @@ const Playback = {
         });
         this.percussionNotes.forEach((note) => {
             const startTime = now + (note.time * secondsPerBeat);
+            // Audit v3: scale the synth velocity from the
+            // MusicXML velocity + accent. velocity 1-127 maps
+            // to Tone.js gain 0-1 (roughly: gain = vel/127).
+            // Accent multiplies the velocity so downbeats are
+            // louder. Without this, every hit is the same
+            // loudness, which sounds mechanical.
+            const vel = (note.velocity || 80) / 127;
+            const accent = note.accent || 0.6;
+            const gain = Math.max(0.1, Math.min(1.0, vel * accent));
             const id = Tone.Transport.schedule((time) => {
                 if (!state.isPlaying) return;
                 switch (note.strokeType) {
                     case 'dum':
-                        if (state.dumSkin) state.dumSkin.triggerAttackRelease('G1', '8n', time);
-                        if (state.dumBody) state.dumBody.triggerAttackRelease('8n', time);
-                        if (state.dumTransient) state.dumTransient.triggerAttackRelease('64n', time);
+                        if (state.dumSkin) {
+                            state.dumSkin.volume.value = -2 + (1 - gain) * -10;
+                            state.dumSkin.triggerAttackRelease('G1', '8n', time);
+                        }
+                        if (state.dumBody) {
+                            state.dumBody.volume.value = -8 + (1 - gain) * -10;
+                            state.dumBody.triggerAttackRelease('8n', time);
+                        }
+                        if (state.dumTransient) {
+                            state.dumTransient.volume.value = -16 + (1 - gain) * -8;
+                            state.dumTransient.triggerAttackRelease('64n', time);
+                        }
                         break;
                     case 'tak':
-                        if (state.takSkin) state.takSkin.triggerAttackRelease('A4', '32n', time);
-                        if (state.takCrack) state.takCrack.triggerAttackRelease('32n', time);
-                        if (state.takJingle) state.takJingle.triggerAttackRelease('64n', time);
+                        if (state.takSkin) {
+                            state.takSkin.volume.value = -4 + (1 - gain) * -10;
+                            state.takSkin.triggerAttackRelease('A4', '32n', time);
+                        }
+                        if (state.takCrack) {
+                            state.takCrack.volume.value = -10 + (1 - gain) * -8;
+                            state.takCrack.triggerAttackRelease('32n', time);
+                        }
+                        if (state.takJingle) {
+                            state.takJingle.volume.value = -22 + (1 - gain) * -8;
+                            state.takJingle.triggerAttackRelease('64n', time);
+                        }
                         break;
                     case 'ka':
-                        if (state.kaSkin) state.kaSkin.triggerAttackRelease('D4', '32n', time);
-                        if (state.kaNoise) state.kaNoise.triggerAttackRelease('64n', time);
+                        if (state.kaSkin) {
+                            state.kaSkin.volume.value = -10 + (1 - gain) * -10;
+                            state.kaSkin.triggerAttackRelease('D4', '32n', time);
+                        }
+                        if (state.kaNoise) {
+                            state.kaNoise.volume.value = -18 + (1 - gain) * -8;
+                            state.kaNoise.triggerAttackRelease('64n', time);
+                        }
                         break;
                 }
             }, startTime - now);
