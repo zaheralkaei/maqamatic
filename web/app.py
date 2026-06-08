@@ -309,5 +309,19 @@ def get_iqa_details(iqa_id):
     })
 
 
+@app.after_request
+def add_no_cache_headers(response):
+    """Prevent the browser from caching the HTML and JS during
+    development / hot-fix deploys. Otherwise users see the old
+    "Failed to fetch" alert even after we ship a fix.
+    """
+    if request.path.endswith('.html') or request.path == '/' \
+       or '/static/js/' in request.path or '/static/css/' in request.path:
+        response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+        response.headers['Pragma'] = 'no-cache'
+        response.headers['Expires'] = '0'
+    return response
+
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
