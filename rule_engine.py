@@ -495,17 +495,23 @@ class StructureGrammarRules:
     def _compute_target_section_count(self) -> int:
         """Compute how many sections to generate based on total_beats.
 
-        Audit v2 fix: previously section_count was the only control
+        Audit v2: previously section_count was the only control
         for the number of sections, while total_beats (sent by the
         UI's DURATION slider) was completely ignored. The user
         expected DURATION to control length but the slider did
         nothing visible.
 
-        New behavior: total_beats is the source of truth. We convert
-        it to a target number of sections using the configured
-        phrases-per-section and measures-per-phrase. The explicit
-        section_count parameter is still respected if total_beats
-        is at its default (32 = the generator's own default).
+        Audit v2.1 (post-deploy): the UI now sends duration_beats =
+        bars × beats_per_bar (so 16 bars in 4/4 = 64 beats). The
+        user expects "16 bars" to mean 16 melody measures, not
+        4 melody measures. The previous formula divided by
+        phrases_per_section (=2) which cut the result in half.
+
+        New behavior: target_measures is exactly what total_beats
+        maps to in measure count, and section_count = target_measures
+        / (phrases_per_section * measures_per_phrase) where
+        phrases_per_section averages 2 in the antecedent-consequent
+        pairing path. The clamp ensures we don't blow up.
         """
         # For composed forms, section count is fixed by the pattern
         form_data = self.get_form_data()
@@ -522,15 +528,17 @@ class StructureGrammarRules:
 
         # Each section has 1-2 phrases (we'll say 2 on average for
         # antecedent-consequent pairs); each phrase has the configured
-        # measures_per_phrase
+        # measures_per_phrase. To produce exactly target_measures
+        # melody measures, divide by measures_per_section.
         phrases_per_section = 2
         measures_per_phrase = max(1, self._params.phrase_length_measures)
         measures_per_section = phrases_per_section * measures_per_phrase
 
-        # Calculate target section count
+        # target_count gives exactly target_measures melody measures
+        # when multiplied back by measures_per_section.
         target_count = max(1, round(target_measures / measures_per_section))
         # Clamp to reasonable range
-        max_sections = self._expansion.get("max_total_sections", 12)
+        max_sections = self._expansion.get("max_total_sections", 24)
         return min(max_sections, max(1, target_count))
 
     def _get_iqa_beats_per_measure(self) -> int:

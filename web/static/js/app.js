@@ -770,7 +770,19 @@ async function generateMelody() {
         // Core selections
         maqam_selection: document.getElementById('select-maqam').value,
         iqa_selection: document.getElementById('select-iqa').value,
-        duration_beats: parseInt(document.getElementById('slider-beats').value),
+        // Audit v2: the slider value is now in BARS (1..32), not
+        // beats. Convert to beats using the selected iqa's time
+        // signature so the backend sees the same shape as before.
+        // The iqa_select preview's text is "4/4", "7/8", etc.
+        duration_bars: parseInt(document.getElementById('slider-beats').value),
+        duration_beats: (() => {
+            const bars = parseInt(document.getElementById('slider-beats').value);
+            const timeText = (document.getElementById('iqa-time')?.textContent || '4/4').trim();
+            const m = timeText.match(/^(\d+)\s*\/\s*(\d+)$/);
+            if (!m) return bars * 4;  // fallback: assume 4/4
+            const beatsPerBar = parseInt(m[1]);
+            return bars * beatsPerBar;
+        })(),
 
         // Global style
         tradition_vs_experimental: parseInt(document.getElementById('slider-tradition').value),
@@ -871,7 +883,7 @@ function setupEventHandlers() {
 
     // Beats slider
     document.getElementById('slider-beats').addEventListener('input', (e) => {
-        document.getElementById('beats-value').textContent = `${e.target.value} beats`;
+        document.getElementById('beats-value').textContent = `${e.target.value} bars`;
     });
 
     // Wire ALL sliders to the inspector
@@ -946,8 +958,8 @@ function setupEventHandlers() {
     // Reset all controls to defaults
     document.getElementById('btn-reset').addEventListener('click', () => {
         // Core
-        document.getElementById('slider-beats').value = 32;
-        document.getElementById('beats-value').textContent = '32 beats';
+        document.getElementById('slider-beats').value = 8;
+        document.getElementById('beats-value').textContent = '8 bars';
         // Global style
         document.getElementById('slider-tradition').value = 70;
         document.getElementById('slider-energy-level').value = 50;

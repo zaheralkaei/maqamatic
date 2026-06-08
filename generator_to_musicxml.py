@@ -112,11 +112,18 @@ class IqaConverter:
     """Converts iqa patterns to percussion events"""
 
     # Standard General MIDI percussion mapping
+    # GM drum map for the percussion track. Numbers come from the
+    # General MIDI standard. Channel 10 is reserved for drums so the
+    # program number is ignored — only the note numbers matter.
+    # We picked more percussion-appropriate notes than the default
+    # "dum=36, tak=42, ka=39" because Arabic percussion has a strong
+    # tonal center on the low dum and a sharp high tak — using a
+    # closed hi-hat for "tak" sounds like a drum machine, not a riq.
     DRUM_MAP = {
-        "dum": 36,      # Bass Drum 1
-        "tak": 42,      # Closed Hi-Hat (or use 38 for Snare)
-        "ka": 39,       # Hand Clap / Ghost note
-        "rest": 0       # No sound
+        "dum": 35,    # Acoustic Bass Drum (deeper than 36, more "thump")
+        "tak": 49,    # Crash Cymbal (sharp attack, fast decay)
+        "ka":  50,    # High Tom (sustained, slightly tuned)
+        "rest": 0,    # No sound
     }
 
     def __init__(self, data: DataLoader, iqa_id: str):
@@ -127,6 +134,10 @@ class IqaConverter:
     def get_pattern_events(self) -> List[PercussionEvent]:
         """Get percussion events from iqa pattern"""
         pattern = self.iqa_data.get("pattern", {})
+        # Per-iqa MIDI overrides let each rhythm use sounds that
+        # match its character (e.g. a heavy dum on Maqsum, a bright
+        # tak on Saidi). Falls back to the class-level DRUM_MAP.
+        midi_overrides = self.iqa_data.get("midi", {})
         events = pattern.get("events", [])
 
         perc_events = []
@@ -140,7 +151,9 @@ class IqaConverter:
                 duration=event.get("duration", 4),
                 stroke=stroke,
                 accent=event.get("accent", 0),
-                midi_note=self.DRUM_MAP.get(stroke, 39)
+                # Per-iqa override first, then the class default
+                midi_note=(midi_overrides.get(f"{stroke}_note")
+                           or self.DRUM_MAP.get(stroke, 39))
             ))
 
         return perc_events
@@ -1098,17 +1111,32 @@ class MusicXMLGenerator:
         return prefix + "".join(xml_parts)
 
     def _percussion_note_to_xml(self, event: PercussionEvent) -> str:
-        """Convert a percussion event to MusicXML"""
-        # Map stroke types to display
+        """Convert a percussion event to MusicXML.
+
+        Maps stroke types to appropriate staff positions and
+        velocities for the selected GM percussion instrument. The
+        velocity (1-127) comes from the accent field (0, 1, 2):
+        - accent 0 (light): velocity 60
+        - accent 1 (medium): velocity 80
+        - accent 2 (strong, the downbeat): velocity 105
+
+        This gives the percussion the natural rise-and-fall of a
+        real riq/dumbek performance instead of every hit being
+        equal-volume.
+        """
+        # Map stroke types to display positions on the staff
         display_map = {
             "dum": ("F", 4),   # Bass drum position
             "tak": ("C", 5),   # Hi-hat/snare position
-            "ka": ("E", 4),    # Ghost note position
+            "ka":  ("E", 4),   # Ghost note position
         }
+        # Velocity by accent: gives audible dynamics
+        velocity_map = {0: 60, 1: 80, 2: 105}
 
         step, octave = display_map.get(event.stroke, ("E", 4))
         note_type = self._duration_to_type(event.duration)
         is_dotted = self._duration_is_dotted(event.duration)
+        velocity = velocity_map.get(event.accent, 80)
 
         xml = f'''      <note>
         <unpitched>
@@ -1118,6 +1146,7 @@ class MusicXMLGenerator:
         <duration>{event.duration}</duration>
         <instrument id="P2-I1"/>
         <type>{note_type}</type>
+        <velocity>{velocity}</velocity>
 '''
         if is_dotted:
             xml += "        <dot/>\n"

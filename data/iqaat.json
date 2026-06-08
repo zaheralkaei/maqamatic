@@ -45,7 +45,7 @@
         "genres": ["dabke", "folk", "zaffa"],
         "regions": ["Levant"]
       },
-      "midi": {"dum_note": 36, "tak_note": 42, "ka_note": 39}
+      "midi": {"dum_note": 35, "tak_note": 49, "ka_note": 50}
     },
     "malfuf": {
       "name": "Malfuf",
@@ -71,7 +71,7 @@
         "genres": ["pop", "folk", "dance"],
         "regions": ["Egypt", "Levant"]
       },
-      "midi": {"dum_note": 36, "tak_note": 42, "ka_note": 39}
+      "midi": {"dum_note": 36, "tak_note": 50, "ka_note": 39}
     },
     "maqsum": {
       "name": "Maqsum",
@@ -101,7 +101,7 @@
         "genres": ["classical", "pop", "folk"],
         "regions": ["all Arab world"]
       },
-      "midi": {"dum_note": 36, "tak_note": 42, "ka_note": 39}
+      "midi": {"dum_note": 35, "tak_note": 49, "ka_note": 50}
     },
     "baladi": {
       "name": "Baladi",
@@ -131,7 +131,7 @@
         "genres": ["baladi", "shaabi", "belly dance"],
         "regions": ["Egypt"]
       },
-      "midi": {"dum_note": 36, "tak_note": 42, "ka_note": 39}
+      "midi": {"dum_note": 36, "tak_note": 50, "ka_note": 39}
     },
     "saidi": {
       "name": "Saidi",
@@ -161,7 +161,7 @@
         "genres": ["saidi", "folk", "tahtib"],
         "regions": ["Upper Egypt"]
       },
-      "midi": {"dum_note": 36, "tak_note": 42, "ka_note": 39}
+      "midi": {"dum_note": 36, "tak_note": 50, "ka_note": 39}
     },
     "wahda": {
       "name": "Wahda",
@@ -191,7 +191,7 @@
         "genres": ["classical", "taqsim"],
         "regions": ["Egypt", "Levant"]
       },
-      "midi": {"dum_note": 36, "tak_note": 42, "ka_note": 39}
+      "midi": {"dum_note": 35, "tak_note": 49, "ka_note": 50}
     },
     "fallahi": {
       "name": "Fallahi",
@@ -219,7 +219,7 @@
         "genres": ["folk", "dabke"],
         "regions": ["Egypt", "Levant"]
       },
-      "midi": {"dum_note": 36, "tak_note": 42, "ka_note": 39}
+      "midi": {"dum_note": 36, "tak_note": 50, "ka_note": 39}
     },
     "ciftetelli": {
       "name": "Ciftetelli",
@@ -250,7 +250,7 @@
         "genres": ["Turkish", "belly dance"],
         "regions": ["Turkey", "Greece", "Levant"]
       },
-      "midi": {"dum_note": 36, "tak_note": 42, "ka_note": 39}
+      "midi": {"dum_note": 36, "tak_note": 50, "ka_note": 39}
     },
     "samai_thaqil": {
       "name": "Sama'i Thaqil",
@@ -282,7 +282,7 @@
         "genres": ["classical", "Ottoman"],
         "regions": ["Turkey", "Levant", "Egypt"]
       },
-      "midi": {"dum_note": 36, "tak_note": 42, "ka_note": 39}
+      "midi": {"dum_note": 35, "tak_note": 49, "ka_note": 50}
     },
     "yuruk_semai": {
       "name": "Yuruk Semai",
@@ -310,7 +310,7 @@
         "genres": ["Turkish classical", "sama'i"],
         "regions": ["Turkey", "Levant"]
       },
-      "midi": {"dum_note": 36, "tak_note": 42, "ka_note": 39}
+      "midi": {"dum_note": 36, "tak_note": 50, "ka_note": 39}
     },
     "sudasi": {
       "name": "Sudasi",
@@ -344,7 +344,7 @@
         "genres": ["classical"],
         "regions": ["Egypt", "Levant"]
       },
-      "midi": {"dum_note": 36, "tak_note": 42, "ka_note": 39}
+      "midi": {"dum_note": 35, "tak_note": 49, "ka_note": 50}
     },
     "wahda_wa_nuss": {
       "name": "Wahda wa Nuss",
@@ -381,7 +381,7 @@
         "genres": ["classical"],
         "regions": ["Egypt", "Levant"]
       },
-      "midi": {"dum_note": 36, "tak_note": 42, "ka_note": 39}
+      "midi": {"dum_note": 35, "tak_note": 49, "ka_note": 50}
     },
     "zaffa": {
       "name": "Zaffa",
@@ -418,7 +418,7 @@
         "genres": ["wedding", "celebration"],
         "regions": ["Egypt", "Levant"]
       },
-      "midi": {"dum_note": 36, "tak_note": 42, "ka_note": 39}
+      "midi": {"dum_note": 35, "tak_note": 49, "ka_note": 50}
     },
     "masmoudi_kabir": {
       "name": "Masmoudi Kabir",
@@ -456,7 +456,7 @@
         "genres": ["classical", "belly dance"],
         "regions": ["Egypt"]
       },
-      "midi": {"dum_note": 36, "tak_note": 42, "ka_note": 39}
+      "midi": {"dum_note": 35, "tak_note": 49, "ka_note": 50}
     },
     "masmoudi_saghir": {
       "name": "Masmoudi Saghir",
@@ -486,7 +486,7 @@
         "genres": ["classical", "belly dance"],
         "regions": ["Egypt"]
       },
-      "midi": {"dum_note": 36, "tak_note": 42, "ka_note": 39}
+      "midi": {"dum_note": 35, "tak_note": 49, "ka_note": 50}
     },
     "karachi": {
       "name": "Karachi",
@@ -512,7 +512,7 @@
         "genres": ["pop", "modern"],
         "regions": ["Egypt", "Levant"]
       },
-      "midi": {"dum_note": 36, "tak_note": 42, "ka_note": 39}
+      "midi": {"dum_note": 36, "tak_note": 50, "ka_note": 39}
     },
     "bambi": {
       "name": "Bambi",
@@ -543,7 +543,7 @@
         "genres": ["folk", "shaabi"],
         "regions": ["Egypt"]
       },
-      "midi": {"dum_note": 36, "tak_note": 42, "ka_note": 39}
+      "midi": {"dum_note": 36, "tak_note": 50, "ka_note": 39}
     },
     "nawakht": {
       "name": "Nawakht",
@@ -572,7 +572,7 @@
         "genres": ["Turkish classical", "folk"],
         "regions": ["Turkey"]
       },
-      "midi": {"dum_note": 36, "tak_note": 42, "ka_note": 39}
+      "midi": {"dum_note": 36, "tak_note": 50, "ka_note": 39}
     },
     "fox": {
       "name": "Fox",
@@ -598,7 +598,7 @@
         "genres": ["Ottoman classical", "longa"],
         "regions": ["Turkey", "Levant"]
       },
-      "midi": {"dum_note": 36, "tak_note": 42, "ka_note": 39}
+      "midi": {"dum_note": 36, "tak_note": 50, "ka_note": 39}
     },
     "samai_darij": {
       "name": "Sama'i Darij",
@@ -623,7 +623,7 @@
         "genres": ["Ottoman classical", "sama'i"],
         "regions": ["Turkey", "Levant", "Egypt"]
       },
-      "midi": {"dum_note": 36, "tak_note": 42, "ka_note": 39}
+      "midi": {"dum_note": 35, "tak_note": 49, "ka_note": 50}
     },
     "dawr_hindi": {
       "name": "Dawr Hindi",
@@ -659,7 +659,7 @@
         "genres": ["classical", "muwashshahat"],
         "regions": ["Levant", "Egypt"]
       },
-      "midi": {"dum_note": 36, "tak_note": 42, "ka_note": 39}
+      "midi": {"dum_note": 35, "tak_note": 49, "ka_note": 50}
     }
   }
 }
