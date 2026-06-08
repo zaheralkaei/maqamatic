@@ -20,7 +20,6 @@ class GeneratorParams:
     iqa_id: str = "maqsum"
 
     # === Structure ===
-    num_phrases: int = 8
     phrase_length_measures: int = 1
     total_beats: int = 32
     section_count: int = 4
@@ -33,7 +32,6 @@ class GeneratorParams:
     melodic_density: float = 0.5
     melodic_balance: float = 0.75
     step_vs_jump: float = 0.7
-    jump_frequency: float = 0.3
     jins_adherence: float = 0.6
     contour_type: str = "arch"
     phrase_length_notes: int = 8
@@ -66,7 +64,6 @@ class GeneratorParams:
     # === Advanced ===
     pitch_gravity_strength: float = 0.7
     transition_matrix_weight: float = 0.6
-    characteristic_phrase_adherence: float = 0.5
     random_seed: Optional[int] = None
 
 
@@ -106,7 +103,6 @@ def create_generator_from_ui_params(ui_values: Dict):
                    ui_values.get("iqa", "maqsum")),
 
         # Structure
-        num_phrases=int(ui_values.get("num_phrases", 8)),
         phrase_length_measures=int(ui_values.get("phrase_length_measures",
                                   ui_values.get("phrase_length_measures", 1))),
         total_beats=int(ui_values.get("duration_beats",
@@ -121,7 +117,6 @@ def create_generator_from_ui_params(ui_values: Dict):
         melodic_density=norm("melodic_density", 50),
         melodic_balance=norm("melodic_balance", 75),
         step_vs_jump=norm("step_vs_jump", 70),
-        jump_frequency=1.0 - norm("step_vs_jump", 70),
         jins_adherence=norm("jins_adherence", 60),
         contour_type=ui_values.get("contour_type", "arch"),
         phrase_length_notes=int(ui_values.get("phrase_length", 8)),
@@ -157,8 +152,6 @@ def create_generator_from_ui_params(ui_values: Dict):
         # Advanced
         pitch_gravity_strength=norm("pitch_gravity_strength", 70),
         transition_matrix_weight=norm("transition_matrix_weight", 60),
-        characteristic_phrase_adherence=norm(
-            "characteristic_phrase_adherence", 50),
         random_seed=random_seed_value,
     )
 

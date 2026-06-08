@@ -26,6 +26,10 @@ class MusicXMLNote:
     tie_start: bool = False
     tie_stop: bool = False
     ornament: Optional[str] = None
+    # Audit v2: dynamic marking for this note ('pp', 'p', 'mp', 'mf',
+    # 'f', 'ff'). Set by the exporter from the phrase's
+    # dynamics_level; only the first note of each phrase carries it.
+    dynamic: Optional[str] = None
 
 
 @dataclass
@@ -198,14 +202,23 @@ class MusicXMLGenerator:
             is_first_note = True
 
             for phrase in section.phrases:
+                is_first_phrase_note = True
                 for note in phrase.notes:
                     xml_note = converter.degree_to_pitch(note.degree)
                     xml_note.duration = note.duration
                     xml_note.is_rest = note.is_rest
                     xml_note.ornament = note.ornament
+                    # Audit v2: convert the phrase's dynamics_level to
+                    # a MusicXML dynamic marking on the first note of
+                    # each phrase. Subsequent notes in the phrase use
+                    # the same dynamic (the player interprets nuances).
+                    if is_first_phrase_note and not xml_note.is_rest:
+                        xml_note.dynamic = self._level_to_dynamic(
+                            phrase.dynamics_level)
                     label = section_label if is_first_note else ""
                     annotated_notes.append((xml_note, section_iqa, label))
                     is_first_note = False
+                    is_first_phrase_note = False
 
         # Get maqam info for key signature
         maqam_data = self.data.maqamat.get(current_maqam, {})
@@ -497,6 +510,10 @@ class MusicXMLGenerator:
                             alter=note.alter, duration=sub_dur,
                             tie_start=tie_start, tie_stop=tie_stop,
                             ornament=note.ornament if is_first_sub and i == 0 else None,
+                            # Audit v2: propagate dynamic marking from the
+                            # original note (set by the section-to-note
+                            # mapper from the phrase's dynamics_level).
+                            dynamic=note.dynamic if is_first_sub and i == 0 else None,
                         )
                         xml_parts.append(self._note_to_xml(sub_note))
                         current_position += sub_dur
@@ -766,6 +783,9 @@ class MusicXMLGenerator:
                             tie_stop=tie_stop,
                             # Only put ornament on the first notehead
                             ornament=note.ornament if is_first_sub and i == 0 else None,
+                            # Audit v2: propagate dynamic marking to the
+                            # first notehead of any tied chain.
+                            dynamic=note.dynamic if is_first_sub and i == 0 else None,
                         )
                         xml_parts.append(self._note_to_xml(sub_note))
                         current_position += sub_dur
@@ -979,6 +999,39 @@ class MusicXMLGenerator:
       </direction>
 '''
 
+    @staticmethod
+    def _level_to_dynamic(level: float) -> str:
+        """Convert a 0-1 dynamics_level to a MusicXML dynamic marking.
+
+        Audit v2: maps the phrase's dynamics_level to one of the
+        six standard dynamics. Thresholds chosen so default
+        phase intensity (e.g. exposition 0.2-0.5) lands on mp,
+        climax (0.8-1.0) on f/ff, resolution (0.1-0.4) on p.
+        """
+        if level < 0.15:
+            return "pp"
+        if level < 0.30:
+            return "p"
+        if level < 0.50:
+            return "mp"
+        if level < 0.70:
+            return "mf"
+        if level < 0.90:
+            return "f"
+        return "ff"
+
+    @staticmethod
+    def _dynamic_to_xml(dynamic: str) -> str:
+        """Emit a MusicXML <direction> with a dynamic marking."""
+        return f'''      <direction placement="below">
+        <direction-type>
+          <dynamics>
+            <{dynamic}/>
+          </dynamics>
+        </direction-type>
+      </direction>
+'''
+
     def _note_to_xml(self, note: MusicXMLNote) -> str:
         """Convert a single melody note to MusicXML.
 
@@ -988,6 +1041,12 @@ class MusicXMLGenerator:
         """
         if note.is_rest:
             return self._rest_to_xml(note.duration)
+
+        # Audit v2: dynamic marking is a <direction> placed before the
+        # note. Emit it as a prefix.
+        prefix = ""
+        if note.dynamic:
+            prefix = self._dynamic_to_xml(note.dynamic)
 
         xml_parts = ["      <note>\n"]
 
@@ -1036,7 +1095,7 @@ class MusicXMLGenerator:
             xml_parts.append("        </notations>\n")
 
         xml_parts.append("      </note>\n")
-        return "".join(xml_parts)
+        return prefix + "".join(xml_parts)
 
     def _percussion_note_to_xml(self, event: PercussionEvent) -> str:
         """Convert a percussion event to MusicXML"""

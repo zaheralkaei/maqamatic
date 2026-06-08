@@ -465,12 +465,15 @@ class DurationRules:
 class StructureGrammarRules:
     """Resolves structure grammar: form selection, section expansion."""
 
-    def __init__(self, config: Dict, params):
+    def __init__(self, config: Dict, params, data=None):
         self._grammar = config.get("structure_grammar", {})
         self._base_forms = self._grammar.get("base_forms", {})
         self._expansion = self._grammar.get("expansion_rules", {})
         self._section_props = self._grammar.get("section_properties", {})
         self._params = params
+        # Audit v2: stash iqaat data so _get_iqa_beats_per_measure
+        # can compute the right time signature for the current iqa.
+        self._iqaat_data = (data.iqaat if data is not None else {}) or {}
 
     def get_form_data(self) -> Dict:
         """Return the full form data dict (used to check composed flag etc.)."""
@@ -489,6 +492,55 @@ class StructureGrammarRules:
             return form_data.get("pattern", "ABA")
         return "ABA"  # Default ternary
 
+    def _compute_target_section_count(self) -> int:
+        """Compute how many sections to generate based on total_beats.
+
+        Audit v2 fix: previously section_count was the only control
+        for the number of sections, while total_beats (sent by the
+        UI's DURATION slider) was completely ignored. The user
+        expected DURATION to control length but the slider did
+        nothing visible.
+
+        New behavior: total_beats is the source of truth. We convert
+        it to a target number of sections using the configured
+        phrases-per-section and measures-per-phrase. The explicit
+        section_count parameter is still respected if total_beats
+        is at its default (32 = the generator's own default).
+        """
+        # For composed forms, section count is fixed by the pattern
+        form_data = self.get_form_data()
+        if form_data.get("composed"):
+            # Pattern is always 8 sections (K T K2 T K3 T K' T)
+            return 8
+
+        # For non-composed forms: derive from total_beats
+        total_beats = self._params.total_beats
+        beats_per_measure = self._get_iqa_beats_per_measure()
+        if beats_per_measure <= 0:
+            beats_per_measure = 4  # default 4/4
+        target_measures = total_beats / beats_per_measure
+
+        # Each section has 1-2 phrases (we'll say 2 on average for
+        # antecedent-consequent pairs); each phrase has the configured
+        # measures_per_phrase
+        phrases_per_section = 2
+        measures_per_phrase = max(1, self._params.phrase_length_measures)
+        measures_per_section = phrases_per_section * measures_per_phrase
+
+        # Calculate target section count
+        target_count = max(1, round(target_measures / measures_per_section))
+        # Clamp to reasonable range
+        max_sections = self._expansion.get("max_total_sections", 12)
+        return min(max_sections, max(1, target_count))
+
+    def _get_iqa_beats_per_measure(self) -> int:
+        """Get the number of beats per measure for the current iqa."""
+        iqa_id = getattr(self._params, "iqa_id", None)
+        if iqa_id and iqa_id in self._iqaat_data:
+            ts = self._iqaat_data[iqa_id].get("time_signature", {})
+            return max(1, ts.get("beats", 4))
+        return 4
+
     def expand_form(self, base_pattern: str) -> List[str]:
         """Expand the base pattern into a section label list.
 
@@ -501,7 +553,9 @@ class StructureGrammarRules:
             return self._expand_composed_pattern(base_pattern)
 
         sections = list(base_pattern)
-        target_count = self._params.section_count
+        # Audit v2 fix: derive target section count from total_beats
+        # rather than the (now ignored) params.section_count.
+        target_count = self._compute_target_section_count()
         max_depth = self._expansion.get("max_recursion_depth", 3)
         max_sections = self._expansion.get("max_total_sections", 12)
         rules = self._expansion.get("rules", [])
@@ -633,9 +687,20 @@ class PhaseSystemRules:
         self._params = params
 
     def build_phase_sequence(self, num_sections: int) -> List[Dict]:
-        """Build the complete phase sequence from config."""
-        if not self._fixed_phases:
-            # Fallback
+        """Build the complete phase sequence from config.
+
+        Audit v2: the `use_fixed_phases` (and `phase_mode`) params
+        were sent by the UI but never read. The phase system always
+        used the fixed_phases list, regardless of the slider.
+        Now: if `use_fixed_phases` is True (slider < 50%), use the
+        fixed order. Otherwise (slider >= 50%), use the dynamic
+        fallback sequence with shuffled phase distribution.
+        """
+        # Read use_fixed_phases; default True (matches original behavior)
+        use_fixed = getattr(self._params, "use_fixed_phases", True)
+
+        if not self._fixed_phases or not use_fixed:
+            # Dynamic path: alternate exposure/exploration/climax
             return self._fallback_sequence(num_sections)
 
         # Read duration ratios from config
@@ -1094,7 +1159,7 @@ class RuleEngine:
         self.phrase_structure = PhraseStructureRules(
             self.universal, self.config, params)
         self.duration = DurationRules(self.config, data, params)
-        self.structure_grammar = StructureGrammarRules(self.config, params)
+        self.structure_grammar = StructureGrammarRules(self.config, params, data)
         self.phase_system = PhaseSystemRules(self.config, params)
         self.modulation = ModulationRules(self.config, data, params)
         self.ornamentation = OrnamentationRules(self.config, data, params)

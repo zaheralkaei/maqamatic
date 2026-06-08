@@ -223,7 +223,6 @@ const UI = {
         setSlider('slider-dynamics-range', v.dynamics_range);
         setSlider('slider-pitch-gravity', v.pitch_gravity_strength);
         setSlider('slider-transition-weight', v.transition_matrix_weight);
-        setSlider('slider-phrase-adherence', v.characteristic_phrase_adherence);
 
         // Update numeric value displays
         updateNumericDisplays();
@@ -811,7 +810,6 @@ async function generateMelody() {
         // Advanced
         pitch_gravity_strength: parseInt(document.getElementById('slider-pitch-gravity').value),
         transition_matrix_weight: parseInt(document.getElementById('slider-transition-weight').value),
-        characteristic_phrase_adherence: parseInt(document.getElementById('slider-phrase-adherence').value),
         randomness_seed: document.getElementById('input-randomness-seed').value || '',
 
         // Misc
@@ -885,7 +883,7 @@ function setupEventHandlers() {
         'slider-rhythmic-alignment', 'slider-duration-variety', 'slider-tempo-stability',
         'slider-modulation-frequency', 'slider-modulation-distance', 'slider-max-maqamat',
         'slider-ornaments', 'slider-vibrato-amount', 'slider-dynamics-range',
-        'slider-pitch-gravity', 'slider-transition-weight', 'slider-phrase-adherence'
+        'slider-pitch-gravity', 'slider-transition-weight'
     ].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.addEventListener('input', () => Inspector.updateAll());
@@ -982,7 +980,6 @@ function setupEventHandlers() {
         // Advanced
         document.getElementById('slider-pitch-gravity').value = 70;
         document.getElementById('slider-transition-weight').value = 60;
-        document.getElementById('slider-phrase-adherence').value = 50;
         document.getElementById('input-randomness-seed').value = '';
         // Percussion
         document.getElementById('check-percussion').checked = true;

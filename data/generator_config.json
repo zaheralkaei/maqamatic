@@ -375,12 +375,12 @@
       "rules": [
         {
           "input": "A",
-          "outputs": ["A", "AA", "AA'", "ABA"],
+          "outputs": ["A", "AA", "AAB", "ABA"],
           "probabilities": [0.3, 0.3, 0.2, 0.2]
         },
         {
           "input": "B",
-          "outputs": ["B", "BB", "BB'", "BCB"],
+          "outputs": ["B", "BB", "BBA", "BCB"],
           "probabilities": [0.3, 0.3, 0.2, 0.2]
         },
         {
@@ -390,7 +390,7 @@
         }
       ],
       "max_recursion_depth": 3,
-      "max_total_sections": 12
+      "max_total_sections": 24
     },
 
     "section_properties": {

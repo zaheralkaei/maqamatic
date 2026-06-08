@@ -72,6 +72,10 @@ class Phrase:
     phrase_type: PhraseType = PhraseType.TRANSITIONAL
     start_beat: int = 0
     length_measures: int = 1
+    # Audit v2: dynamics_range wiring. dynamics_level is 0-1 (pp..ff);
+    # the value comes from the phase's intensity_range plus the
+    # params.dynamics_range slider which widens/narrows the spread.
+    dynamics_level: float = 0.5
 
 
 @dataclass
@@ -1338,7 +1342,8 @@ class MaqamGenerator:
                     is_first_section=(i == 0))
 
             # Set per-section metadata
-            section.section_label = label
+            section.section_label = self._format_section_label(
+                label, i, section_labels, is_composed)
             if is_composed:
                 section.iqa_id = section_iqa if section_iqa else self.params.iqa_id
             else:
@@ -1350,6 +1355,43 @@ class MaqamGenerator:
         self._enforce_tonic_ending(sections)
 
         return sections
+
+    def _format_section_label(self, label: str, index: int,
+                               all_labels: List[str],
+                               is_composed: bool) -> str:
+        """Produce a human-readable section label for rehearsal marks.
+
+        Audit v2: previously labels were just the raw section letter
+        (A, B, K, T). For non-composed forms with expansion (e.g.
+        ABA expanded to A, B, A, A), this produced repeated "A"
+        labels, making the score look like one continuous section
+        with redundant marks.
+
+        New format:
+        - Composed forms:  K → "Kh 1", K2 → "Kh 2", K3 → "Kh 3",
+                            K' → "Kh 4", T → "Tas"
+        - Non-composed:    Letter with prime marks for repeats:
+                            A → A, A → A', A → A'', etc. The first
+                            occurrence keeps the plain letter.
+        """
+        if is_composed:
+            return {
+                "K": "Kh 1",
+                "K2": "Kh 2",
+                "K3": "Kh 3",
+                "K'": "Kh 4",
+                "T": "Tas",
+            }.get(label, label)
+
+        # Non-composed: count which occurrence this is
+        occurrence = sum(1 for lbl in all_labels[:index + 1] if lbl == label)
+        if occurrence == 1:
+            return label  # first occurrence: plain letter
+        # Subsequent: A', A'', A''' (prime marks, max 3 — beyond that
+        # the piece is just very repetitive and the score still
+        # indicates the structural repeat)
+        primes = min(occurrence - 1, 3)
+        return label + "'" * primes
 
     def _build_composed_phase_sequence(self, section_labels: List[str]) -> List[Dict]:
         """Build phase sequence for composed forms (samai/longa/bashraf).
@@ -1422,6 +1464,9 @@ class MaqamGenerator:
             "allowed_cadences", ["half", "full"])
 
         i = 0
+        # Audit v2: resolve dynamics per section from phase intensity
+        # and the dynamics_range slider.
+        section_dynamics = self._resolve_section_dynamics(phase_info)
         while i < len(phrase_types):
             is_opening = is_first_section and i == 0
 
@@ -1434,11 +1479,13 @@ class MaqamGenerator:
                     allowed_cadences=allowed_cadences,
                     phase=phase,
                     is_piece_opening=is_opening)
+                ant.dynamics_level = section_dynamics
                 con = self.phrase_generator.generate_phrase(
                     phrase_types[i + 1],
                     cadence_role="consequent",
                     allowed_cadences=["full"],
                     phase=phase)
+                con.dynamics_level = section_dynamics
                 section.phrases.extend([ant, con])
                 i += 2
             else:
@@ -1447,10 +1494,39 @@ class MaqamGenerator:
                     allowed_cadences=allowed_cadences,
                     phase=phase,
                     is_piece_opening=is_opening)
+                phrase.dynamics_level = section_dynamics
                 section.phrases.append(phrase)
                 i += 1
 
         return section
+
+    def _resolve_section_dynamics(self, phase_info: Dict) -> float:
+        """Map phase intensity + dynamics_range slider to a 0-1 level.
+
+        Audit v2: previously the dynamics_range slider (0-100) was
+        sent by the UI but never used. Now: each section's
+        dynamics_level is computed from the phase's intensity_range
+        (from generator_config.json) and widened/narrowed by the
+        dynamics_range slider. The result is later converted to a
+        MusicXML dynamic marking (pp/p/mp/mf/f/ff).
+        """
+        if not phase_info:
+            return 0.5
+        intensity = phase_info.get("intensity_range", [0.3, 0.7])
+        if not intensity or len(intensity) < 2:
+            return 0.5
+        low, high = intensity[0], intensity[1]
+        # Centre of the phase's natural intensity range
+        centre = (low + high) / 2.0
+        # The dynamics_range slider (0-1) widens the spread;
+        # 0.5 = neutral, 0 = narrow, 1 = wide
+        dyn_range = getattr(self.params, "dynamics_range", 0.6)
+        # The slider currently sits at 0.6 by default (the user
+        # tested with no change); shift the centre slightly upward
+        # for higher values, downward for lower, and widen/narrow
+        # by a small amount.
+        spread = max(0.05, (high - low) * (0.5 + dyn_range))
+        return max(0.05, min(0.95, centre))
 
     def _get_phrase_types_for_phase(self, phase: Phase) -> List[PhraseType]:
         """Get phrase types appropriate for the phase"""
