@@ -38,5 +38,9 @@ output/
 *.md
 !README.md
 
+# Infrastructure / CI (not needed inside the image)
+infra
+.github
+
 # Knowledge files (optional - can include if needed)
 # knowledge/
