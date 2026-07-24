@@ -72,15 +72,27 @@ git clone https://github.com/zaheralkaei/maqamatic.git && cd maqamatic
 Create the resource group and deploy:
 
 ```bash
-az group create --name maqamatic-rg --location westeurope
+az group create --name maqamatic-rg --location swedencentral
 ```
 
 ```bash
 az deployment group create --resource-group maqamatic-rg --template-file infra/main.bicep --query properties.outputs.url.value -o tsv
 ```
 
-Change `westeurope` to whichever region you prefer. The command prints the live
-HTTPS URL. First request will be slow — that is scale-to-zero doing its job.
+The deploy takes 3–5 minutes; the Container Apps environment is the slow part.
+It prints the live HTTPS URL. The first request will be slow — that is
+scale-to-zero doing its job.
+
+> **On regions.** Avoid `westeurope`: it is capacity-constrained and rejects new
+> customers with `RequestDisallowedByAzure` / "region is currently not accepting
+> new customers". `swedencentral` is the default here for that reason.
+> `germanywestcentral`, `northeurope`, `francecentral`, and `polandcentral` are
+> good fallbacks.
+>
+> A resource group's location cannot be changed after creation, and
+> `infra/main.bicep` defaults every resource to `resourceGroup().location`. So if
+> you need to switch regions, delete the (empty) group and recreate it rather
+> than passing a location override — that keeps later deploys parameter-free.
 
 ## Step 3 — Wire up continuous deployment *(Cloud Shell)*
 
