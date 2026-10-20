@@ -67,8 +67,9 @@ def test_maqam_modulation_targets_resolve(maqamat):
 
 
 # Maqamat whose declared ajnas chain does not reproduce their own stored
-# scale. Tracked as a data finding (PRELAUNCH_AUDIT / CONTENT_CHECK C-5).
-KNOWN_AJNAS_CHAIN_MISMATCH = {"sikah_baladi"}
+# scale. Empty: sikah_baladi (C-5) was resolved — its degree 7 was corrected
+# from D natural to D half-flat so the two Sikah Baladi ajnas reconstruct it.
+KNOWN_AJNAS_CHAIN_MISMATCH: set = set()
 
 
 def _reconstruct_scale_from_ajnas(maqam, ajnas):

@@ -44,7 +44,7 @@ If you find a discrepancy with MaqamWorld, please open an issue — the data sho
 | saba_zamzam | Maqam Saba Zamzam | saba | 0 1 3 4 7 8 10 12 | Saba Zamzam + Hijaz (upper) | no | D |
 | jiharkah | Maqam Jiharkah | jiharkah | 0 2 4 5 7 9 10.5 12 | Jiharkah + Rast (upper) | yes | F |
 | lami | Maqam Lami | lami | 0 1 3 5 6 8 10 12 | Lami + Kurd (upper) | no | D |
-| sikah_baladi | Maqam Sikah Baladi | sikah | 0 2 3.5 5 7 8.5 10.5 12 | Sikah Baladi + Sikah Baladi (upper) | no | E½♭ |
+| sikah_baladi | Maqam Sikah Baladi | sikah | 0 2 3.5 5 7 8.5 10 12 | Sikah Baladi + Sikah Baladi (upper) | no | E½♭ |
 | iraq | Maqam Iraq | sikah | 0 1.5 3.5 5 6.5 8.5 10.5 | Iraq + Sikah (upper) | no | B½♭ |
 | yakah | Maqam Yakah | rast | 0 2 3.5 5 7 8.5 10 12 | Rast + Bayati (upper) | yes | G |
 
@@ -242,7 +242,7 @@ If you find a discrepancy with MaqamWorld, please open an issue — the data sho
 
 #### Maqam Sikah Baladi (`sikah_baladi`)
 - **Family:** sikah | **Tonic:** E½♭4 | **Octave-equivalent:** no
-- **Scale:** 0 2 3.5 5 7 8.5 10.5 12 (M2 ¾ ¾ W ¾ ¾ M2 — F half-sharp is unique to this maqam)
+- **Scale:** 0 2 3.5 5 7 8.5 10 12 (M2 ¾ ¾ W ¾ ¾ M2 — F half-sharp is unique to this maqam; degree 7 is D half-flat)
 - **Ajnas:** Lower: Sikah Baladi (deg 1, primary) | Upper: Sikah Baladi (deg 4, primary)
 - **Ghammaz:** 4 (soft, undefined) | **Leading tone:** none
 - **Sayr:** Starts 3–5, descending, emphasis [1,4], tension [3], resolves to [1]

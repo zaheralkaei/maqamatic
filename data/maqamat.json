@@ -1112,8 +1112,8 @@
       "name": "Maqam Sikah Baladi",
       "transliteration": "Maqām Sīkāh Baladī",
       "family": "sikah",
-      "scale_semitones": [0, 2, 3.5, 5, 7, 8.5, 10.5, 12],
-      "scale_cents": [0, 200, 350, 500, 700, 850, 1050, 1200],
+      "scale_semitones": [0, 2, 3.5, 5, 7, 8.5, 10, 12],
+      "scale_cents": [0, 200, 350, 500, 700, 850, 1000, 1200],
       "octave_equivalent": true,
       "ajnas": [
         {"jins_id": "sikah_baladi", "position": "lower", "start_degree": 1, "is_primary": true, "alternatives": []},
@@ -1152,7 +1152,7 @@
       "musicxml": {
         "default_tonic": {"step": "E", "octave": 4, "alter": -0.5},
         "key_signature_fifths": 0,
-        "custom_accidentals": [{"step": "E", "alter": -0.5}, {"step": "F", "alter": 0.5}, {"step": "A", "alter": -0.5}],
+        "custom_accidentals": [{"step": "E", "alter": -0.5}, {"step": "F", "alter": 0.5}, {"step": "A", "alter": -0.5}, {"step": "B", "alter": -0.5}, {"step": "D", "alter": -0.5}],
         "scale_notes": [
           {"step": "E", "octave": 4, "alter": -0.5},
           {"step": "F", "octave": 4, "alter": 0.5},
@@ -1160,7 +1160,7 @@
           {"step": "A", "octave": 4, "alter": -0.5},
           {"step": "B", "octave": 4, "alter": -0.5},
           {"step": "C", "octave": 5, "alter": 0},
-          {"step": "D", "octave": 5, "alter": 0},
+          {"step": "D", "octave": 5, "alter": -0.5},
           {"step": "E", "octave": 5, "alter": -0.5}
         ]
       }
