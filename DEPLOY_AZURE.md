@@ -124,7 +124,9 @@ gh secret set AZURE_CLIENT_ID --body "<appId>" && gh secret set AZURE_TENANT_ID 
 
 ## Step 4 — Verify
 
-Push to `main`, or trigger the workflow by hand:
+Every run first executes the test suite (`pytest`, Python 3.11); the image is
+only built and rolled out if the tests pass. Push to `main`, or trigger the
+workflow by hand:
 
 ```bash
 gh workflow run deploy-azure.yml && gh run watch
@@ -183,8 +185,11 @@ az group delete --name maqamatic-rg --yes
 make horizontal scaling incorrect today:
 
 1. **Rate limiting is in-process.** `RateLimiter` in [`web/app.py`](web/app.py) is
-   a plain `OrderedDict`, so N replicas means N × 10 requests/minute, and the
-   window resets on every deploy.
+   a plain `OrderedDict` per gunicorn worker, so the effective limit is
+   10 requests/minute × workers (2) × replicas, and the window resets on every
+   deploy. It keys on the real client IP via `ProxyFix`, trusting
+   `TRUSTED_PROXY_HOPS` (default `1`, the Container Apps ingress) entries of
+   `X-Forwarded-For`; set it to `0` when nothing sits in front of the app.
 2. **Downloads are instance-local.** `/api/download/<file_id>` reads from the
    container's `output/` directory, so a download served by a different replica
    than the one that generated the file returns 404.

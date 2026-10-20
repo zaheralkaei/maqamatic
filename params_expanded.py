@@ -3,8 +3,9 @@ Expanded GeneratorParams with all UI parameters mapped.
 Replaces the limited GeneratorParams from maqam_generator.py.
 """
 
+import math
 from dataclasses import dataclass
-from typing import Optional, Dict
+from typing import Optional, Dict, Iterable
 
 
 @dataclass
@@ -68,6 +69,103 @@ class GeneratorParams:
     pitch_gravity_strength: float = 0.7
     transition_matrix_weight: float = 0.6
     random_seed: Optional[int] = None
+
+
+class ParamValidationError(ValueError):
+    """A request parameter has the wrong type or an unknown value."""
+
+    def __init__(self, field: str, message: str):
+        super().__init__(f"{field}: {message}")
+        self.field = field
+
+
+# Numeric request fields that ui_parameters.json doesn't define, with the
+# range the UI can produce. duration_beats = bars (4..32) x beats per bar
+# (at most 10, for 10/8).
+EXTRA_NUMERIC_RANGES = {
+    "duration_beats": (2, 320),
+    "beats": (2, 320),             # legacy name for duration_beats
+    "duration_bars": (4, 32),
+    "register_excursion": (0, 100),
+}
+
+# tension_curve values the current HTML still sends although they are not in
+# ui_parameters.json (see AUDIT_ROUND2 R2-07). Accepted until the UI is fixed.
+LEGACY_TENSION_CURVES = ("ascending", "descending", "flat")
+
+
+def _as_number(field: str, value) -> float:
+    if isinstance(value, bool):
+        raise ParamValidationError(field, "must be a number, not a boolean")
+    if isinstance(value, (int, float)):
+        number = float(value)
+    elif isinstance(value, str):
+        try:
+            number = float(value.strip())
+        except ValueError:
+            raise ParamValidationError(field, f"must be a number, got {value!r}")
+    else:
+        raise ParamValidationError(field, f"must be a number, got {type(value).__name__}")
+    if not math.isfinite(number):
+        raise ParamValidationError(field, "must be a finite number")
+    return number
+
+
+def sanitize_ui_values(ui_values: Dict, parameter_defs: Dict,
+                       valid_forms: Optional[Iterable[str]] = None) -> Dict:
+    """Validate and clamp a request's UI values (audit R2-03 / R2-11).
+
+    - Numeric fields must be numbers (or numeric strings); out-of-range
+      values are clamped to the range the UI itself allows, taken from
+      ui_parameters.json, so the API can't be driven to extreme cost.
+    - Dropdown fields must be one of the defined options.
+    - Selections must be strings; the seed a string or integer;
+      include_percussion a boolean.
+    - A value of None is treated as absent (the default applies).
+
+    Raises ParamValidationError naming the offending field. Unknown keys
+    are passed through untouched.
+    """
+    clean = {k: v for k, v in ui_values.items() if v is not None}
+
+    ranges = dict(EXTRA_NUMERIC_RANGES)
+    options = {}
+    for name, d in parameter_defs.items():
+        if d.get("type") == "slider" and d.get("min") is not None:
+            ranges[name] = (d["min"], d["max"])
+        elif d.get("type") == "dropdown":
+            options[name] = [o["value"] for o in d.get("options", [])
+                             if isinstance(o, dict)]
+    if valid_forms is not None:
+        options["form_type"] = list(valid_forms)
+    if "tension_curve" in options:
+        options["tension_curve"] += list(LEGACY_TENSION_CURVES)
+
+    for name, (lo, hi) in ranges.items():
+        if name in clean:
+            number = _as_number(name, clean[name])
+            clean[name] = int(round(max(lo, min(hi, number))))
+
+    for name, allowed in options.items():
+        if name in clean:
+            value = clean[name]
+            if not isinstance(value, str) or value not in allowed:
+                raise ParamValidationError(
+                    name, f"must be one of {sorted(set(allowed))}, got {value!r}")
+
+    for name in ("maqam_selection", "maqam", "iqa_selection", "iqa"):
+        if name in clean and not isinstance(clean[name], str):
+            raise ParamValidationError(name, "must be a string id")
+
+    seed = clean.get("randomness_seed")
+    if seed is not None and (isinstance(seed, bool)
+                             or not isinstance(seed, (str, int))):
+        raise ParamValidationError("randomness_seed", "must be a string or integer")
+
+    if "include_percussion" in clean and not isinstance(clean["include_percussion"], bool):
+        raise ParamValidationError("include_percussion", "must be true or false")
+
+    return clean
 
 
 def create_generator_from_ui_params(ui_values: Dict):

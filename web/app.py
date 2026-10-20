@@ -13,18 +13,34 @@ from collections import defaultdict
 from pathlib import Path
 from flask import Flask, request, jsonify, send_file, render_template
 from flask_cors import CORS
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 # Add parent directory to path for imports
 import sys
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from maqam_generator import MaqamGenerator, DataLoader
-from params_expanded import GeneratorParams, create_generator_from_ui_params
+from params_expanded import (GeneratorParams, ParamValidationError,
+                             create_generator_from_ui_params, sanitize_ui_values)
 from generator_to_musicxml import generate_and_export, MusicXMLGenerator
 
 app = Flask(__name__,
             static_folder='static',
             template_folder='templates')
+
+# Audit R2-02: in production the app sits behind the Azure Container Apps
+# ingress proxy, so request.remote_addr is the proxy, not the user, and the
+# per-IP rate limiter became one shared global bucket. Trust the
+# X-Forwarded-For entries added by that many proxy hops (1 on Azure). Set
+# TRUSTED_PROXY_HOPS=0 when running without a proxy so clients can't spoof it.
+TRUSTED_PROXY_HOPS = int(os.environ.get('TRUSTED_PROXY_HOPS', '1'))
+if TRUSTED_PROXY_HOPS > 0:
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_for=TRUSTED_PROXY_HOPS,
+                            x_proto=TRUSTED_PROXY_HOPS)
+
+# Audit R2-03: a generation request is a small JSON object; refuse bodies
+# larger than this outright.
+app.config['MAX_CONTENT_LENGTH'] = 64 * 1024
 # Audit v3 (post-Railway): CORS was permissive but the
 # Access-Control-Allow-Headers default didn't always include
 # Content-Type on some proxies (Railway edge). Be explicit so
@@ -177,6 +193,16 @@ def get_parameters():
         return jsonify({'error': 'Failed to load parameters'}), 500
 
 
+def _bad_request(message, **extra):
+    return jsonify({'success': False, 'error': message, **extra}), 400
+
+
+@app.errorhandler(413)
+def payload_too_large(_error):
+    return jsonify({'success': False,
+                    'error': 'Request body is too large.'}), 413
+
+
 @app.route('/api/generate', methods=['POST'])
 def generate_melody():
     """Generate a melody based on provided parameters"""
@@ -186,20 +212,39 @@ def generate_melody():
         return jsonify({'error': 'Rate limit exceeded. Please wait and try again.'}), 429
 
     cleanup_old_files()
-    try:
-        data = request.get_json() or {}
 
+    # Audit R2-11: malformed or mistyped input is the client's error (400),
+    # not a server failure (500).
+    data = request.get_json(silent=True)
+    if data is None:
+        if request.get_data(cache=True):
+            return _bad_request('Request body must be valid JSON.')
+        data = {}
+    if not isinstance(data, dict):
+        return _bad_request('Request body must be a JSON object.')
+    try:
+        data = sanitize_ui_values(
+            data,
+            data_loader.ui_parameters.get('parameters', {}),
+            valid_forms=data_loader.generator_config.get(
+                'structure_grammar', {}).get('base_forms', {}).keys())
+    except ParamValidationError as e:
+        return _bad_request(str(e), field=e.field)
+
+    try:
         # Validate maqam_id and iqa_id up front so a typo returns 400
         # instead of silently falling back to defaults.
         maqam_id = data.get("maqam_selection") or data.get("maqam", "bayati")
         if maqam_id not in data_loader.maqamat:
             return jsonify({
+                'success': False,
                 'error': f'Unknown maqam: {maqam_id}',
                 'valid_maqamat': sorted(data_loader.maqamat.keys()),
             }), 400
         iqa_id = data.get("iqa_selection") or data.get("iqa", "maqsum")
         if iqa_id not in data_loader.iqaat:
             return jsonify({
+                'success': False,
                 'error': f'Unknown iqa: {iqa_id}',
                 'valid_iqaat': sorted(data_loader.iqaat.keys()),
             }), 400

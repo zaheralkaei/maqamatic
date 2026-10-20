@@ -46,6 +46,9 @@ def main():
     # Import and run the app
     os.chdir(project_root)
 
+    # Local development has no reverse proxy in front, so don't trust
+    # X-Forwarded-For (see TRUSTED_PROXY_HOPS in web/app.py).
+    os.environ.setdefault('TRUSTED_PROXY_HOPS', '0')
     from web.app import app
 
     url = "http://localhost:5025"

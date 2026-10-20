@@ -12,6 +12,11 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = REPO_ROOT / "data"
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
+# Local checkouts may keep Flask & co. in an untracked vendor/ folder
+# (pip install --target vendor); CI installs requirements.txt instead.
+VENDOR = REPO_ROOT / "vendor"
+if VENDOR.is_dir() and str(VENDOR) not in sys.path:
+    sys.path.append(str(VENDOR))
 
 from maqam_generator import DataLoader  # noqa: E402
 

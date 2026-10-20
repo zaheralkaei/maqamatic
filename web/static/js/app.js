@@ -640,13 +640,16 @@ const Playback = {
                             if (displayStep === 'F' && displayOctave === 4) strokeType = 'dum';
                             else if (displayStep === 'C' && displayOctave === 5) strokeType = 'tak';
                             else if (displayStep === 'E' && displayOctave === 4) strokeType = 'ka';
-                            // Audit v3: read velocity/accent from the
-                            // MusicXML so the audio playback gets the
-                            // same dynamic shape as the visual score.
-                            // MusicXML stores <velocity>1-127</velocity>
-                            // and an optional <accent/> articulation.
+                            // Read velocity/accent from the MusicXML so the
+                            // audio playback gets the same dynamic shape as
+                            // the visual score. Velocity is the standard
+                            // `dynamics` attribute on <note> (percent of the
+                            // forte velocity 90; audit F-2/R2-04). Older
+                            // files carried a <velocity>1-127</velocity>.
+                            const dynAttr = parseFloat(note.getAttribute('dynamics'));
                             const velText = note.querySelector('velocity')?.textContent;
-                            const vel = velText ? parseInt(velText) : 80;
+                            const vel = Number.isFinite(dynAttr) ? Math.round(dynAttr * 0.9)
+                                      : velText ? parseInt(velText) : 80;
                             const hasAccent = note.querySelector('notations articulations accent') !== null;
                             const accent = hasAccent ? 1.0 : 0.6;
                             this.percussionNotes.push({
