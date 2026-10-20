@@ -538,35 +538,6 @@
       },
       "midi": {"dum_note": 36, "tak_note": 50, "ka_note": 39}
     },
-    "nawakht": {
-      "name": "Nawakht",
-      "transliteration": "Nawakht",
-      "time_signature": {"beats": 7, "beat_type": 4, "display": "7/4"},
-      "base_unit": "quarter",
-      "total_eighths": 14,
-      "pattern": {
-        "notation_string": "D T T D T D -",
-        "events": [
-          {"position": 0,  "duration": 8, "stroke": "dum", "accent": 2},
-          {"position": 8,  "duration": 8, "stroke": "tak", "accent": 1},
-          {"position": 16, "duration": 8, "stroke": "tak", "accent": 0},
-          {"position": 24, "duration": 8, "stroke": "dum", "accent": 2},
-          {"position": 32, "duration": 8, "stroke": "tak", "accent": 1},
-          {"position": 40, "duration": 8, "stroke": "dum", "accent": 1},
-          {"position": 48, "duration": 8, "stroke": "rest", "accent": 0}
-        ],
-        "total_divisions": 56
-      },
-      "characteristics": {
-        "feel": "asymmetric, lively",
-        "tempo_range": {"min_bpm": 90, "max_bpm": 140, "typical_bpm": 115}
-      },
-      "usage": {
-        "genres": ["Turkish classical", "folk"],
-        "regions": ["Turkey"]
-      },
-      "midi": {"dum_note": 36, "tak_note": 50, "ka_note": 39}
-    },
     "fox": {
       "name": "Fox",
       "transliteration": "Foks",
@@ -625,15 +596,15 @@
       "base_unit": "eighth",
       "total_eighths": 7,
       "pattern": {
-        "notation_string": "D T D T D T T",
+        "notation_string": "D T T D T D -",
         "events": [
           {"position": 0,  "duration": 4, "stroke": "dum", "accent": 2},
           {"position": 4,  "duration": 4, "stroke": "tak", "accent": 1},
-          {"position": 8,  "duration": 4, "stroke": "dum", "accent": 2},
-          {"position": 12, "duration": 4, "stroke": "tak", "accent": 1},
-          {"position": 16, "duration": 4, "stroke": "dum", "accent": 2},
-          {"position": 20, "duration": 4, "stroke": "tak", "accent": 1},
-          {"position": 24, "duration": 4, "stroke": "tak", "accent": 1}
+          {"position": 8,  "duration": 4, "stroke": "tak", "accent": 0},
+          {"position": 12, "duration": 4, "stroke": "dum", "accent": 2},
+          {"position": 16, "duration": 4, "stroke": "tak", "accent": 1},
+          {"position": 20, "duration": 4, "stroke": "dum", "accent": 1},
+          {"position": 24, "duration": 4, "stroke": "rest", "accent": 0}
         ],
         "total_divisions": 28
       },

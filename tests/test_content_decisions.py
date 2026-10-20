@@ -114,9 +114,20 @@ def test_bambi_eight_four(iqaat):
                              (56, 8, "dum")]
 
 
+def test_nawakht_removed(iqaat):
+    assert "nawakht" not in iqaat
+
+
+def test_dawr_hindi_seven_eight(iqaat):
+    iqa = iqaat["dawr_hindi"]
+    # eighths: D, T, T, D, T, D, rest
+    assert _strokes(iqa) == [(0, 4, "dum"), (4, 4, "tak"), (8, 4, "tak"),
+                             (12, 4, "dum"), (16, 4, "tak"), (20, 4, "dum"),
+                             (24, 4, "rest")]
+
+
 @pytest.mark.parametrize("iqa_id,meter", [
     ("masmoudi_kabir", (8, 4)),
-    ("nawakht", (7, 4)),
     ("dawr_hindi", (7, 8)),
 ])
 def test_meters_match_maqamworld(iqaat, iqa_id, meter):

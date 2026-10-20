@@ -1,6 +1,6 @@
 # Maqamatic
 
-A Flask web app that generates Arabic maqam melodies as MusicXML. Pick a maqam (22 available), an iqa'/rhythm (21 available), tweak the parameters, hit Generate, and get a notated score you can play back, download, or edit in any MusicXML-compatible tool (MuseScore, Finale, Dorico, etc).
+A Flask web app that generates Arabic maqam melodies as MusicXML. Pick a maqam (22 available), an iqa'/rhythm (20 available), tweak the parameters, hit Generate, and get a notated score you can play back, download, or edit in any MusicXML-compatible tool (MuseScore, Finale, Dorico, etc).
 
 By Zaher Alkaei.
 
@@ -39,7 +39,7 @@ The user's parameter choices (traditionality, energy, melodic balance, jins adhe
 ## What's in the box
 
 - 22 maqamat across 8 families (Bayati, Rast, Hijaz, Sikah, Nahawand, Kurd, Nikriz, Saba) including quarter-tone support
-- 21 iqa'at from 2/4 to 10/8
+- 20 iqa'at from 2/4 to 10/8
 - 5 presets: Composed Piece, Energetic Dance, Meditative, Modern Fusion, Traditional Taqsim
 - 20+ parameter sliders covering overall style, melodic behavior, form & structure, rhythm, and ornamentation
 - 9 musical forms including traditional Sama'i, Longa, and Bashraf
@@ -57,7 +57,7 @@ Core engine:
 Data:
 - `data/maqamat.json` — 22 maqamat with scale, ajnas, sayr, modulations
 - `data/ajnas.json` — jins (tetrachord) database
-- `data/iqaat.json` — 21 iqa'at with sub-beat encoding
+- `data/iqaat.json` — 20 iqa'at with sub-beat encoding
 - `data/transition_matrices.json` — pitch transition probabilities per maqam
 - `data/sayr_definitions.json` — melodic path rules
 - `data/generator_config.json` — universal rules and defaults

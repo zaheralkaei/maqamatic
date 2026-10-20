@@ -272,7 +272,7 @@ If you find a discrepancy with MaqamWorld, please open an issue — the data sho
 
 ---
 
-## Iqaat (21 rhythmic cycles)
+## Iqaat (20 rhythmic cycles)
 
 ### Notation legend
 - **D** = Dum (bass stroke) | **T** = Tak (sharp stroke) | **k** = Ka (ghost note / light tap)
@@ -299,10 +299,9 @@ If you find a discrepancy with MaqamWorld, please open an issue — the data sho
 | masmoudi_saghir | Masmoudi Saghir | 4/4 | 8 | D D - T D - T - | similar to baladi, lighter | 80–130 (100) | classical, belly dance |
 | karachi | Karachi | 2/4 | 4 | D T D T | simple, driving, pop | 100–160 (130) | pop, modern |
 | bambi | Bambi | 8/4 | 16 | D - - T - - T - - T - - D - D - | lilting, Egyptian folk | 90–140 (115) | folk, shaabi |
-| nawakht | Nawakht | 7/4 | 14 | D T T D T D - | asymmetric, lively | 90–140 (115) | Turkish classical, folk |
 | fox | Fox | 2/4 | 4 | D T D T | short, jumpy, light | 120–200 (160) | Ottoman classical, longa |
 | samai_darij | Sama'i Darij | 3/4 | 6 | D T T | waltz-like, flowing | 100–160 (130) | Ottoman classical, sama'i |
-| dawr_hindi | Dawr Hindi | 7/8 | 7 | D T D T D T T | expansive, meditative | 50–80 (65) | classical, muwashshahat |
+| dawr_hindi | Dawr Hindi | 7/8 | 7 | D T T D T D - | expansive, meditative | 50–80 (65) | classical, muwashshahat |
 
 ### Detailed iqa entries
 
@@ -408,12 +407,6 @@ If you find a discrepancy with MaqamWorld, please open an issue — the data sho
 - **Feel:** lilting, Egyptian folk | **Tempo:** 90–140, typical 115
 - **Genres:** folk, shaabi | **Regions:** Egypt
 
-#### Nawakht (`nawakht`) — 7/4, 14 eighths
-- **Pattern:** `D T T D T D -` (quarter grid) (7 events, 56 divisions)
-- **Events:** D(0,8,2) T(8,8,1) T(16,8) D(24,8,2) T(32,8,1) D(40,8,1) rest(48)
-- **Feel:** asymmetric, lively | **Tempo:** 90–140, typical 115
-- **Genres:** Turkish classical, folk | **Regions:** Turkey
-
 #### Fox (`fox`) — 2/4, 4 eighths
 - **Pattern:** `D T D T` (4 events, 16 divisions)
 - **Events:** D(0,4,2) T(4,4,1) D(8,4,1) T(12,4)
@@ -427,8 +420,8 @@ If you find a discrepancy with MaqamWorld, please open an issue — the data sho
 - **Genres:** Ottoman classical, sama'i | **Regions:** Turkey, Levant, Egypt
 
 #### Dawr Hindi (`dawr_hindi`) — 7/8, 7 eighths
-- **Pattern:** `D T D T D T T` (7 events, 28 divisions)
-- **Events:** D(0,4,2) T(4,4,1) D(8,4,2) T(12,4,1) D(16,4,2) T(20,4,1) T(24,4,1)
+- **Pattern:** `D T T D T D -` (7 events, 28 divisions)
+- **Events:** D(0,4,2) T(4,4,1) T(8,4) D(12,4,2) T(16,4,1) D(20,4,1) rest(24)
 - **Feel:** expansive, meditative | **Tempo:** 50–80, typical 65
 - **Genres:** classical, muwashshahat | **Regions:** Levant, Egypt
 
@@ -469,7 +462,7 @@ If you find a discrepancy with MaqamWorld, please open an issue — the data sho
 |------|---------|-------|
 | `data/maqamat.json` | Maqamat definitions | 22 |
 | `data/ajnas.json` | Ajnas (jins) definitions | 17 |
-| `data/iqaat.json` | Iqaat (rhythmic cycle) definitions | 21 |
+| `data/iqaat.json` | Iqaat (rhythmic cycle) definitions | 20 |
 | `data/sayr_definitions.json` | Melodic path per maqam | 22 + template |
 | `data/transition_matrices.json` | Pitch transition probabilities | 22 maqamat |
 | `data/generator_config.json` | Universal rules & structure grammar | 1 |

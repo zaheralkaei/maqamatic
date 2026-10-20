@@ -12,7 +12,7 @@
 
 ## Pattern
 
-**Notation:** `D T D T D T T`  
+**Notation:** `D T T D T D -`  
 **Base unit:** eighth | **Total divisions:** 28 (per measure)
 
 **Legend:** `D` = Dum (bass, accent 2) | `T` = Tak (sharp, accent 1) | `k` = Ka (ghost note, no accent) | `-` = Rest
@@ -20,7 +20,7 @@
 **Events (position, duration, accent):**
 
 ```
-D(0,4,2) T(4,4,1) D(8,4,2) T(12,4,1) D(16,4,2) T(20,4,1) T(24,4,1)
+D(0,4,2) T(4,4,1) T(8,4,0) D(12,4,2) T(16,4,1) D(20,4,1) -(24,4,0)
 ```
 
 ## Tempo
@@ -45,7 +45,7 @@ Expansive, meditative.
 
 ## Project note
 
-Meter per MaqamWorld (7/8; it was previously stored as 7/4, swapped with Nawakht). The stroke order was kept from the earlier data and has not yet been checked against MaqamWorld's notation.
+Meter per MaqamWorld (7/8). Pattern confirmed by the project owner (2026-10-20): eighth D, eighth T, eighth T, eighth D, eighth T, eighth D, eighth rest. (The project no longer includes a separate Nawakht.)
 
 ## Source
 

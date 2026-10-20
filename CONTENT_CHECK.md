@@ -13,7 +13,7 @@ maqamworld describes every maqam's **ajnas composition in prose** ("Jins X on th
 Iqaat were checked against maqamworld's rhythm index (meters) and, where maqamworld gives no stroke text, against patterns confirmed by the project owner.
 
 ## Headline result
-**All 22 maqamat match maqamworld's ajnas composition and reconstruct exactly from their own ajnas; all 17 ajnas have correct intervals; all 21 iqaat now use maqamworld's meter, one bar per cycle.** Every owner decision below is pinned by `tests/test_content_decisions.py`.
+**All 22 maqamat match maqamworld's ajnas composition and reconstruct exactly from their own ajnas; all 17 ajnas have correct intervals; all 20 iqaat now use maqamworld's meter, one bar per cycle.** Every owner decision below is pinned by `tests/test_content_decisions.py`.
 
 ---
 
@@ -28,7 +28,7 @@ Iqaat were checked against maqamworld's rhythm index (meters) and, where maqamwo
 | 5 | Wahda wa Nuss | **4/4, one bar**: dotted-8th D, dotted-8th T, 8th T, 8th D, 8th rest, 8th T, 8th rest | New pattern. It is exactly maqamworld's description: Maqsum with its first tak delayed by half an eighth |
 | 6 | Ciftetelli | **8/4**: q D, 8th T, q T, 8th T, q T, q D, q D, q T, q rest | New pattern and meter |
 | 7 | Bambi | **8/4**: q D, 8th r, q T, 8th r, q T, 8th r, q T, 8th r, q D, q D | New pattern and meter. The closing D D plus the next cycle's opening D give maqamworld's three consecutive dums |
-| 8 | Nawakht / Dawr Hindi | **maqamworld is correct** | Nawakht 7/4, Dawr Hindi 7/8 (stroke order kept — see C-6) |
+| 8 | Nawakht / Dawr Hindi | **maqamworld meters; then Dawr Hindi = Nawakht's pattern in eighths, and remove Nawakht** | Dawr Hindi 7/8: eighth D, T, T, D, T, D, eighth rest. Nawakht removed |
 | 9 | Farahfaza | **Same shape as Nahawand, on G** | Nahawand + Kurd upper, tonic G3, B♭ (sayr and matrix copied from Nahawand) |
 | 10 | Sikah / Huzam third jins | **Add Rast on the 6th** | Added to both (and to Iraq, per maqamworld) |
 | 11 | Sikah-family jins names | **Use maqamworld's names** | `sikah` is now the 3-note jins E½♭ F G `[1.5, 2]`. The old 4-note `sikah`, the mistuned `mustaar` and the non-maqamworld `iraq` jins are removed. Sikah, Huzam and Iraq use maqamworld's decompositions; Iraq's ghammaz moves to degree 3 |
@@ -85,7 +85,7 @@ Now Nahawand transposed to G3, exactly as maqamworld defines it. (Its old B♮, 
 The earlier degree-7 correction is moot: the maqam was removed by decision #1.
 
 ### ✅ C-6 — Iqaat meters and patterns — RESOLVED; one follow-up
-Every iqa now uses maqamworld's meter with one bar per cycle (Masmoudi Kabir 8/4, Ciftetelli 8/4, Bambi 8/4, Nawakht 7/4, Dawr Hindi 7/8, Wahda wa Nuss one 4/4 bar). **Follow-up:** Nawakht and Dawr Hindi kept their previous stroke order at the new meter; that order has not been checked against maqamworld's notation images.
+Every iqa now uses maqamworld's meter with one bar per cycle (Masmoudi Kabir 8/4, Ciftetelli 8/4, Bambi 8/4, Dawr Hindi 7/8, Wahda wa Nuss one 4/4 bar). Dawr Hindi's pattern was confirmed by the owner (eighth D, T, T, D, T, D, eighth rest), and Nawakht was removed.
 
 ### C-7 — Sayr is structured data vs maqamworld prose — INFORMATIONAL
 Unchanged: a sayr fidelity review is a separate, expert-driven workstream. (Farahfaza and Nairuz inherit the sayr of Nahawand and Yakah respectively, which matches maqamworld's definitions of them as transpositions.)
@@ -103,8 +103,8 @@ Unchanged: a sayr fidelity review is a separate, expert-driven workstream. (Fara
 ### Ajnas interval values — ✅ VERIFIED (17 ajnas)
 Checked against canonical maqam theory and maqamworld's jins taxonomy, and transitively confirmed (every maqam reconstructs from them): ajam `[2,2,1]`, bayati `[1.5,1.5,2]`, hijaz `[1,3,1]`, kurd `[1,2,2]`, nahawand `[2,1,2]`, nikriz/nawa_athar `[2,1,3,1]`, rast `[2,1.5,1.5,2]`, sikah `[1.5,2]`, saba `[1.5,1.5,1]`, saba_zamzam `[1,2,1]`, jiharkah `[2,2,1,2]`, lami `[1,2,2]`, athar_kurd `[1,2,3,1]`, and the upper forms of ajam/nahawand/hijaz.
 
-### Iqaat — meters ✅ all 21; stroke patterns partly confirmed
-All 21 meters match maqamworld's rhythm index (Masmoudi Saghir is maqamworld's Baladi). Stroke patterns are confirmed by the owner for Wahda wa Nuss, Ciftetelli and Bambi; Wahda wa Nuss also matches maqamworld's prose description. maqamworld shows the other patterns only as notation images, so they haven't been checked stroke by stroke. `test_every_iqa_exports_full_measures` confirms all 21 export exactly full melody and percussion measures.
+### Iqaat — meters ✅ all 20; stroke patterns partly confirmed
+All 20 meters match maqamworld's rhythm index (Masmoudi Saghir is maqamworld's Baladi). Stroke patterns are confirmed by the owner for Wahda wa Nuss, Ciftetelli, Bambi and Dawr Hindi; Wahda wa Nuss also matches maqamworld's prose description. maqamworld shows the other patterns only as notation images, so they haven't been checked stroke by stroke. `test_every_iqa_exports_full_measures` confirms all 20 export exactly full melody and percussion measures.
 
 ### Sayr — soft, see C-7.
 

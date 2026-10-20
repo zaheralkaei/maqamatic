@@ -4,7 +4,7 @@
 
 The **iqa'** (plural **iqa'at**, also spelled *iqa* / *iqaa* / *iqa'at*) is a rhythmic pattern or cycle in Arabic music, the rhythmic counterpart to the maqam. Each iqa' is defined by a fixed **time signature**, a repeating **dum/tak pattern**, and a characteristic **feel**. Iqa'at provide the structural foundation over which melodies are composed or improvised.
 
-This project has 21 iqa'at in `data/iqaat.json`, each verified against [MaqamWorld](https://maqamworld.com/en/iqaa.php), the canonical Arabic music encyclopedia.
+This project has 20 iqa'at in `data/iqaat.json`, each verified against [MaqamWorld](https://maqamworld.com/en/iqaa.php), the canonical Arabic music encyclopedia.
 
 ## Key Concepts
 
@@ -50,17 +50,16 @@ The project also has a form grammar in `data/generator_config.json` that pairs i
 | [saidi](saidi.md) | Sa'idi | 4/4 | `D T - D D - T -` | [page](https://www.maqamworld.com/en/iqaa/saidi.php) |
 | [wahda](wahda.md) | Wahda | 4/4 | `D - - T - - T -` | [page](https://www.maqamworld.com/en/iqaa/wahda.php) |
 | [fallahi](fallahi.md) | Fallahi | 2/4 | `D k T k D T -` | [page](https://www.maqamworld.com/en/iqaa/fallahi.php) |
-| [ciftetelli](ciftetelli.md) | Ciftetelli | 8/8 | `D - T - T kT -` | [page](https://www.maqamworld.com/en/iqaa/ciftetelli.php) |
+| [ciftetelli](ciftetelli.md) | Ciftetelli | 8/4 | `D - T T - T T - D - D - T - - -` | [page](https://www.maqamworld.com/en/iqaa/ciftetelli.php) |
 | [samai-thaqil](samai-thaqil.md) | Sama'i Thaqil | 10/8 | `D - T - - D - T - -` | [page](https://www.maqamworld.com/en/iqaa/samai_thaqil.php) |
 | [yuruk-semai](yuruk-semai.md) | Yuruk Semai | 6/8 | `D T T D T -` | [page](https://www.maqamworld.com/en/iqaa/yuruk_semai.php) |
 | [sudasi](sudasi.md) | Sudasi | 6/4 | `D T k T D D T k T D D -` | [page](https://www.maqamworld.com/en/iqaa/sudasi.php) |
-| [wahda-wa-nuss](wahda-wa-nuss.md) | Wahda w-Nuss | 4/4 (×2) | extended wahda, see file | [page](https://www.maqamworld.com/en/iqaa/wahda_w_nuss.php) |
+| [wahda-wa-nuss](wahda-wa-nuss.md) | Wahda w-Nuss | 4/4 | `D - - T - - T - D - - - T - - -` (16ths) | [page](https://www.maqamworld.com/en/iqaa/wahda_w_nuss.php) |
 | [zaffa](zaffa.md) | Zaffa | 4/4 | `D kT kT kD kT k` | [page](https://www.maqamworld.com/en/iqaa/zaffa.php) |
-| [masmoudi-kabir](masmoudi-kabir.md) | Masmoudi Kabir | 4/4 (×2) | 16 positions, see file | [page](https://www.maqamworld.com/en/iqaa/masmudi_kabir.php) |
+| [masmoudi-kabir](masmoudi-kabir.md) | Masmoudi Kabir | 8/4 | `D D - - T - - - D - - T D - T -` | [page](https://www.maqamworld.com/en/iqaa/masmudi_kabir.php) |
 | [masmoudi-saghir](masmoudi-saghir.md) | Masmoudi Saghir | 4/4 | `D D - T D - T -` | [page](https://www.maqamworld.com/en/iqaa/baladi.php) (same as Baladi) |
 | [karachi](karachi.md) | Karachi | 2/4 | `D T D T` | [page](https://www.maqamworld.com/en/iqaa/karachi.php) |
-| [bambi](bambi.md) | Bambi | 4/4 (×2) | 8 positions stretched, see file | [page](https://www.maqamworld.com/en/iqaa/bambi.php) |
-| [nawakht](nawakht.md) | Nawakht | 7/8 | `D T T D T D -` | [page](https://www.maqamworld.com/en/iqaa/nawakht.php) |
+| [bambi](bambi.md) | Bambi | 8/4 | `D - - T - - T - - T - - D - D -` | [page](https://www.maqamworld.com/en/iqaa/bambi.php) |
 | [fox](fox.md) | Fox | 2/4 | `D T D T` | [page](https://www.maqamworld.com/en/iqaa/fox.php) |
 | [samai-darij](samai-darij.md) | Sama'i Darij | 3/4 | `D T T` | [page](https://www.maqamworld.com/en/iqaa/samai_darij.php) |
-| [dawr-hindi](dawr-hindi.md) | Dawr Hindi | 7/4 (×2) | 14 positions, see file | [page](https://www.maqamworld.com/en/iqaa/dawr_hindi.php) |
+| [dawr-hindi](dawr-hindi.md) | Dawr Hindi | 7/8 | `D T T D T D -` | [page](https://www.maqamworld.com/en/iqaa/dawr_hindi.php) |

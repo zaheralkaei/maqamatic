@@ -26,7 +26,7 @@ UI params (JSON, 0–100 sliders)
 ```
 
 **Data model** (all in `data/*.json`):
-- **22 maqamat**, **20 ajnas**, **21 iqaat**.
+- **22 maqamat**, **20 ajnas**, **21 iqaat** at audit time (after the owner's content decisions: 22 maqamat, 17 ajnas, 20 iqaat).
 - Each scale is stored three ways in parallel: `scale_semitones`, `scale_cents`, and MusicXML `scale_notes`.
 - Rich per-maqam metadata: ajnas composition, important degrees (tonic/ghammaz/leading tone), sayr, modulations, constraints.
 
