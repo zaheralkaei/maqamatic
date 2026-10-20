@@ -31,7 +31,7 @@ UI params (JSON, 0–100 sliders)
 - Rich per-maqam metadata: ajnas composition, important degrees (tonic/ghammaz/leading tone), sayr, modulations, constraints.
 
 ### Headline assessment
-The project is in **good shape for launch**. The data is high quality and internally consistent, the generator runs on every maqam without crashing, and the MusicXML is well-formed and rhythmically exact. The one confirmed correctness bug (two maqamat mis-rendered a note — F-1) has been **fixed in this pass**; a set of lower-severity issues and enhancements are catalogued below. Before this audit there were **no automated tests**; there are now **220, all passing**.
+The project is in **good shape for launch**. The data is high quality and internally consistent, the generator runs on every maqam without crashing, and the MusicXML is well-formed and rhythmically exact. The one confirmed correctness bug (two maqamat mis-rendered a note — F-1) has been **fixed in this pass**; a set of lower-severity issues and enhancements are catalogued below. Before this audit there were **no automated tests**; there are now **268, all passing**.
 
 ---
 
@@ -44,7 +44,7 @@ The project is in **good shape for launch**. The data is high quality and intern
 | Generation robustness | generate + export all 22 maqamat × 3 iqaat (seeded) | ✅ no crashes, all well-formed XML |
 | Composed forms | samai (8-section K/T expansion) | ✅ works |
 | Rhythmic integrity | every measure's notes sum to the full measure | ✅ exact |
-| Iqa cycle structure | cycle tiles the measure evenly | ✅ (2 long cycles span 2 bars — see F-5) |
+| Iqa cycle structure | cycle tiles the measure evenly | ✅ (every cycle is now exactly one bar — see F-5) |
 | Determinism | same seed → identical output | ✅ reproducible |
 | External correctness | ajnas composition vs maqamworld.com (spot checks) | ✅ Rast, Hijaz, Yakah/Nairuz, Jiharkah, Saba all match |
 
@@ -58,7 +58,7 @@ The project is in **good shape for launch**. The data is high quality and intern
 The MusicXML exporter (`generator_to_musicxml._note_to_xml`) only emitted an accidental when `alter != 0`. When a scale note was *natural* (`alter = 0`) but the maqam's key signature flats that letter, no natural sign was emitted, so the printed note read a semitone flat (and key-signature-applying MusicXML→MIDI consumers played it flat).
 - **Was affecting:** `farahfaza` (degree 7 = B♮, key sig −2) and `nawa_athar` (degree 7 = B♮, key sig −1) — both the **leading tone**, so musically prominent.
 - **Fix applied:** `_note_to_xml` is now key-signature-aware. When a note is natural on a letter the key signature alters, it emits an explicit `<alter>0</alter>` **and** `<accidental>natural</accidental>`, forcing the correct pitch in every consumer. The key signature (`key_fifths`) is threaded through both the single-meter and multi-meter melody generators via the new `_keysig_alter_for_step` helper. Verified in exported XML for both maqamat.
-- **Note on `custom_accidentals`:** the per-maqam `custom_accidentals` data field was intended for this but is **incomplete and inconsistent** across maqamat, so it was *not* wired in; the key-signature computation is complete and supersedes it. That field can be dropped or regenerated in Phase 2 housekeeping.
+- **Note on `custom_accidentals`:** the per-maqam `custom_accidentals` data field was intended for this but is **incomplete and inconsistent** across maqamat, so it was *not* wired in; the key-signature computation is complete and supersedes it. **The field has since been removed** (2026-10-20, after confirming no code reads it).
 - **Tests:** `tests/test_musicxml.py` now asserts, end-to-end, that every scale degree of every maqam exports at its intended effective pitch (`test_exported_scale_degrees_render_at_correct_pitch`), plus unit tests for the natural-emission logic. The former `xfail`s are gone.
 
 ### 🟠 MEDIUM *(both fixed)*
@@ -75,13 +75,13 @@ maqamworld defines Saba as Jins Saba + Jins Hijaz (3rd) **+ Jins ‘Ajam or Nikr
 
 ### 🟡 LOW / polish
 
-**F-5 — Two iqaat represent an 8-beat cycle as two 4/4 bars. ✅ BY DESIGN (verified).** `masmoudi_kabir` and `wahda_wa_nuss` have 64-division cycles (8 beats) with `time_signature` 4/4. This is **intentional and maqamworld-consistent**: `knowledge/iqaat/masmoudi-kabir.md` documents it as "8/4 over two 4/4 measures," the 16-position pattern deliberately spans both bars, and the cycle tiles the measure evenly (guarded by `test_iqa_cycle_tiles_the_measure`). Changing the meter would alter the written output and contradict the design, so no change. (A future UI could surface the 8-beat cycle length as a hint.)
+**F-5 — 8-beat cycles written as two 4/4 bars. ✅ RESOLVED (owner decision, 2026-10-20).** `masmoudi_kabir` is now **8/4, one bar per cycle**, as maqamworld writes it. `wahda_wa_nuss` is **one 4/4 bar** with the owner-confirmed pattern (Maqsum with its first tak delayed by a sixteenth, matching maqamworld). Every iqa cycle is now exactly one measure, and `test_every_iqa_exports_full_measures` checks all 21 export full measures. See CONTENT_CHECK.md C-6 for the related rhythm fixes.
 
 **F-6 — `jins_id` reuse blurred jins boundaries. ✅ FIXED (2026-10-20).** For maqamat whose lower and upper ajnas share an id (Rast = rast + rast, Sikah Baladi), `JinsRules.is_at_jins_boundary` compared the shared jins-data dict by identity and saw one continuous jins, so no boundary adjustment applied at the ghammaz. **Fix:** boundary detection now compares the active jins **references** by `start_degree` (new `_get_active_jins_ref`), so the tetrachord boundary is detected even when both ajnas share a jins_id. Guarded by `tests/test_rule_engine.py`.
 
-**F-7 — Degree model is capped at 1–8.** The generator clamps all degrees to `[1,8]` (`maqam_generator` motif/cadence code) and `PitchConverter` clamps to the scale length. This is safe (no wrong notes, verified by tests) but means melodies never use the register below the tonic or above the octave, which real taqasim do. Architectural enhancement, not a bug. **(Still open.)**
+**F-7 — Degree model was capped at 1–8. ✅ FIXED (2026-10-20).** Melodies now use the register the sayr data already defined: the `lower` zone (degrees −2…0) through the `extended` zone (9…10). This also fixes a latent bug: the Sikah-family sayr/matrix data already authored degrees −1/0, which the old clamp silently replaced with the tonic. How it works: `PitchConverter` maps every degree in range to a real note — stored scale first, then the maqam's ajnas chain above it (so Saba's 9th is E♭ via Ajam), then octave repetition — keeping the scale's letter names. `select_next_degree` borrows an octave-equivalent matrix row for degrees without one and, at the tonic/octave, offers steps into the register beyond (strength `register_excursion`, default 0.35). Pitch gravity and sayr lookups fold extended degrees to their octave equivalent (degree 0 acts like 7). In 110 seeded pieces about 5% of notes fall outside 1–8. Guarded by new tests in `test_musicxml.py`, `test_generation.py` and `test_rule_engine.py`.
 
-**F-8 — Repo hygiene. ✅ PARTLY DONE.** `vendor/` (5.5 MB of locally pip-installed deps, not used by the Docker build which installs from `requirements.txt`) is now git-ignored so it can't be accidentally committed. `test_output.musicxml` turned out **not** to be tracked (already covered by `*.musicxml`). Still optional: relocate the three historical `AUDIT_REPORT*` files into `docs/`.
+**F-8 — Repo hygiene. ✅ DONE.** `vendor/` (5.5 MB of locally pip-installed deps, not used by the Docker build which installs from `requirements.txt`) is now git-ignored so it can't be accidentally committed. `test_output.musicxml` turned out **not** to be tracked (already covered by `*.musicxml`). The three historical `AUDIT_REPORT*` files now live in `docs/` (moved with `git mv`, history kept).
 
 **F-9 — `app.run(debug=True)` in `web/app.py`. ✅ FIXED (2026-10-20).** The `__main__` block no longer hard-codes `debug=True`; it reads `FLASK_DEBUG` (default off) and `PORT`. Production serves via gunicorn and never runs this block, but the debugger can no longer be reached by accident.
 
@@ -112,7 +112,7 @@ The per-note selection in `PitchSelector.select_next_degree` is an **11-stage pr
 
 ## 5. Test suite added in Phase 1
 
-New `tests/` package (pytest 9, **220 tests, all passing**, ~1s):
+New `tests/` package (pytest 9, **268 tests, all passing**, ~2s). `test_content_decisions.py` pins every content decision the owner confirmed on 2026-10-20:
 
 | File | Covers |
 |---|---|
@@ -129,7 +129,7 @@ Run with: `python -m pytest`
 ## 6. Phase 2 plan (proposed)
 
 **A. Correctness fixes (small, high-value)**
-1. ~~Fix F-1 (natural-accidental rendering).~~ ✅ Done. Follow-up: remove/regenerate the now-superseded `custom_accidentals` field.
+1. ~~Fix F-1 (natural-accidental rendering).~~ ✅ Done, and the superseded `custom_accidentals` field has been removed.
 2. ~~Fix F-2 (percussion velocity → `dynamics` attribute).~~ ✅ Done.
 3. ~~Fix F-3 (per-generator RNG).~~ ✅ Done.
 
@@ -141,14 +141,14 @@ Run with: `python -m pytest`
 **C. Musicality / generator depth**
 - Sensitivity sweep of the 11-stage pipeline (does every slider move the output?).
 - Maqam-specific cadential formulae in `_enforce_tonic_ending`.
-- Consider extending the degree model below the tonic / above the octave (F-7).
+- ~~Extend the degree model below the tonic / above the octave (F-7).~~ ✅ Done. A UI slider for `register_excursion` could be added.
 
 **D. UI / interface** (the user mentioned updating the interface)
 - Surface the richer data we already have (sayr, modulations, mood) in the maqam picker.
-- Iqa labelling (F-5).
+- ~~Iqa labelling (F-5).~~ ✅ Resolved: every cycle is now one bar in its maqamworld meter.
 
 **E. Housekeeping**
-- F-8 repo cleanup, F-9 debug guard, add a CI job that runs `pytest`.
+- ~~F-8 repo cleanup, F-9 debug guard.~~ ✅ Done. Still open: add a CI job that runs `pytest`.
 
 ---
 

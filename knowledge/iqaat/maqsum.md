@@ -43,9 +43,9 @@ Main iqa' for the **Bashraf** form (instrumental).
 
 ## MIDI
 
-- **Dum (D):** note 36 (C2)
-- **Tak (T):** note 42 (F#2)
-- **Ka (k):** note 39 (D#2)
+- **Dum (D):** note 35 (B1)
+- **Tak (T):** note 49 (C#3)
+- **Ka (k):** note 50 (D3)
 
 ## Source
 

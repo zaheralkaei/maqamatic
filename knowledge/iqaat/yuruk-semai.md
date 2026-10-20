@@ -40,7 +40,7 @@ Quick, dance-like.
 ## MIDI
 
 - **Dum (D):** note 36 (C2)
-- **Tak (T):** note 42 (F#2)
+- **Tak (T):** note 50 (D3)
 - **Ka (k):** note 39 (D#2)
 
 ## Source

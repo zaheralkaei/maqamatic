@@ -63,7 +63,6 @@
       "musicxml": {
         "default_tonic": {"step": "B", "octave": 3, "alter": -1},
         "key_signature_fifths": -2,
-        "custom_accidentals": [],
         "scale_notes": [
           {"step": "B", "octave": 3, "alter": -1},
           {"step": "C", "octave": 4, "alter": 0},
@@ -119,7 +118,6 @@
       "musicxml": {
         "default_tonic": {"step": "B", "octave": 3, "alter": -1},
         "key_signature_fifths": -2,
-        "custom_accidentals": [{"step": "B", "alter": -1}, {"step": "E", "alter": -1}],
         "scale_notes": [
           {"step": "B", "octave": 3, "alter": -1},
           {"step": "C", "octave": 4, "alter": 0},
@@ -141,7 +139,7 @@
       "octave_equivalent": true,
       "ajnas": [
         {"jins_id": "bayati", "position": "lower", "start_degree": 1, "is_primary": true, "alternatives": []},
-        {"jins_id": "nahawand_upper", "position": "upper", "start_degree": 4, "is_primary": true, "alternatives": ["hijaz_upper", "ajam_upper"]}
+        {"jins_id": "nahawand_upper", "position": "upper", "start_degree": 4, "is_primary": true, "alternatives": ["hijaz_upper", "ajam_upper", "rast"]}
       ],
       "important_degrees": {
         "tonic": {"degree": 1, "constraint": "hard"},
@@ -178,7 +176,6 @@
       "musicxml": {
         "default_tonic": {"step": "D", "octave": 4, "alter": 0},
         "key_signature_fifths": 0,
-        "custom_accidentals": [{"step": "E", "alter": -0.5}, {"step": "B", "alter": -1}],
         "scale_notes": [
           {"step": "D", "octave": 4, "alter": 0},
           {"step": "E", "octave": 4, "alter": -0.5},
@@ -235,7 +232,6 @@
       "musicxml": {
         "default_tonic": {"step": "D", "octave": 4, "alter": 0},
         "key_signature_fifths": 0,
-        "custom_accidentals": [{"step": "E", "alter": -0.5}, {"step": "A", "alter": -1}],
         "scale_notes": [
           {"step": "D", "octave": 4, "alter": 0},
           {"step": "E", "octave": 4, "alter": -0.5},
@@ -293,7 +289,6 @@
       "musicxml": {
         "default_tonic": {"step": "D", "octave": 4, "alter": 0},
         "key_signature_fifths": 0,
-        "custom_accidentals": [{"step": "E", "alter": -1}, {"step": "F", "alter": 1}, {"step": "B", "alter": -1}],
         "scale_notes": [
           {"step": "D", "octave": 4, "alter": 0},
           {"step": "E", "octave": 4, "alter": -1},
@@ -350,7 +345,6 @@
       "musicxml": {
         "default_tonic": {"step": "C", "octave": 4, "alter": 0},
         "key_signature_fifths": 0,
-        "custom_accidentals": [{"step": "D", "alter": -1}, {"step": "E", "alter": 0}, {"step": "A", "alter": -1}, {"step": "B", "alter": 0}],
         "scale_notes": [
           {"step": "C", "octave": 4, "alter": 0},
           {"step": "D", "octave": 4, "alter": -1},
@@ -408,7 +402,6 @@
       "musicxml": {
         "default_tonic": {"step": "D", "octave": 4, "alter": 0},
         "key_signature_fifths": -1,
-        "custom_accidentals": [],
         "scale_notes": [
           {"step": "D", "octave": 4, "alter": 0},
           {"step": "E", "octave": 4, "alter": -1},
@@ -466,7 +459,6 @@
       "musicxml": {
         "default_tonic": {"step": "C", "octave": 4, "alter": 0},
         "key_signature_fifths": -3,
-        "custom_accidentals": [],
         "scale_notes": [
           {"step": "C", "octave": 4, "alter": 0},
           {"step": "D", "octave": 4, "alter": 0},
@@ -483,12 +475,12 @@
       "name": "Maqam Farahfaza",
       "transliteration": "Maqām Faraḥfazā",
       "family": "nahawand",
-      "scale_semitones": [0, 2, 3, 5, 7, 8, 11, 12],
-      "scale_cents": [0, 200, 300, 500, 700, 800, 1100, 1200],
+      "scale_semitones": [0, 2, 3, 5, 7, 8, 10, 12],
+      "scale_cents": [0, 200, 300, 500, 700, 800, 1000, 1200],
       "octave_equivalent": true,
       "ajnas": [
         {"jins_id": "nahawand", "position": "lower", "start_degree": 1, "is_primary": true, "alternatives": []},
-        {"jins_id": "hijaz_upper", "position": "upper", "start_degree": 5, "is_primary": true, "alternatives": []}
+        {"jins_id": "kurd", "position": "upper", "start_degree": 5, "is_primary": true, "alternatives": ["hijaz"]}
       ],
       "important_degrees": {
         "tonic": {"degree": 1, "constraint": "hard"},
@@ -499,9 +491,9 @@
       "sayr": {
         "starting_range": [5, 8],
         "typical_direction": "descending",
-        "emphasis_degrees": [1, 5, 7],
-        "tension_degrees": [6],
-        "resolution_degrees": [1, 5]
+        "emphasis_degrees": [1, 3, 5],
+        "tension_degrees": [4, 7],
+        "resolution_degrees": [1]
       },
       "modulations": {
         "common_modulations": [
@@ -509,30 +501,29 @@
         ]
       },
       "characteristics": {
-        "mood": ["dramatic", "minor with exotic upper"],
-        "time_of_day": "evening",
-        "traditional_usage": ["dramatic pieces"],
+        "mood": ["soft", "romantic", "minor"],
+        "time_of_day": "any",
+        "traditional_usage": ["Nahawand transposed to G (yakah)", "classical"],
         "popularity": "moderate",
-        "region": ["Turkey", "Levant"]
+        "region": ["Egypt", "Levant", "Turkey"]
       },
       "constraints": {
         "hard": {"must_resolve_to_tonic": true, "forbidden_intervals": [], "required_ajnas": ["nahawand"]},
-        "soft": {"preferred_range": [1, 12], "cadence_patterns": [], "avoid_degrees": []},
-        "preferences": {"ornament_degrees": [6, 7], "vibrato_degrees": [1, 5], "phrase_endings": [1, 5]}
+        "soft": {"preferred_range": [1, 15], "cadence_patterns": [[5, 4, 3, 2, 1]], "avoid_degrees": []},
+        "preferences": {"ornament_degrees": [3, 5], "vibrato_degrees": [1, 5], "phrase_endings": [1, 5]}
       },
       "musicxml": {
-        "default_tonic": {"step": "C", "octave": 4, "alter": 0},
+        "default_tonic": {"step": "G", "octave": 3, "alter": 0},
         "key_signature_fifths": -2,
-        "custom_accidentals": [{"step": "B", "alter": 0}],
         "scale_notes": [
+          {"step": "G", "octave": 3, "alter": 0},
+          {"step": "A", "octave": 3, "alter": 0},
+          {"step": "B", "octave": 3, "alter": -1},
           {"step": "C", "octave": 4, "alter": 0},
           {"step": "D", "octave": 4, "alter": 0},
           {"step": "E", "octave": 4, "alter": -1},
           {"step": "F", "octave": 4, "alter": 0},
-          {"step": "G", "octave": 4, "alter": 0},
-          {"step": "A", "octave": 4, "alter": -1},
-          {"step": "B", "octave": 4, "alter": 0},
-          {"step": "C", "octave": 5, "alter": 0}
+          {"step": "G", "octave": 4, "alter": 0}
         ]
       }
     },
@@ -581,7 +572,6 @@
       "musicxml": {
         "default_tonic": {"step": "C", "octave": 4, "alter": 0},
         "key_signature_fifths": -2,
-        "custom_accidentals": [{"step": "F", "alter": 1}],
         "scale_notes": [
           {"step": "C", "octave": 4, "alter": 0},
           {"step": "D", "octave": 4, "alter": 0},
@@ -638,7 +628,6 @@
       "musicxml": {
         "default_tonic": {"step": "C", "octave": 4, "alter": 0},
         "key_signature_fifths": -1,
-        "custom_accidentals": [{"step": "E", "alter": -1}, {"step": "F", "alter": 1}],
         "scale_notes": [
           {"step": "C", "octave": 4, "alter": 0},
           {"step": "D", "octave": 4, "alter": 0},
@@ -697,7 +686,6 @@
       "musicxml": {
         "default_tonic": {"step": "C", "octave": 4, "alter": 0},
         "key_signature_fifths": 0,
-        "custom_accidentals": [{"step": "E", "alter": -0.5}, {"step": "B", "alter": -0.5}],
         "scale_notes": [
           {"step": "C", "octave": 4, "alter": 0},
           {"step": "D", "octave": 4, "alter": 0},
@@ -755,7 +743,6 @@
       "musicxml": {
         "default_tonic": {"step": "C", "octave": 4, "alter": 0},
         "key_signature_fifths": 0,
-        "custom_accidentals": [{"step": "E", "alter": -0.5}, {"step": "A", "alter": -1}, {"step": "B", "alter": 0}],
         "scale_notes": [
           {"step": "C", "octave": 4, "alter": 0},
           {"step": "D", "octave": 4, "alter": 0},
@@ -777,7 +764,8 @@
       "octave_equivalent": false,
       "ajnas": [
         {"jins_id": "sikah", "position": "lower", "start_degree": 1, "is_primary": true, "alternatives": []},
-        {"jins_id": "rast", "position": "upper", "start_degree": 3, "is_primary": true, "alternatives": []}
+        {"jins_id": "rast", "position": "upper", "start_degree": 3, "is_primary": true, "alternatives": []},
+        {"jins_id": "rast", "position": "top", "start_degree": 6, "is_primary": false, "alternatives": [], "note": "Rast on the 6th (secondary ghammaz) per maqamworld"}
       ],
       "important_degrees": {
         "tonic": {"degree": 1, "constraint": "hard"},
@@ -813,7 +801,6 @@
       "musicxml": {
         "default_tonic": {"step": "E", "octave": 4, "alter": -0.5},
         "key_signature_fifths": 0,
-        "custom_accidentals": [{"step": "E", "alter": -0.5}, {"step": "B", "alter": -0.5}],
         "scale_notes": [
           {"step": "E", "octave": 4, "alter": -0.5},
           {"step": "F", "octave": 4, "alter": 0},
@@ -833,8 +820,9 @@
       "scale_cents": [0, 150, 350, 450, 750, 850, 1050],
       "octave_equivalent": false,
       "ajnas": [
-        {"jins_id": "mustaar", "position": "lower", "start_degree": 1, "is_primary": true, "alternatives": []},
-        {"jins_id": "hijaz", "position": "upper", "start_degree": 3, "is_primary": true, "alternatives": []}
+        {"jins_id": "sikah", "position": "lower", "start_degree": 1, "is_primary": true, "alternatives": []},
+        {"jins_id": "hijaz", "position": "upper", "start_degree": 3, "is_primary": true, "alternatives": []},
+        {"jins_id": "rast", "position": "top", "start_degree": 6, "is_primary": false, "alternatives": [], "note": "Rast on the 6th per maqamworld"}
       ],
       "important_degrees": {
         "tonic": {"degree": 1, "constraint": "hard"},
@@ -869,7 +857,6 @@
       "musicxml": {
         "default_tonic": {"step": "E", "octave": 4, "alter": -0.5},
         "key_signature_fifths": 0,
-        "custom_accidentals": [{"step": "E", "alter": -0.5}, {"step": "A", "alter": -1}, {"step": "B", "alter": 0}],
         "scale_notes": [
           {"step": "E", "octave": 4, "alter": -0.5},
           {"step": "F", "octave": 4, "alter": 0},
@@ -891,7 +878,7 @@
       "ajnas": [
         {"jins_id": "saba", "position": "lower", "start_degree": 1, "is_primary": true, "alternatives": []},
         {"jins_id": "hijaz", "position": "upper", "start_degree": 3, "is_primary": true, "alternatives": [], "note": "overlaps with Saba jins at F-Gb"},
-        {"jins_id": "ajam", "position": "top", "start_degree": 6, "is_primary": false, "alternatives": ["nikriz"], "note": "Ajam (or Nikriz) on the 6th per maqamworld; extends above the octave"}
+        {"jins_id": "ajam", "position": "top", "start_degree": 6, "is_primary": false, "alternatives": ["nikriz"], "note": "Ajam on the 6th gives a natural octave (D); the Nikriz alternative on B-flat gives a flat octave (D-flat). Per maqamworld."}
       ],
       "important_degrees": {
         "tonic": {"degree": 1, "constraint": "hard"},
@@ -927,7 +914,6 @@
       "musicxml": {
         "default_tonic": {"step": "D", "octave": 4, "alter": 0},
         "key_signature_fifths": 0,
-        "custom_accidentals": [{"step": "E", "alter": -0.5}, {"step": "G", "alter": -1}],
         "scale_notes": [
           {"step": "D", "octave": 4, "alter": 0},
           {"step": "E", "octave": 4, "alter": -0.5},
@@ -950,7 +936,7 @@
       "ajnas": [
         {"jins_id": "saba_zamzam", "position": "lower", "start_degree": 1, "is_primary": true, "alternatives": []},
         {"jins_id": "hijaz", "position": "upper", "start_degree": 3, "is_primary": true, "alternatives": [], "note": "overlaps with Saba Zamzam jins at F-Gb"},
-        {"jins_id": "ajam", "position": "top", "start_degree": 6, "is_primary": false, "alternatives": ["nikriz"], "note": "Ajam (or Nikriz) on the 6th per maqamworld; extends above the octave"}
+        {"jins_id": "ajam", "position": "top", "start_degree": 6, "is_primary": false, "alternatives": ["nikriz"], "note": "Ajam on the 6th gives a natural octave (D); the Nikriz alternative on B-flat gives a flat octave (D-flat). Per maqamworld."}
       ],
       "important_degrees": {
         "tonic": {"degree": 1, "constraint": "hard"},
@@ -985,7 +971,6 @@
       "musicxml": {
         "default_tonic": {"step": "D", "octave": 4, "alter": 0},
         "key_signature_fifths": -1,
-        "custom_accidentals": [{"step": "G", "alter": -1}],
         "scale_notes": [
           {"step": "D", "octave": 4, "alter": 0},
           {"step": "E", "octave": 4, "alter": -1},
@@ -1042,7 +1027,6 @@
       "musicxml": {
         "default_tonic": {"step": "F", "octave": 4, "alter": 0},
         "key_signature_fifths": -1,
-        "custom_accidentals": [{"step": "E", "alter": -0.5}],
         "scale_notes": [
           {"step": "F", "octave": 4, "alter": 0},
           {"step": "G", "octave": 4, "alter": 0},
@@ -1097,7 +1081,6 @@
       "musicxml": {
         "default_tonic": {"step": "D", "octave": 4, "alter": 0},
         "key_signature_fifths": -2,
-        "custom_accidentals": [],
         "scale_notes": [
           {"step": "D", "octave": 4, "alter": 0},
           {"step": "E", "octave": 4, "alter": -1},
@@ -1110,63 +1093,6 @@
         ]
       }
     },
-    "sikah_baladi": {
-      "name": "Maqam Sikah Baladi",
-      "transliteration": "Maqām Sīkāh Baladī",
-      "family": "sikah",
-      "scale_semitones": [0, 2, 3.5, 5, 7, 8.5, 10, 12],
-      "scale_cents": [0, 200, 350, 500, 700, 850, 1000, 1200],
-      "octave_equivalent": true,
-      "ajnas": [
-        {"jins_id": "sikah_baladi", "position": "lower", "start_degree": 1, "is_primary": true, "alternatives": []},
-        {"jins_id": "sikah_baladi", "position": "upper", "start_degree": 4, "is_primary": true, "alternatives": []}
-      ],
-      "important_degrees": {
-        "tonic": {"degree": 1, "constraint": "hard"},
-        "ghammaz": {"degree": 4, "constraint": "hard"},
-        "secondary_ghammaz": null,
-        "leading_tone": null
-      },
-      "sayr": {
-        "starting_range": [3, 5],
-        "typical_direction": "descending",
-        "emphasis_degrees": [1, 4],
-        "tension_degrees": [3],
-        "resolution_degrees": [1]
-      },
-      "modulations": {
-        "common_modulations": [
-          {"target": "sikah", "pivot_degree": 1, "frequency": "common", "constraint": "soft"}
-        ]
-      },
-      "characteristics": {
-        "mood": ["folk", "Egyptian", "popular"],
-        "time_of_day": "any",
-        "traditional_usage": ["Egyptian folk music", "sha'bi"],
-        "popularity": "moderate",
-        "region": ["Egypt"]
-      },
-      "constraints": {
-        "hard": {"must_resolve_to_tonic": true, "forbidden_intervals": [], "required_ajnas": ["sikah_baladi"]},
-        "soft": {"preferred_range": [1, 10], "cadence_patterns": [], "avoid_degrees": []},
-        "preferences": {"ornament_degrees": [1, 4], "vibrato_degrees": [1], "phrase_endings": [1]}
-      },
-      "musicxml": {
-        "default_tonic": {"step": "E", "octave": 4, "alter": -0.5},
-        "key_signature_fifths": 0,
-        "custom_accidentals": [{"step": "E", "alter": -0.5}, {"step": "F", "alter": 0.5}, {"step": "A", "alter": -0.5}, {"step": "B", "alter": -0.5}, {"step": "D", "alter": -0.5}],
-        "scale_notes": [
-          {"step": "E", "octave": 4, "alter": -0.5},
-          {"step": "F", "octave": 4, "alter": 0.5},
-          {"step": "G", "octave": 4, "alter": 0},
-          {"step": "A", "octave": 4, "alter": -0.5},
-          {"step": "B", "octave": 4, "alter": -0.5},
-          {"step": "C", "octave": 5, "alter": 0},
-          {"step": "D", "octave": 5, "alter": -0.5},
-          {"step": "E", "octave": 5, "alter": -0.5}
-        ]
-      }
-    },
     "iraq": {
       "name": "Maqam Iraq",
       "transliteration": "Maqām 'Irāq",
@@ -1175,19 +1101,20 @@
       "scale_cents": [0, 150, 350, 500, 650, 850, 1050],
       "octave_equivalent": false,
       "ajnas": [
-        {"jins_id": "iraq", "position": "lower", "start_degree": 1, "is_primary": true, "alternatives": []},
-        {"jins_id": "sikah", "position": "upper", "start_degree": 4, "is_primary": true, "alternatives": []}
+        {"jins_id": "sikah", "position": "lower", "start_degree": 1, "is_primary": true, "alternatives": []},
+        {"jins_id": "bayati", "position": "upper", "start_degree": 3, "is_primary": true, "alternatives": []},
+        {"jins_id": "rast", "position": "top", "start_degree": 6, "is_primary": false, "alternatives": [], "note": "Rast on the 6th per maqamworld"}
       ],
       "important_degrees": {
         "tonic": {"degree": 1, "constraint": "hard"},
-        "ghammaz": {"degree": 4, "constraint": "hard"},
+        "ghammaz": {"degree": 3, "constraint": "hard"},
         "secondary_ghammaz": null,
         "leading_tone": null
       },
       "sayr": {
         "starting_range": [3, 5],
         "typical_direction": "descending",
-        "emphasis_degrees": [1, 4],
+        "emphasis_degrees": [1, 3],
         "tension_degrees": [2, 3],
         "resolution_degrees": [1]
       },
@@ -1204,14 +1131,13 @@
         "region": ["Iraq", "Levant"]
       },
       "constraints": {
-        "hard": {"must_resolve_to_tonic": true, "forbidden_intervals": [], "required_ajnas": ["iraq"]},
+        "hard": {"must_resolve_to_tonic": true, "forbidden_intervals": [], "required_ajnas": ["sikah"]},
         "soft": {"preferred_range": [1, 8], "cadence_patterns": [], "avoid_degrees": []},
         "preferences": {"ornament_degrees": [1, 4], "vibrato_degrees": [1], "phrase_endings": [1]}
       },
       "musicxml": {
         "default_tonic": {"step": "B", "octave": 3, "alter": -0.5},
         "key_signature_fifths": 0,
-        "custom_accidentals": [{"step": "B", "alter": -0.5}, {"step": "E", "alter": -0.5}],
         "scale_notes": [
           {"step": "B", "octave": 3, "alter": -0.5},
           {"step": "C", "octave": 4, "alter": 0},
@@ -1267,7 +1193,6 @@
       "musicxml": {
         "default_tonic": {"step": "G", "octave": 3, "alter": 0},
         "key_signature_fifths": 0,
-        "custom_accidentals": [{"step": "B", "alter": -0.5}, {"step": "E", "alter": -0.5}],
         "scale_notes": [
           {"step": "G", "octave": 3, "alter": 0},
           {"step": "A", "octave": 3, "alter": 0},
@@ -1277,6 +1202,63 @@
           {"step": "E", "octave": 4, "alter": -0.5},
           {"step": "F", "octave": 4, "alter": 0},
           {"step": "G", "octave": 4, "alter": 0}
+        ]
+      }
+    },
+    "nairuz": {
+      "name": "Maqam Nairuz",
+      "transliteration": "Maqām Nayrūz",
+      "family": "rast",
+      "scale_semitones": [0, 2, 3.5, 5, 7, 8.5, 10, 12],
+      "scale_cents": [0, 200, 350, 500, 700, 850, 1000, 1200],
+      "octave_equivalent": true,
+      "ajnas": [
+        {"jins_id": "rast", "position": "lower", "start_degree": 1, "is_primary": true, "alternatives": []},
+        {"jins_id": "bayati", "position": "upper", "start_degree": 5, "is_primary": true, "alternatives": []}
+      ],
+      "important_degrees": {
+        "tonic": {"degree": 1, "constraint": "hard"},
+        "ghammaz": {"degree": 5, "constraint": "hard"},
+        "secondary_ghammaz": null,
+        "leading_tone": {"degree": 7, "constraint": "soft"}
+      },
+      "sayr": {
+        "starting_range": [1, 4],
+        "typical_direction": "ascending",
+        "emphasis_degrees": [1, 5],
+        "tension_degrees": [4, 7],
+        "resolution_degrees": [1]
+      },
+      "modulations": {
+        "common_modulations": [
+          {"target": "rast", "pivot_degree": 1, "frequency": "common", "constraint": "soft"},
+          {"target": "suznak", "pivot_degree": 5, "frequency": "occasional", "constraint": "preference"}
+        ]
+      },
+      "characteristics": {
+        "mood": ["Rast with Bayati upper", "warm"],
+        "time_of_day": "any",
+        "traditional_usage": ["muwashshahat", "sayr within Rast and Suznak"],
+        "popularity": "low",
+        "region": ["Egypt", "Levant"]
+      },
+      "constraints": {
+        "hard": {"must_resolve_to_tonic": true, "forbidden_intervals": [], "required_ajnas": ["rast"]},
+        "soft": {"preferred_range": [1, 15], "cadence_patterns": [], "avoid_degrees": []},
+        "preferences": {"ornament_degrees": [3, 5], "vibrato_degrees": [1], "phrase_endings": [1, 5]}
+      },
+      "musicxml": {
+        "default_tonic": {"step": "C", "octave": 4, "alter": 0},
+        "key_signature_fifths": 0,
+        "scale_notes": [
+          {"step": "C", "octave": 4, "alter": 0},
+          {"step": "D", "octave": 4, "alter": 0},
+          {"step": "E", "octave": 4, "alter": -0.5},
+          {"step": "F", "octave": 4, "alter": 0},
+          {"step": "G", "octave": 4, "alter": 0},
+          {"step": "A", "octave": 4, "alter": -0.5},
+          {"step": "B", "octave": 4, "alter": -1},
+          {"step": "C", "octave": 5, "alter": 0}
         ]
       }
     }

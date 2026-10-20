@@ -224,23 +224,23 @@
     "ciftetelli": {
       "name": "Ciftetelli",
       "transliteration": "Çiftetelli",
-      "time_signature": {"beats": 8, "beat_type": 8, "display": "8/8"},
+      "time_signature": {"beats": 8, "beat_type": 4, "display": "8/4"},
       "base_unit": "eighth",
-      "total_eighths": 8,
+      "total_eighths": 16,
       "pattern": {
-        "notation_string": "D - T - T kT -",
+        "notation_string": "D - T T - T T - D - D - T - - -",
         "events": [
-          {"position": 0,  "duration": 4, "stroke": "dum", "accent": 2},
-          {"position": 4,  "duration": 4, "stroke": "rest", "accent": 0},
+          {"position": 0,  "duration": 8, "stroke": "dum", "accent": 2},
           {"position": 8,  "duration": 4, "stroke": "tak", "accent": 1},
-          {"position": 12, "duration": 4, "stroke": "rest", "accent": 0},
-          {"position": 16, "duration": 4, "stroke": "tak", "accent": 1},
-          {"position": 20, "duration": 2, "stroke": "ka",  "accent": 0},
-          {"position": 22, "duration": 2, "stroke": "tak", "accent": 1},
-          {"position": 24, "duration": 4, "stroke": "rest", "accent": 0},
-          {"position": 28, "duration": 4, "stroke": "rest", "accent": 0}
+          {"position": 12, "duration": 8, "stroke": "tak", "accent": 1},
+          {"position": 20, "duration": 4, "stroke": "tak", "accent": 1},
+          {"position": 24, "duration": 8, "stroke": "tak", "accent": 1},
+          {"position": 32, "duration": 8, "stroke": "dum", "accent": 2},
+          {"position": 40, "duration": 8, "stroke": "dum", "accent": 1},
+          {"position": 48, "duration": 8, "stroke": "tak", "accent": 1},
+          {"position": 56, "duration": 8, "stroke": "rest", "accent": 0}
         ],
-        "total_divisions": 32
+        "total_divisions": 64
       },
       "characteristics": {
         "feel": "slow, sensual, Turkish",
@@ -350,28 +350,20 @@
       "name": "Wahda wa Nuss",
       "transliteration": "Waḥda wa Nuṣṣ",
       "time_signature": {"beats": 4, "beat_type": 4, "display": "4/4"},
-      "base_unit": "eighth",
+      "base_unit": "sixteenth",
       "total_eighths": 8,
       "pattern": {
-        "notation_string": "D - - - T - D - T - D - - - T -",
+        "notation_string": "D - - T - - T - D - - - T - - -",
         "events": [
-          {"position": 0,  "duration": 8, "stroke": "dum", "accent": 2},
-          {"position": 8,  "duration": 4, "stroke": "rest", "accent": 0},
-          {"position": 12, "duration": 4, "stroke": "rest", "accent": 0},
-          {"position": 16, "duration": 4, "stroke": "tak", "accent": 1},
+          {"position": 0,  "duration": 6, "stroke": "dum", "accent": 2},
+          {"position": 6,  "duration": 6, "stroke": "tak", "accent": 1},
+          {"position": 12, "duration": 4, "stroke": "tak", "accent": 1},
+          {"position": 16, "duration": 4, "stroke": "dum", "accent": 2},
           {"position": 20, "duration": 4, "stroke": "rest", "accent": 0},
-          {"position": 24, "duration": 4, "stroke": "dum", "accent": 2},
-          {"position": 28, "duration": 4, "stroke": "rest", "accent": 0},
-          {"position": 32, "duration": 4, "stroke": "tak", "accent": 1},
-          {"position": 36, "duration": 4, "stroke": "rest", "accent": 0},
-          {"position": 40, "duration": 4, "stroke": "dum", "accent": 1},
-          {"position": 44, "duration": 4, "stroke": "rest", "accent": 0},
-          {"position": 48, "duration": 4, "stroke": "rest", "accent": 0},
-          {"position": 52, "duration": 4, "stroke": "rest", "accent": 0},
-          {"position": 56, "duration": 4, "stroke": "tak", "accent": 1},
-          {"position": 60, "duration": 4, "stroke": "rest", "accent": 0}
+          {"position": 24, "duration": 4, "stroke": "tak", "accent": 1},
+          {"position": 28, "duration": 4, "stroke": "rest", "accent": 0}
         ],
-        "total_divisions": 64
+        "total_divisions": 32
       },
       "characteristics": {
         "feel": "extended wahda, expansive",
@@ -423,7 +415,7 @@
     "masmoudi_kabir": {
       "name": "Masmoudi Kabir",
       "transliteration": "Masmūdī Kabīr",
-      "time_signature": {"beats": 4, "beat_type": 4, "display": "4/4"},
+      "time_signature": {"beats": 8, "beat_type": 4, "display": "8/4"},
       "base_unit": "eighth",
       "total_eighths": 16,
       "pattern": {
@@ -517,23 +509,24 @@
     "bambi": {
       "name": "Bambi",
       "transliteration": "Bambī",
-      "time_signature": {"beats": 4, "beat_type": 4, "display": "4/4"},
+      "time_signature": {"beats": 8, "beat_type": 4, "display": "8/4"},
       "base_unit": "eighth",
-      "total_eighths": 8,
+      "total_eighths": 16,
       "pattern": {
-        "notation_string": "D - T k T - D T",
+        "notation_string": "D - - T - - T - - T - - D - D -",
         "events": [
-          {"position": 0,  "duration": 4, "stroke": "dum", "accent": 2},
-          {"position": 4,  "duration": 4, "stroke": "rest", "accent": 0},
-          {"position": 8,  "duration": 4, "stroke": "tak", "accent": 1},
-          {"position": 12, "duration": 2, "stroke": "ka",  "accent": 0},
-          {"position": 14, "duration": 2, "stroke": "tak", "accent": 1},
-          {"position": 16, "duration": 4, "stroke": "rest", "accent": 0},
-          {"position": 20, "duration": 4, "stroke": "dum", "accent": 2},
-          {"position": 24, "duration": 4, "stroke": "tak", "accent": 1},
-          {"position": 28, "duration": 4, "stroke": "rest", "accent": 0}
+          {"position": 0,  "duration": 8, "stroke": "dum", "accent": 2},
+          {"position": 8,  "duration": 4, "stroke": "rest", "accent": 0},
+          {"position": 12, "duration": 8, "stroke": "tak", "accent": 1},
+          {"position": 20, "duration": 4, "stroke": "rest", "accent": 0},
+          {"position": 24, "duration": 8, "stroke": "tak", "accent": 1},
+          {"position": 32, "duration": 4, "stroke": "rest", "accent": 0},
+          {"position": 36, "duration": 8, "stroke": "tak", "accent": 1},
+          {"position": 44, "duration": 4, "stroke": "rest", "accent": 0},
+          {"position": 48, "duration": 8, "stroke": "dum", "accent": 1},
+          {"position": 56, "duration": 8, "stroke": "dum", "accent": 1}
         ],
-        "total_divisions": 32
+        "total_divisions": 64
       },
       "characteristics": {
         "feel": "lilting, Egyptian folk",
@@ -548,21 +541,21 @@
     "nawakht": {
       "name": "Nawakht",
       "transliteration": "Nawakht",
-      "time_signature": {"beats": 7, "beat_type": 8, "display": "7/8"},
-      "base_unit": "eighth",
-      "total_eighths": 7,
+      "time_signature": {"beats": 7, "beat_type": 4, "display": "7/4"},
+      "base_unit": "quarter",
+      "total_eighths": 14,
       "pattern": {
         "notation_string": "D T T D T D -",
         "events": [
-          {"position": 0,  "duration": 4, "stroke": "dum", "accent": 2},
-          {"position": 4,  "duration": 4, "stroke": "tak", "accent": 1},
-          {"position": 8,  "duration": 4, "stroke": "tak", "accent": 0},
-          {"position": 12, "duration": 4, "stroke": "dum", "accent": 2},
-          {"position": 16, "duration": 4, "stroke": "tak", "accent": 1},
-          {"position": 20, "duration": 4, "stroke": "dum", "accent": 1},
-          {"position": 24, "duration": 4, "stroke": "rest", "accent": 0}
+          {"position": 0,  "duration": 8, "stroke": "dum", "accent": 2},
+          {"position": 8,  "duration": 8, "stroke": "tak", "accent": 1},
+          {"position": 16, "duration": 8, "stroke": "tak", "accent": 0},
+          {"position": 24, "duration": 8, "stroke": "dum", "accent": 2},
+          {"position": 32, "duration": 8, "stroke": "tak", "accent": 1},
+          {"position": 40, "duration": 8, "stroke": "dum", "accent": 1},
+          {"position": 48, "duration": 8, "stroke": "rest", "accent": 0}
         ],
-        "total_divisions": 28
+        "total_divisions": 56
       },
       "characteristics": {
         "feel": "asymmetric, lively",
@@ -628,28 +621,21 @@
     "dawr_hindi": {
       "name": "Dawr Hindi",
       "transliteration": "Dawr Hindī",
-      "time_signature": {"beats": 7, "beat_type": 4, "display": "7/4"},
+      "time_signature": {"beats": 7, "beat_type": 8, "display": "7/8"},
       "base_unit": "eighth",
-      "total_eighths": 14,
+      "total_eighths": 7,
       "pattern": {
-        "notation_string": "D - T - D - T - D - T - T -",
+        "notation_string": "D T D T D T T",
         "events": [
           {"position": 0,  "duration": 4, "stroke": "dum", "accent": 2},
-          {"position": 4,  "duration": 4, "stroke": "rest", "accent": 0},
-          {"position": 8,  "duration": 4, "stroke": "tak", "accent": 1},
-          {"position": 12, "duration": 4, "stroke": "rest", "accent": 0},
+          {"position": 4,  "duration": 4, "stroke": "tak", "accent": 1},
+          {"position": 8,  "duration": 4, "stroke": "dum", "accent": 2},
+          {"position": 12, "duration": 4, "stroke": "tak", "accent": 1},
           {"position": 16, "duration": 4, "stroke": "dum", "accent": 2},
-          {"position": 20, "duration": 4, "stroke": "rest", "accent": 0},
-          {"position": 24, "duration": 4, "stroke": "tak", "accent": 1},
-          {"position": 28, "duration": 4, "stroke": "rest", "accent": 0},
-          {"position": 32, "duration": 4, "stroke": "dum", "accent": 2},
-          {"position": 36, "duration": 4, "stroke": "rest", "accent": 0},
-          {"position": 40, "duration": 4, "stroke": "tak", "accent": 1},
-          {"position": 44, "duration": 4, "stroke": "rest", "accent": 0},
-          {"position": 48, "duration": 4, "stroke": "tak", "accent": 1},
-          {"position": 52, "duration": 4, "stroke": "rest", "accent": 0}
+          {"position": 20, "duration": 4, "stroke": "tak", "accent": 1},
+          {"position": 24, "duration": 4, "stroke": "tak", "accent": 1}
         ],
-        "total_divisions": 56
+        "total_divisions": 28
       },
       "characteristics": {
         "feel": "expansive, meditative",

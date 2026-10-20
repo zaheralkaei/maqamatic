@@ -119,6 +119,23 @@ def test_measures_sum_to_full_duration(maqam_id, iqa_id, data, mxg, iqaat):
     assert not errors, f"{maqam_id}/{iqa_id}: under/overfull measures: {errors}"
 
 
+def _all_iqa_ids():
+    return sorted(DataLoader(str(DATA_DIR)).iqaat.keys())
+
+
+@pytest.mark.parametrize("iqa_id", _all_iqa_ids())
+def test_every_iqa_exports_full_measures(iqa_id, data, mxg):
+    """Melody and percussion measures are exactly full for every rhythm,
+    including the 8/4, 7/8 and dotted-eighth patterns."""
+    params = GeneratorParams(maqam_id="bayati", iqa_id=iqa_id,
+                             total_beats=48, random_seed=11)
+    gen = MaqamGenerator(params, data_dir=str(DATA_DIR))
+    xml = mxg.sections_to_musicxml(gen.generate(), iqa_id=iqa_id,
+                                   include_percussion=True)
+    errors = _measure_duration_errors(xml)
+    assert not errors, f"{iqa_id}: under/overfull measures: {errors}"
+
+
 def test_generator_does_not_touch_global_rng(data):
     """F-3: constructing/running a seeded generator must not reseed or
     consume the process-global random module."""
@@ -145,6 +162,43 @@ def test_seed_reproducible_under_interleaving(data, mxg):
     _ = out(7)          # a different request interleaved
     second = out(42)
     assert first == second
+
+
+def test_melodies_use_register_beyond_tonic_and_octave(data):
+    """F-7: generated degrees stay inside the register, and across a batch
+    of pieces some notes fall below the tonic / above the octave."""
+    lo, hi = data.degree_range
+    seen = set()
+    for maqam_id in ("rast", "bayati", "sikah", "saba"):
+        for seed in range(4):
+            gen = MaqamGenerator(GeneratorParams(maqam_id=maqam_id, iqa_id="maqsum",
+                                                 total_beats=64, random_seed=seed),
+                                 data_dir=str(DATA_DIR))
+            for section in gen.generate():
+                for phrase in section.phrases:
+                    for note in phrase.notes:
+                        assert lo <= note.degree <= hi, (maqam_id, note.degree)
+                        seen.add(note.degree)
+    assert any(d < 1 for d in seen), "never went below the tonic"
+    assert any(d > 8 for d in seen), "never went above the octave"
+
+
+def test_register_excursion_zero_keeps_core_octave(data):
+    """register_excursion=0 disables the stepping-out mechanism; the line
+    then only leaves 1..8 where a maqam's own matrix says so."""
+    for seed in range(4):
+        gen = MaqamGenerator(GeneratorParams(maqam_id="rast", iqa_id="maqsum",
+                                             total_beats=64, random_seed=seed,
+                                             register_excursion=0.0,
+                                             repetition_amount=0.0,
+                                             # modulating into e.g. Sikah would
+                                             # bring that maqam's own -1/0 rows
+                                             allow_modulation=False),
+                             data_dir=str(DATA_DIR))
+        for section in gen.generate():
+            for phrase in section.phrases:
+                for note in phrase.notes:
+                    assert 1 <= note.degree <= 8
 
 
 def test_empty_seed_does_not_crash(data, mxg):

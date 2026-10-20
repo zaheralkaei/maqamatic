@@ -1,6 +1,6 @@
-# Iqa' Nawakht 7/8
+# Iqa' Nawakht 7/4
 
-**Nawakht** (Nawakht) — 7/8, 7 eighths per measure.
+**Nawakht** (Nawakht) — 7/4, 14 eighths per measure.
 
 ## Overview
 
@@ -13,14 +13,14 @@
 ## Pattern
 
 **Notation:** `D T T D T D -`  
-**Base unit:** eighth | **Total divisions:** 28 (per measure)
+**Base unit:** quarter | **Total divisions:** 56 (per measure)
 
 **Legend:** `D` = Dum (bass, accent 2) | `T` = Tak (sharp, accent 1) | `k` = Ka (ghost note, no accent) | `-` = Rest
 
 **Events (position, duration, accent):**
 
 ```
-D(0,4,2) T(4,4,1) T(8,4,0) D(12,4,2) T(16,4,1) D(20,4,1) -(24,4,0)
+D(0,8,2) T(8,8,1) T(16,8,0) D(24,8,2) T(32,8,1) D(40,8,1) -(48,8,0)
 ```
 
 ## Tempo
@@ -40,8 +40,12 @@ Asymmetric, lively.
 ## MIDI
 
 - **Dum (D):** note 36 (C2)
-- **Tak (T):** note 42 (F#2)
+- **Tak (T):** note 50 (D3)
 - **Ka (k):** note 39 (D#2)
+
+## Project note
+
+Meter per MaqamWorld (7/4; it was previously stored as 7/8, swapped with Dawr Hindi). The stroke order was kept from the earlier data and has not yet been checked against MaqamWorld's notation.
 
 ## Source
 

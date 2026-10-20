@@ -95,7 +95,7 @@ Each maqam consists of **ajnas** (singular: jins) - tetrachords or pentachords t
 |-------|-------|-----------|--------------|
 | Rast | C | Balanced, confident, bright | Openings, celebrations |
 | Suznak | C | Rast with Hijaz upper | More dramatic than Rast |
-| Nairuz | C | Rast with Nahawand upper | Softer, more reflective |
+| Nairuz | C | Rast with Bayati upper (on the 5th) | Softer, more reflective |
 | Yakah | G (low) | Deep, grounded | Meditative pieces |
 | Mahur | C | Rast with Ajam influence | Bright, festive |
 
@@ -129,7 +129,7 @@ Each maqam consists of **ajnas** (singular: jins) - tetrachords or pentachords t
 |-------|-------|-----------|--------------|
 | Nahawand | C | Like Western minor | Sadness, beauty |
 | Nahawand Murassa | C | Embellished Nahawand | Ornate sadness |
-| Farahfaza | C | Nahawand variant | Joy mixed with sadness |
+| Farahfaza | G | Nahawand transposed to G | Joy mixed with sadness |
 | Ushaq Masri | C | Egyptian variant | Egyptian classical |
 
 ### Ajam Family

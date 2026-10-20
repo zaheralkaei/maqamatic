@@ -45,12 +45,16 @@ class PercussionEvent:
 class PitchConverter:
     """Converts scale degrees to actual pitches based on maqam"""
 
+    _STEP_SEMITONES = {"C": 0, "D": 2, "E": 4, "F": 5, "G": 7, "A": 9, "B": 11}
+
     def __init__(self, data: DataLoader, maqam_id: str, tonic: str = "D4"):
         self.data = data
         self.maqam_id = maqam_id
         self.maqam_data = data.maqamat.get(maqam_id, {})
         self.tonic = self._parse_tonic(tonic)
         self.scale_notes = self._get_scale_notes()
+        self.degree_min, self.degree_max = data.degree_range
+        self.degree_semitones = self._build_degree_semitones()
 
     def _parse_tonic(self, tonic: str) -> Dict:
         """Parse tonic string like 'D4' into step and octave"""
@@ -65,32 +69,85 @@ class PitchConverter:
         musicxml = self.maqam_data.get("musicxml", {})
         return musicxml.get("scale_notes", [])
 
+    def _build_degree_semitones(self) -> Dict[int, float]:
+        """Semitones above the tonic for every degree in the generator's
+        register (audit F-7).
+
+        1. Degrees 1..N come from the stored scale.
+        2. Above the stored scale, the maqam's own ajnas chain is followed
+           (e.g. Saba's Ajam on the 6th makes degree 9 E-flat, not the
+           E-half-flat an octave copy would give).
+        3. Remaining degrees repeat at the octave, upward and downward.
+        """
+        sem = self.maqam_data.get("scale_semitones", [])
+        if not sem:
+            return {}
+        table = {i + 1: float(s) for i, s in enumerate(sem)}
+
+        ajnas = self.data.ajnas
+        for ref in self.maqam_data.get("ajnas", []):
+            start = ref.get("start_degree", 1)
+            if start not in table:
+                continue
+            cum = table[start]
+            steps = ajnas.get(ref.get("jins_id", ""), {}).get(
+                "intervals_semitones", [])
+            for k, step in enumerate(steps):
+                cum += step
+                table.setdefault(start + 1 + k, cum)
+
+        for d in range(max(table) + 1, self.degree_max + 1):
+            table[d] = table[d - 7] + 12
+        for d in range(0, self.degree_min - 1, -1):
+            table[d] = table[d + 7] - 12
+        return table
+
+    def _note_abs(self, note: Dict) -> float:
+        return (self._STEP_SEMITONES[note["step"]] + note.get("alter", 0)
+                + 12 * note["octave"])
+
+    def _spell_extended(self, degree: int) -> MusicXMLNote:
+        """Spell a degree outside the stored scale, keeping the scale's
+        letter for that position (so degree 0 of Rast is a B, degree 9 a D)
+        and computing the accidental from the target pitch."""
+        idx = (degree - 1) % 7
+        octave_shift = (degree - 1) // 7
+        template = self.scale_notes[idx]
+        step = template["step"]
+        octave = template["octave"] + octave_shift
+        target = self._note_abs(self.scale_notes[0]) + self.degree_semitones[degree]
+        alter = round((target - (self._STEP_SEMITONES[step] + 12 * octave)) * 2) / 2
+        if abs(alter) > 1.5:
+            raise ValueError(
+                f"{self.maqam_id} degree {degree}: cannot spell {target} "
+                f"semitones with letter {step} (alter {alter})")
+        if alter == int(alter):
+            alter = int(alter)
+        return MusicXMLNote(step=step, octave=octave, alter=alter, duration=0)
+
     def degree_to_pitch(self, degree: int) -> MusicXMLNote:
-        """Convert a scale degree to a pitch"""
+        """Convert a scale degree to a pitch.
+
+        Degrees below the tonic and above the stored scale are supported
+        up to the generator's register (data.degree_range); anything beyond
+        is clamped to that range.
+        """
         if not self.scale_notes:
             return self._fallback_pitch(degree)
 
-        # Clamp out-of-range degrees to the valid octave range [1, N].
-        # Without this, a degree of 9 with an 8-note scale (e.g. maqam
-        # Rast's [1..8]) would silently wrap to index 1 (E½♭, octave+1)
-        # and produce wrong notes — see issue with the "sequence" motif
-        # variation in maqam_generator._maybe_repeat_motif.
-        n = len(self.scale_notes)
-        if degree < 1:
-            degree = 1
-        elif degree > n:
-            degree = n
+        degree = max(self.degree_min, min(self.degree_max, degree))
 
-        # Get base pitch from scale
-        idx = degree - 1
-        if 0 <= idx < len(self.scale_notes):
-            base = self.scale_notes[idx]
+        if 1 <= degree <= len(self.scale_notes):
+            base = self.scale_notes[degree - 1]
             return MusicXMLNote(
                 step=base.get("step", "C"),
                 octave=base.get("octave", 4),
                 alter=base.get("alter", 0),
                 duration=0
             )
+
+        if degree in self.degree_semitones and len(self.scale_notes) >= 7:
+            return self._spell_extended(degree)
 
         return self._fallback_pitch(degree)
 
@@ -1125,6 +1182,10 @@ class MusicXMLGenerator:
             xml_parts.append("        <accidental>sharp</accidental>\n")
         elif note.alter == -1:
             xml_parts.append("        <accidental>flat</accidental>\n")
+        elif note.alter == 1.5:
+            xml_parts.append("        <accidental>three-quarters-sharp</accidental>\n")
+        elif note.alter == -1.5:
+            xml_parts.append("        <accidental>three-quarters-flat</accidental>\n")
         elif needs_natural:
             xml_parts.append("        <accidental>natural</accidental>\n")
 

@@ -45,6 +45,12 @@ def _sync_phase_alias():
 Phase = _sync_phase_alias()
 del _sync_phase_alias
 
+from rule_engine import fold_degree  # noqa: E402  (shared octave folding)
+
+# Register the generator may use when sayr data doesn't say otherwise:
+# a few degrees below the tonic up to a third above the octave.
+DEFAULT_DEGREE_RANGE = (-2, 10)
+
 
 class PhraseType(Enum):
     """Types of phrases in the melody"""
@@ -130,6 +136,18 @@ class DataLoader:
     def ui_parameters(self) -> Dict:
         return self._load_json("ui_parameters.json")
 
+    @property
+    def degree_range(self) -> Tuple[int, int]:
+        """(lowest, highest) scale degree melodies may use, taken from the
+        sayr zone definitions (the 'lower' zone sits below the tonic, the
+        'extended' zone above the octave)."""
+        zones = self.sayr_definitions.get("zone_definitions", {})
+        degrees = [d for z in zones.values() if isinstance(z, dict)
+                   for d in z.get("typical_degrees", [])]
+        if not degrees:
+            return DEFAULT_DEGREE_RANGE
+        return min(degrees), max(degrees)
+
 
 class PitchSelector:
     """Selects pitches based on transition matrices, sayr rules, and RuleEngine"""
@@ -154,6 +172,7 @@ class PitchSelector:
         self.current_zone = "tonic"
         self.current_phase = Phase.EXPOSITION
         self.visited_degrees: set = set()
+        self.degree_min, self.degree_max = data.degree_range
 
     def _get_sayr(self) -> Dict:
         """Get sayr definition for current maqam"""
@@ -193,6 +212,64 @@ class PitchSelector:
                 Phase.RESOLUTION: "tonic"
             }
             self.current_zone = phase_zones.get(self.current_phase, "tonic")
+
+    def _pitch_props(self, degree: int) -> Dict:
+        """Sayr pitch properties for a degree, falling back to its octave
+        equivalent for degrees below the tonic / above the octave."""
+        props = self.sayr.get("pitch_properties", {})
+        if str(degree) in props:
+            return props[str(degree)]
+        return props.get(str(fold_degree(degree)), {})
+
+    def _transition_row(self, degree: int) -> Dict[int, float]:
+        """Matrix row for a degree as {target_degree: probability}.
+
+        A degree without its own row (outside the authored register) uses
+        the row of its octave equivalent, shifted by the same octave.
+        """
+        rows = self.matrix.get("transitions", {})
+        if str(degree) in rows:
+            return {int(t): p for t, p in rows[str(degree)].items()}
+        folded = fold_degree(degree)
+        if str(folded) in rows:
+            shift = degree - folded
+            return {int(t) + shift: p for t, p in rows[str(folded)].items()}
+        return {}
+
+    def _base_transition_probs(self, current_degree: int) -> Dict[str, float]:
+        """Base candidate probabilities for the next degree.
+
+        Starts from the matrix row, then lets the line step past the tonic
+        or the octave: the same note an octave away has its own row, and
+        that row's moves that land outside degrees 1-8 are offered here too,
+        scaled by params.register_excursion. Everything is kept inside the
+        generator's degree range.
+        """
+        probs = self._transition_row(current_degree)
+        excursion = getattr(self.params, "register_excursion", 0.0)
+        rows = self.matrix.get("transitions", {})
+        if excursion > 0:
+            for octave in (7, -7):
+                twin = str(current_degree + octave)
+                if twin not in rows:
+                    continue
+                for t, p in rows[twin].items():
+                    target = int(t) - octave
+                    if (target < 1 or target > 8) and target not in probs:
+                        probs[target] = p * excursion
+        probs = {d: p for d, p in probs.items()
+                 if self.degree_min <= d <= self.degree_max}
+
+        if not probs:
+            # No authored row at all: plain neighbour-weighted choice.
+            lo, hi = self.degree_min, self.degree_max
+            probs = {d: 0.1 for d in range(max(lo, current_degree - 3),
+                                          min(hi, current_degree + 3) + 1)}
+            probs[current_degree] = 0.15
+            for step in (-1, 1):
+                if lo <= current_degree + step <= hi:
+                    probs[current_degree + step] = 0.25
+        return {str(d): p for d, p in probs.items()}
 
     def _get_zone_for_degree(self, degree: int) -> str:
         """Determine which zone a degree belongs to"""
@@ -247,12 +324,14 @@ class PitchSelector:
                                      phrase_position: float) -> Dict[str, float]:
         """Apply bias based on position within phrase"""
         position_adjustments = self.context_adjustments.get("phrase_position", {})
-        pitch_props = self.sayr.get("pitch_properties", {})
 
         adjusted = {}
         for deg_str, prob in probs.items():
             mult = 1.0
-            deg_props = pitch_props.get(deg_str, {})
+            try:
+                deg_props = self._pitch_props(int(deg_str))
+            except ValueError:
+                deg_props = {}
             importance = deg_props.get("importance", "secondary")
 
             if phrase_position < 0.25:
@@ -540,22 +619,9 @@ class PitchSelector:
                            phrase_position: float = 0.5) -> int:
         """Select the next scale degree based on all rules (10-step pipeline)"""
 
-        # Get base probabilities from transition matrix
-        deg_str = str(current_degree)
-        transitions = self.matrix.get("transitions", {})
-        base_probs = transitions.get(deg_str, {})
-
-        if not base_probs:
-            # L3 (audit): was range(-1, 9), which included invalid
-            # degrees -1 and 0. Valid maqam scale degrees are 1..N;
-            # for an 8-note maqam, 1..8. Use 1..9 as a safe upper
-            # bound (clamped downstream by PitchConverter).
-            base_probs = {str(d): 0.1 for d in range(1, 9)}
-            base_probs[str(current_degree)] = 0.15
-            if current_degree > 1:
-                base_probs[str(current_degree - 1)] = 0.25
-            if current_degree < 8:
-                base_probs[str(current_degree + 1)] = 0.25
+        # Base probabilities from the transition matrix, extended to the
+        # register below the tonic / above the octave (audit F-7).
+        base_probs = self._base_transition_probs(current_degree)
 
         # Step 0: Blend matrix with uniform by transition_matrix_weight
         probs = self._apply_matrix_weight(base_probs)
@@ -1067,6 +1133,11 @@ class PhraseGenerator:
                 degrees.append(current)
         return degrees
 
+    def _clamp_degree(self, degree: int) -> int:
+        lo = self.pitch_selector.degree_min
+        hi = self.pitch_selector.degree_max
+        return max(lo, min(hi, degree))
+
     def _maybe_repeat_motif(self, phrase_type: PhraseType) -> Optional[List[int]]:
         """Attempt to recall and vary a previous motif."""
         if not self.rules or not self._motif_memory:
@@ -1081,17 +1152,17 @@ class PhraseGenerator:
             return source.copy()
         elif var_type == "sequence":
             transposition = self.rng.choice([-3, -2, -1, 1, 2, 3])
-            # Clamp to valid degree range [1, 8] — out-of-range degrees
-            # would otherwise produce wrong notes via the pitch converter
-            # (see generator_to_musicxml.PitchConverter.degree_to_pitch).
-            return [max(1, min(8, d + transposition)) for d in source]
+            # Keep the sequence inside the generator's register
+            # (degree_range covers below the tonic and above the octave).
+            return [self._clamp_degree(d + transposition) for d in source]
         elif var_type == "rhythmic_variation":
             return source.copy()  # Same pitches, rhythm regenerated
         elif var_type == "melodic_variation":
             varied = source.copy()
             for j in range(len(varied)):
                 if self.rng.random() < 0.3:
-                    varied[j] = max(1, min(8, varied[j] + self.rng.choice([-1, 1])))
+                    varied[j] = self._clamp_degree(
+                        varied[j] + self.rng.choice([-1, 1]))
             return varied
         elif var_type == "development":
             start = self.rng.randint(0, max(0, len(source) - 3))

@@ -12,15 +12,15 @@
 
 ## Pattern
 
-**Notation:** `D - - - T - D - T - D - - - T -`  
-**Base unit:** eighth | **Total divisions:** 64 (per measure)
+**Notation:** `D - - T - - T - D - - - T - - -`  
+**Base unit:** sixteenth | **Total divisions:** 32 (per measure)
 
 **Legend:** `D` = Dum (bass, accent 2) | `T` = Tak (sharp, accent 1) | `k` = Ka (ghost note, no accent) | `-` = Rest
 
 **Events (position, duration, accent):**
 
 ```
-D(0,8,2) -(8,4,0) -(12,4,0) T(16,4,1) -(20,4,0) D(24,4,2) -(28,4,0) T(32,4,1) -(36,4,0) D(40,4,1) -(44,4,0) -(48,4,0) -(52,4,0) T(56,4,1) -(60,4,0)
+D(0,6,2) T(6,6,1) T(12,4,1) D(16,4,2) -(20,4,0) T(24,4,1) -(28,4,0)
 ```
 
 ## Tempo
@@ -39,13 +39,13 @@ Extended wahda, expansive.
 
 ## MIDI
 
-- **Dum (D):** note 36 (C2)
-- **Tak (T):** note 42 (F#2)
-- **Ka (k):** note 39 (D#2)
+- **Dum (D):** note 35 (B1)
+- **Tak (T):** note 49 (C#3)
+- **Ka (k):** note 50 (D3)
 
 ## Project note
 
-Wahda w-Nuss is the syncopated "one and a half" version. The project stores the 4/4 pattern stretched across 2 measures of 4/4 (14 positions, total_divisions=64), as MaqamWorld notes that mid-twentieth-century tarab vocal phrases typically treat it as an extended pattern.
+One 4/4 measure per cycle: Maqsum with its first tak delayed by a sixteenth, exactly as MaqamWorld describes. Pattern confirmed by the project owner (2026-10-20): dotted-eighth D, dotted-eighth T, eighth T, eighth D, eighth rest, eighth T, eighth rest.
 
 ## Source
 

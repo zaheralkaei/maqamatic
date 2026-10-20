@@ -1,6 +1,6 @@
-# Iqa' Bambi 4/4
+# Iqa' Bambi 8/4
 
-**Bambi** (Bambī) — 4/4, 8 eighths per measure.
+**Bambi** (Bambī) — 8/4, 16 eighths per measure.
 
 ## Overview
 
@@ -12,15 +12,15 @@
 
 ## Pattern
 
-**Notation:** `D - T k T - D T`  
-**Base unit:** eighth | **Total divisions:** 32 (per measure)
+**Notation:** `D - - T - - T - - T - - D - D -`  
+**Base unit:** eighth | **Total divisions:** 64 (per measure)
 
 **Legend:** `D` = Dum (bass, accent 2) | `T` = Tak (sharp, accent 1) | `k` = Ka (ghost note, no accent) | `-` = Rest
 
 **Events (position, duration, accent):**
 
 ```
-D(0,4,2) -(4,4,0) T(8,4,1) k(12,2,0) T(14,2,1) -(16,4,0) D(20,4,2) T(24,4,1) -(28,4,0)
+D(0,8,2) -(8,4,0) T(12,8,1) -(20,4,0) T(24,8,1) -(32,4,0) T(36,8,1) -(44,4,0) D(48,8,1) D(56,8,1)
 ```
 
 ## Tempo
@@ -40,8 +40,12 @@ Lilting, egyptian folk.
 ## MIDI
 
 - **Dum (D):** note 36 (C2)
-- **Tak (T):** note 42 (F#2)
+- **Tak (T):** note 50 (D3)
 - **Ka (k):** note 39 (D#2)
+
+## Project note
+
+8/4, one measure per cycle. Pattern confirmed by the project owner (2026-10-20): quarter D, eighth rest, quarter T, eighth rest, quarter T, eighth rest, quarter T, eighth rest, quarter D, quarter D. The two closing dums plus the next cycle's opening dum give the three consecutive dums MaqamWorld describes.
 
 ## Source
 

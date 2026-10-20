@@ -36,6 +36,9 @@ class GeneratorParams:
     contour_type: str = "arch"
     phrase_length_notes: int = 8
     repetition_amount: float = 0.5
+    # How readily the melody steps past the tonic/octave into the register
+    # below the tonic and above the octave (0 = stay within degrees 1-8).
+    register_excursion: float = 0.35
 
     # === Structure ===
     form_type: str = "free"
@@ -121,6 +124,7 @@ def create_generator_from_ui_params(ui_values: Dict):
         contour_type=ui_values.get("contour_type", "arch"),
         phrase_length_notes=int(ui_values.get("phrase_length", 8)),
         repetition_amount=norm("repetition_amount", 50),
+        register_excursion=norm("register_excursion", 35),
 
         # Structure
         form_type=ui_values.get("form_type", "free"),

@@ -1,6 +1,6 @@
-# Iqa' Ciftetelli 8/8
+# Iqa' Ciftetelli 8/4
 
-**Ciftetelli** (Çiftetelli) — 8/8, 8 eighths per measure.
+**Ciftetelli** (Çiftetelli) — 8/4, 16 eighths per measure.
 
 ## Overview
 
@@ -12,15 +12,15 @@
 
 ## Pattern
 
-**Notation:** `D - T - T kT -`  
-**Base unit:** eighth | **Total divisions:** 32 (per measure)
+**Notation:** `D - T T - T T - D - D - T - - -`  
+**Base unit:** eighth | **Total divisions:** 64 (per measure)
 
 **Legend:** `D` = Dum (bass, accent 2) | `T` = Tak (sharp, accent 1) | `k` = Ka (ghost note, no accent) | `-` = Rest
 
 **Events (position, duration, accent):**
 
 ```
-D(0,4,2) -(4,4,0) T(8,4,1) -(12,4,0) T(16,4,1) k(20,2,0) T(22,2,1) -(24,4,0) -(28,4,0)
+D(0,8,2) T(8,4,1) T(12,8,1) T(20,4,1) T(24,8,1) D(32,8,2) D(40,8,1) T(48,8,1) -(56,8,0)
 ```
 
 ## Tempo
@@ -40,12 +40,12 @@ Slow, sensual, turkish.
 ## MIDI
 
 - **Dum (D):** note 36 (C2)
-- **Tak (T):** note 42 (F#2)
+- **Tak (T):** note 50 (D3)
 - **Ka (k):** note 39 (D#2)
 
 ## Project note
 
-MaqamWorld says Ciftetelli is usually stretched over two 4/4 measures. The project stores the single-measure form (8/8) for use as a single 8/8 measure; a separate `masmoudi_kabir` iqa' covers the slow two-measure stretched form.
+Stored in its usual slow form, as MaqamWorld lists it: 8/4, one measure per cycle (the "two 4/4 measures" written as a single 8/4 bar). Pattern confirmed by the project owner (2026-10-20): quarter D, eighth T, quarter T, eighth T, quarter T, quarter D, quarter D, quarter T, quarter rest.
 
 ## Source
 

@@ -1,6 +1,6 @@
-# Iqa' Masmoudi Kabir 4/4
+# Iqa' Masmoudi Kabir 8/4
 
-**Masmoudi Kabir** (Masmūdī Kabīr) — 4/4, 16 eighths per measure.
+**Masmoudi Kabir** (Masmūdī Kabīr) — 8/4, 16 eighths per measure.
 
 ## Overview
 
@@ -39,13 +39,13 @@ Heavy, majestic, classical.
 
 ## MIDI
 
-- **Dum (D):** note 36 (C2)
-- **Tak (T):** note 42 (F#2)
-- **Ka (k):** note 39 (D#2)
+- **Dum (D):** note 35 (B1)
+- **Tak (T):** note 49 (C#3)
+- **Ka (k):** note 50 (D3)
 
 ## Project note
 
-MaqamWorld notes Masmudi Kabir is the "large" version (8/4 over two 4/4 measures); the project stores the 16-position pattern spanning both measures.
+Stored as MaqamWorld writes it: one 8/4 measure per cycle (confirmed by the project owner, 2026-10-20).
 
 ## Source
 

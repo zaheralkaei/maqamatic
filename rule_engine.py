@@ -11,6 +11,16 @@ from typing import Dict, List, Optional, Tuple, Any
 from enum import Enum
 
 
+def fold_degree(degree: int) -> int:
+    """Map any scale degree onto its octave equivalent in 1..7.
+
+    Degrees outside the core octave (below the tonic or above the octave)
+    share their melodic role with the same note an octave away:
+    0 -> 7, -1 -> 6, 8 -> 1, 9 -> 2, ...
+    """
+    return ((degree - 1) % 7) + 1
+
+
 class Phase(Enum):
     """Melodic journey phases. This is the canonical definition;
     maqam_generator.py imports this enum at module load time and
@@ -176,20 +186,49 @@ class PitchHierarchyRules:
         self._data = data
         self._params = params
 
+    def _sayr_props(self, degree: int, maqam_id: str) -> Dict:
+        """Sayr pitch_properties for a degree. A degree with no entry of its
+        own (below the tonic, above the octave) borrows the properties of
+        its octave equivalent."""
+        sayr = self._data.sayr_definitions.get("sayr", {}).get(maqam_id, {})
+        pitch_props = sayr.get("pitch_properties", {})
+        if str(degree) in pitch_props:
+            return pitch_props[str(degree)]
+        return pitch_props.get(str(fold_degree(degree)), {})
+
     def get_role_for_degree(self, degree: int, maqam_id: str) -> str:
-        """Determine the role of a degree in the given maqam."""
+        """Determine the role of a degree in the given maqam.
+
+        Exact matches win (important_degrees, then the sayr entry for the
+        degree itself); otherwise the octave-equivalent degree decides, so
+        e.g. degree 0 takes the role of degree 7 (the leading tone below).
+        """
         maqam = self._data.maqamat.get(maqam_id, {})
         important = maqam.get("important_degrees", {})
-        for role, info in important.items():
-            if isinstance(info, dict) and info.get("degree") == degree:
-                return role
 
-        # Check sayr pitch_properties
-        sayr_defs = self._data.sayr_definitions.get("sayr", {})
-        sayr = sayr_defs.get(maqam_id, {})
+        def important_role(d):
+            for role, info in important.items():
+                if isinstance(info, dict) and info.get("degree") == d:
+                    return role
+            return None
+
+        role = important_role(degree)
+        if role:
+            return role
+
+        sayr = self._data.sayr_definitions.get("sayr", {}).get(maqam_id, {})
         pitch_props = sayr.get("pitch_properties", {})
-        deg_props = pitch_props.get(str(degree), {})
-        return deg_props.get("importance", "passing_degree")
+        if str(degree) in pitch_props:
+            return pitch_props[str(degree)].get("importance", "passing_degree")
+
+        folded = fold_degree(degree)
+        if folded != degree:
+            role = important_role(folded)
+            if role:
+                return role
+            return pitch_props.get(str(folded), {}).get(
+                "importance", "passing_degree")
+        return "passing_degree"
 
     def get_gravity_multiplier(self, degree: int, maqam_id: str) -> float:
         """Return probability multiplier based on pitch gravity.
@@ -199,10 +238,7 @@ class PitchHierarchyRules:
         base_gravity = role_data.get("gravity", 0.5)
 
         # Also check sayr-specific gravity
-        sayr_defs = self._data.sayr_definitions.get("sayr", {})
-        sayr = sayr_defs.get(maqam_id, {})
-        pitch_props = sayr.get("pitch_properties", {})
-        deg_props = pitch_props.get(str(degree), {})
+        deg_props = self._sayr_props(degree, maqam_id)
         sayr_gravity = deg_props.get("gravity", base_gravity)
 
         # Merge: average of universal and sayr-specific

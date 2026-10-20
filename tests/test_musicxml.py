@@ -61,28 +61,60 @@ def test_degree_to_pitch_maps_scale(data):
     assert (first.step, first.octave) == ("C", 4)
 
 
-def test_degree_to_pitch_clamps_out_of_range(data):
-    """Degrees above the scale size clamp to the top note, not wrap."""
-    conv = PitchConverter(data, "rast")  # 8-note scale
-    top = conv.degree_to_pitch(8)
-    over = conv.degree_to_pitch(99)
-    assert (over.step, over.octave, over.alter) == (top.step, top.octave, top.alter)
+def _pitch(conv, degree):
+    p = conv.degree_to_pitch(degree)
+    return (p.step, p.alter, p.octave)
 
 
-def test_degree_to_pitch_clamps_below_one(data):
+def test_degree_range_comes_from_sayr_zones(data):
+    """F-7: the register spans the sayr 'lower' to 'extended' zones."""
+    assert data.degree_range == (-2, 10)
+
+
+def test_degrees_beyond_register_clamp_to_its_edges(data):
     conv = PitchConverter(data, "rast")
-    first = conv.degree_to_pitch(1)
-    below = conv.degree_to_pitch(-5)
-    assert (below.step, below.octave) == (first.step, first.octave)
+    lo, hi = data.degree_range
+    assert _pitch(conv, 99) == _pitch(conv, hi)
+    assert _pitch(conv, -99) == _pitch(conv, lo)
 
 
-def test_seven_note_maqam_degree_eight_clamps(data):
-    """Sikah is a 7-note maqam; degree 8 must clamp, never index past end."""
+def test_degrees_below_tonic_are_real_notes(data):
+    """F-7: Rast below C4 is B half-flat, A, G (yakah) — not the tonic."""
+    conv = PitchConverter(data, "rast")
+    assert _pitch(conv, 0) == ("B", -0.5, 3)
+    assert _pitch(conv, -1) == ("A", 0, 3)
+    assert _pitch(conv, -2) == ("G", 0, 3)
+
+
+def test_degrees_above_octave_follow_octave_repetition(data):
+    conv = PitchConverter(data, "rast")
+    assert _pitch(conv, 9) == ("D", 0, 5)
+    assert _pitch(conv, 10) == ("E", -0.5, 5)
+
+
+def test_extended_degrees_follow_the_ajnas_chain(data):
+    """Saba is not octave-equivalent: its Ajam on the 6th makes degree 9
+    E-flat, where a plain octave copy would give E half-flat."""
+    conv = PitchConverter(data, "saba")
+    assert _pitch(conv, 9) == ("E", -1, 5)
+
+
+def test_seven_note_maqam_reaches_its_octave(data):
+    """Sikah stores 7 notes; degree 8 is the tonic's octave (via Rast on
+    the 6th), no longer clamped to degree 7."""
     conv = PitchConverter(data, "sikah")
     assert len(conv.scale_notes) == 7
-    d7 = conv.degree_to_pitch(7)
-    d8 = conv.degree_to_pitch(8)
-    assert (d8.step, d8.octave, d8.alter) == (d7.step, d7.octave, d7.alter)
+    assert _pitch(conv, 8) == ("E", -0.5, 5)
+    assert _pitch(conv, 0) == ("D", 0, 4)
+
+
+def test_every_maqam_spells_its_whole_register(data, maqamat):
+    lo, hi = data.degree_range
+    for mid in maqamat:
+        conv = PitchConverter(data, mid)
+        for degree in range(lo, hi + 1):
+            p = conv.degree_to_pitch(degree)
+            assert p.alter in (-1.5, -1, -0.5, 0, 0.5, 1, 1.5), (mid, degree, p)
 
 
 # ---------------------------------------------------------------------------

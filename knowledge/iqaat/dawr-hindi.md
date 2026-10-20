@@ -1,6 +1,6 @@
-# Iqa' Dawr Hindi 7/4
+# Iqa' Dawr Hindi 7/8
 
-**Dawr Hindi** (Dawr Hindī) — 7/4, 14 eighths per measure.
+**Dawr Hindi** (Dawr Hindī) — 7/8, 7 eighths per measure.
 
 ## Overview
 
@@ -12,15 +12,15 @@
 
 ## Pattern
 
-**Notation:** `D - T - D - T - D - T - T -`  
-**Base unit:** eighth | **Total divisions:** 56 (per measure)
+**Notation:** `D T D T D T T`  
+**Base unit:** eighth | **Total divisions:** 28 (per measure)
 
 **Legend:** `D` = Dum (bass, accent 2) | `T` = Tak (sharp, accent 1) | `k` = Ka (ghost note, no accent) | `-` = Rest
 
 **Events (position, duration, accent):**
 
 ```
-D(0,4,2) -(4,4,0) T(8,4,1) -(12,4,0) D(16,4,2) -(20,4,0) T(24,4,1) -(28,4,0) D(32,4,2) -(36,4,0) T(40,4,1) -(44,4,0) T(48,4,1) -(52,4,0)
+D(0,4,2) T(4,4,1) D(8,4,2) T(12,4,1) D(16,4,2) T(20,4,1) T(24,4,1)
 ```
 
 ## Tempo
@@ -39,9 +39,13 @@ Expansive, meditative.
 
 ## MIDI
 
-- **Dum (D):** note 36 (C2)
-- **Tak (T):** note 42 (F#2)
-- **Ka (k):** note 39 (D#2)
+- **Dum (D):** note 35 (B1)
+- **Tak (T):** note 49 (C#3)
+- **Ka (k):** note 50 (D3)
+
+## Project note
+
+Meter per MaqamWorld (7/8; it was previously stored as 7/4, swapped with Nawakht). The stroke order was kept from the earlier data and has not yet been checked against MaqamWorld's notation.
 
 ## Source
 
