@@ -528,7 +528,7 @@ class MusicXMLGenerator:
                             # mapper from the phrase's dynamics_level).
                             dynamic=note.dynamic if is_first_sub and i == 0 else None,
                         )
-                        xml_parts.append(self._note_to_xml(sub_note))
+                        xml_parts.append(self._note_to_xml(sub_note, key_fifths))
                         current_position += sub_dur
                         is_first_sub = False
 
@@ -800,7 +800,7 @@ class MusicXMLGenerator:
                             # first notehead of any tied chain.
                             dynamic=note.dynamic if is_first_sub and i == 0 else None,
                         )
-                        xml_parts.append(self._note_to_xml(sub_note))
+                        xml_parts.append(self._note_to_xml(sub_note, key_fifths))
                         current_position += sub_dur
                         is_first_sub = False
 
@@ -1045,12 +1045,33 @@ class MusicXMLGenerator:
       </direction>
 '''
 
-    def _note_to_xml(self, note: MusicXMLNote) -> str:
+    # Order in which flats / sharps are added to a key signature.
+    _FLAT_ORDER = ["B", "E", "A", "D", "G", "C", "F"]
+    _SHARP_ORDER = ["F", "C", "G", "D", "A", "E", "B"]
+
+    @classmethod
+    def _keysig_alter_for_step(cls, fifths: int, step: str) -> int:
+        """Return the alteration (-1, 0, +1) the key signature applies to
+        `step`. Quarter-tone key signatures don't exist in standard MusicXML,
+        so this only ever returns whole flats/sharps."""
+        if fifths < 0:
+            return -1 if step in cls._FLAT_ORDER[:abs(fifths)] else 0
+        if fifths > 0:
+            return 1 if step in cls._SHARP_ORDER[:fifths] else 0
+        return 0
+
+    def _note_to_xml(self, note: MusicXMLNote, key_fifths: int = 0) -> str:
         """Convert a single melody note to MusicXML.
 
         Assumes note.duration is a valid single-notehead value
         (from VALID_DURATIONS). Caller must decompose non-standard
         durations before calling this.
+
+        key_fifths is the active key signature (number of sharps/flats).
+        It is needed so a note that is natural (alter == 0) on a letter the
+        key signature alters gets an explicit natural sign — otherwise the
+        printed score reads (and many MusicXML→MIDI consumers play) the note
+        a semitone off. See PRELAUNCH_AUDIT F-1.
         """
         if note.is_rest:
             return self._rest_to_xml(note.duration)
@@ -1063,10 +1084,20 @@ class MusicXMLGenerator:
 
         xml_parts = ["      <note>\n"]
 
+        # Does this natural note sit on a letter the key signature alters?
+        # If so it needs an explicit natural (both <alter>0</alter> for
+        # pitch-correctness and <accidental>natural</accidental> for display).
+        ks_alter = self._keysig_alter_for_step(key_fifths, note.step)
+        needs_natural = (note.alter == 0 and ks_alter != 0)
+
         xml_parts.append("        <pitch>\n")
         xml_parts.append(f"          <step>{note.step}</step>\n")
         if note.alter != 0:
             xml_parts.append(f"          <alter>{note.alter}</alter>\n")
+        elif needs_natural:
+            # Force the natural so consumers that apply the key signature
+            # don't flatten/sharpen this note.
+            xml_parts.append("          <alter>0</alter>\n")
         xml_parts.append(f"          <octave>{note.octave}</octave>\n")
         xml_parts.append("        </pitch>\n")
 
@@ -1084,7 +1115,8 @@ class MusicXMLGenerator:
         if self._duration_is_dotted(note.duration):
             xml_parts.append("        <dot/>\n")
 
-        # Accidental display for quarter tones
+        # Accidental display for quarter tones, whole accidentals, and
+        # the key-signature-contradicting natural (F-1 fix).
         if note.alter == 0.5:
             xml_parts.append("        <accidental>quarter-sharp</accidental>\n")
         elif note.alter == -0.5:
@@ -1093,6 +1125,8 @@ class MusicXMLGenerator:
             xml_parts.append("        <accidental>sharp</accidental>\n")
         elif note.alter == -1:
             xml_parts.append("        <accidental>flat</accidental>\n")
+        elif needs_natural:
+            xml_parts.append("        <accidental>natural</accidental>\n")
 
         # Build notations block (ties + ornaments)
         ornament_xml = self._ornament_to_xml(note.ornament) if note.ornament else ""
