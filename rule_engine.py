@@ -1056,6 +1056,23 @@ class JinsRules:
 
         return None
 
+    def _get_active_jins_ref(self, degree: int,
+                             maqam_id: str) -> Optional[Dict]:
+        """Return the maqam's ajnas *reference* (with its start_degree)
+        that contains the degree. Unlike get_active_jins_for_degree,
+        this distinguishes two ajnas that share a jins_id (e.g. Rast's
+        lower and upper Rast, or Sikah Baladi) by their position, so a
+        tetrachord boundary at the ghammaz is detected. F-6."""
+        maqam = self._data.maqamat.get(maqam_id, {})
+        for jins_ref in maqam.get("ajnas", []):
+            start_deg = jins_ref.get("start_degree", 1)
+            intervals = self._ajnas.get(
+                jins_ref.get("jins_id", ""), {}).get("intervals_semitones", [])
+            end_deg = start_deg + len(intervals)
+            if start_deg <= degree <= end_deg:
+                return jins_ref
+        return None
+
     def get_jins_degree_set(self, degree: int, maqam_id: str) -> set:
         """Return the set of scale degrees that belong to the same jins
         as *degree*.  Returns empty set if degree is outside any jins."""
@@ -1087,12 +1104,18 @@ class JinsRules:
     def is_at_jins_boundary(self, current_degree: int,
                              proposed_degree: int,
                              maqam_id: str) -> bool:
-        """Check if crossing a jins boundary."""
-        current_jins = self.get_active_jins_for_degree(current_degree, maqam_id)
-        proposed_jins = self.get_active_jins_for_degree(proposed_degree, maqam_id)
-        if current_jins is None or proposed_jins is None:
+        """Check if crossing a jins boundary.
+
+        F-6: compares the active jins *references* by start degree rather
+        than the shared jins-data dict, so maqamat whose lower and upper
+        ajnas have the same jins_id (Rast = Rast + Rast, Sikah Baladi)
+        still register the boundary between the two tetrachords.
+        """
+        current_ref = self._get_active_jins_ref(current_degree, maqam_id)
+        proposed_ref = self._get_active_jins_ref(proposed_degree, maqam_id)
+        if current_ref is None or proposed_ref is None:
             return False
-        return current_jins is not proposed_jins
+        return current_ref.get("start_degree") != proposed_ref.get("start_degree")
 
     # ------------------------------------------------------------------
     # Main probability adjustment — adherence-aware

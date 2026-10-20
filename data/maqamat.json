@@ -890,7 +890,8 @@
       "octave_equivalent": false,
       "ajnas": [
         {"jins_id": "saba", "position": "lower", "start_degree": 1, "is_primary": true, "alternatives": []},
-        {"jins_id": "hijaz", "position": "upper", "start_degree": 3, "is_primary": true, "alternatives": [], "note": "overlaps with Saba jins at F-Gb"}
+        {"jins_id": "hijaz", "position": "upper", "start_degree": 3, "is_primary": true, "alternatives": [], "note": "overlaps with Saba jins at F-Gb"},
+        {"jins_id": "ajam", "position": "top", "start_degree": 6, "is_primary": false, "alternatives": ["nikriz"], "note": "Ajam (or Nikriz) on the 6th per maqamworld; extends above the octave"}
       ],
       "important_degrees": {
         "tonic": {"degree": 1, "constraint": "hard"},
@@ -948,7 +949,8 @@
       "octave_equivalent": false,
       "ajnas": [
         {"jins_id": "saba_zamzam", "position": "lower", "start_degree": 1, "is_primary": true, "alternatives": []},
-        {"jins_id": "hijaz", "position": "upper", "start_degree": 3, "is_primary": true, "alternatives": [], "note": "overlaps with Saba Zamzam jins at F-Gb"}
+        {"jins_id": "hijaz", "position": "upper", "start_degree": 3, "is_primary": true, "alternatives": [], "note": "overlaps with Saba Zamzam jins at F-Gb"},
+        {"jins_id": "ajam", "position": "top", "start_degree": 6, "is_primary": false, "alternatives": ["nikriz"], "note": "Ajam (or Nikriz) on the 6th per maqamworld; extends above the octave"}
       ],
       "important_degrees": {
         "tonic": {"degree": 1, "constraint": "hard"},

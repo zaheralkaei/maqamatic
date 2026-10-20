@@ -32,8 +32,8 @@ maqamworld describes every maqam's **ajnas composition in prose** ("Jins X on th
 | suznak | rast(1), hijaz_upper(5) | Rast(1) + Hijaz(5) | ✅ |
 | sikah | sikah(1), rast(3) | Sikah(1) + Upper Rast(3) + **Rast(6)** | ✅ pitches; 3rd jins not modeled (C-1) |
 | huzam | mustaar(1), hijaz(3) | **Sikah**(1) + Hijaz(3) + **Rast(6)** | ✅ pitches; lower label + 3rd jins (C-1,C-3) |
-| saba | saba(1), hijaz(3) | Saba(1) + Hijaz(3) + **[‘Ajam/Nikriz](6)** | ✅ pitches; 3rd jins not modeled (C-1) |
-| saba_zamzam | saba_zamzam(1), hijaz(3) | Saba Zamzam(1) + Hijaz(3) + **[‘Ajam/Nikriz](6)** | ✅ pitches; 3rd jins not modeled (C-1) |
+| saba | saba(1), hijaz(3), ajam(6) | Saba(1) + Hijaz(3) + [‘Ajam/Nikriz](6) | ✅ 3rd jins now modeled (F-4) |
+| saba_zamzam | saba_zamzam(1), hijaz(3), ajam(6) | Saba Zamzam(1) + Hijaz(3) + [‘Ajam/Nikriz](6) | ✅ 3rd jins now modeled (F-4) |
 | jiharkah | jiharkah(1), rast(5) | Jiharkah(1) + Upper Rast(5) | ✅ |
 | lami | lami(1), kurd(4) | Lami(1) + Kurd(4) | ✅ exact |
 | sikah_baladi | sikah_baladi(1), sikah_baladi(4) | two Jins Sikah Baladi brackets (notation confirms) | ✅ fixed (C-5): degree 7 → D½♭ |
@@ -51,8 +51,8 @@ The declared ajnas (lower `sikah_baladi` + upper `sikah_baladi` on degree 4, eac
 **Fix applied** to `data/maqamat.json`: `scale_semitones[6]` 10.5→10, `scale_cents[6]` 1050→1000, `scale_notes[6]` D→D½♭ (`alter -0.5`), and `custom_accidentals` completed (added B½♭, D½♭). Docs updated. The scale now reconstructs exactly; `test_ajnas_chain_reproduces_scale` enforces it (the `KNOWN_AJNAS_CHAIN_MISMATCH` set is now empty).
 *(Minor aside noticed: `MAQAMATIC_REFERENCE.md` lists sikah_baladi as octave-equivalent "no" while the data says `true`; degree 8 = exact octave, so `true` is defensible. Left as-is — not part of C-5.)*
 
-### C-1 — Optional third jins (on the 6th degree) not modeled — LOW / enhancement
-maqamworld gives **Saba, Saba Zamzam, Sikah, and Huzam** a third jins on the 6th degree (‘Ajam / Nikriz / Rast). The project models them with two ajnas. The core octave pitches are still correct (verified), but the upper extension and some idiomatic modulations aren't represented. Add the third jins for fuller authenticity.
+### C-1 — Optional third jins (on the 6th degree) — PARTLY DONE
+maqamworld gives **Saba, Saba Zamzam, Sikah, and Huzam** a third jins on the 6th degree (‘Ajam / Nikriz / Rast). **Saba and Saba Zamzam now model it** (Ajam on the 6th, Nikriz alternative — added 2026-10-20, see audit F-4); they reconstruct cleanly through degree 9. **Still open:** Sikah and Huzam (Rast on the 6th) remain two-ajnas. Core octave pitches are correct for all four; the third jins mainly enriches the upper register and idiomatic modulations.
 
 ### C-2 — Alternative upper-ajnas lists diverge — LOW
 The *primary* upper jins is correct everywhere, but the `alternatives` lists differ from maqamworld: Bayati lists hijaz/ajam but **not Rast** (which maqamworld gives); Kurd, Nikriz, Rast add alternatives maqamworld doesn't list. Affects modulation variety only, not the base scale. Reconcile against maqamworld family pages.

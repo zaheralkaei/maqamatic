@@ -31,7 +31,7 @@ UI params (JSON, 0–100 sliders)
 - Rich per-maqam metadata: ajnas composition, important degrees (tonic/ghammaz/leading tone), sayr, modulations, constraints.
 
 ### Headline assessment
-The project is in **good shape for launch**. The data is high quality and internally consistent, the generator runs on every maqam without crashing, and the MusicXML is well-formed and rhythmically exact. The one confirmed correctness bug (two maqamat mis-rendered a note — F-1) has been **fixed in this pass**; a set of lower-severity issues and enhancements are catalogued below. Before this audit there were **no automated tests**; there are now **216, all passing**.
+The project is in **good shape for launch**. The data is high quality and internally consistent, the generator runs on every maqam without crashing, and the MusicXML is well-formed and rhythmically exact. The one confirmed correctness bug (two maqamat mis-rendered a note — F-1) has been **fixed in this pass**; a set of lower-severity issues and enhancements are catalogued below. Before this audit there were **no automated tests**; there are now **220, all passing**.
 
 ---
 
@@ -69,20 +69,21 @@ The MusicXML exporter (`generator_to_musicxml._note_to_xml`) only emitted an acc
 **F-3 — Global RNG state was shared across concurrent web requests. ✅ FIXED (2026-10-20).**
 `MaqamGenerator.__init__` called `random.seed(...)` on the process-global `random` module and the whole pipeline used module-level `random.*`, so under threads two in-flight `/api/generate` requests could perturb each other and break reproducibility. **Fix:** each `MaqamGenerator` now owns a `random.Random(seed)` instance, threaded through the `RuleEngine` sub-rules and the pitch/rhythm/phrase/modulation components (all module-level `random.*` calls replaced with the instance). Verified: a seeded generator no longer touches global RNG, and a seeded request stays reproducible even when another generation interleaves. Guarded by two new tests in `tests/test_generation.py`.
 
-**F-4 — Saba's upper structure is simplified; octave is treated as natural.**
-maqamworld defines Saba as Jins Saba + Jins Hijaz (3rd) **+ Jins ‘Ajam or Nikriz on the 6th**; the project models only the first two ajnas. Also, Saba is non-octave and its 8th degree is classically a *flat* upper tonic, but the data lists degree 8 = D♮ (12 semitones). Pitches below the octave are correct; this is a fidelity gap, not a crash. Flag for the correctness phase.
+**F-4 — Saba's upper structure was simplified. ✅ FIXED (2026-10-20).**
+maqamworld defines Saba as Jins Saba + Jins Hijaz (3rd) **+ Jins ‘Ajam or Nikriz on the 6th**; the project modelled only the first two ajnas. **Fix:** added the third jins (`ajam` on degree 6, `nikriz` as alternative) to `saba` and `saba_zamzam`, matching maqamworld's notation. Verified consistent with the stored scale — degrees 6–8 (B♭ C D) are exactly the start of Ajam, and the maqam now reconstructs cleanly through degree 9.
+*On the "flat octave":* maqamworld's canonical ascending scale puts **Ajam on the 6th**, which yields a **natural** octave (D♮ at degree 8) — so the project's degree 8 = D♮ is **correct**, not a flat-octave error as first suspected. No scale change.
 
 ### 🟡 LOW / polish
 
-**F-5 — Two iqaat label an 8-beat cycle as 4/4.** `masmoudi_kabir` and `wahda_wa_nuss` have 64-division cycles (8 beats) but `time_signature` 4/4. The cycle correctly spans two 4/4 bars and the exporter handles it, but the UI will show "4/4" for what players know as an 8-beat cycle. Consider labelling 8/4 or annotating the display.
+**F-5 — Two iqaat represent an 8-beat cycle as two 4/4 bars. ✅ BY DESIGN (verified).** `masmoudi_kabir` and `wahda_wa_nuss` have 64-division cycles (8 beats) with `time_signature` 4/4. This is **intentional and maqamworld-consistent**: `knowledge/iqaat/masmoudi-kabir.md` documents it as "8/4 over two 4/4 measures," the 16-position pattern deliberately spans both bars, and the cycle tiles the measure evenly (guarded by `test_iqa_cycle_tiles_the_measure`). Changing the meter would alter the written output and contradict the design, so no change. (A future UI could surface the 8-beat cycle length as a hint.)
 
-**F-6 — `jins_id` reuse blurs jins boundaries in the rule engine.** For maqamat whose lower and upper ajnas share an id (e.g. Rast = rast + rast), `JinsRules.is_at_jins_boundary` compares dicts by identity and sees one continuous jins, so no boundary penalty is applied mid-scale. Minor musical effect; note for the jins-rules review.
+**F-6 — `jins_id` reuse blurred jins boundaries. ✅ FIXED (2026-10-20).** For maqamat whose lower and upper ajnas share an id (Rast = rast + rast, Sikah Baladi), `JinsRules.is_at_jins_boundary` compared the shared jins-data dict by identity and saw one continuous jins, so no boundary adjustment applied at the ghammaz. **Fix:** boundary detection now compares the active jins **references** by `start_degree` (new `_get_active_jins_ref`), so the tetrachord boundary is detected even when both ajnas share a jins_id. Guarded by `tests/test_rule_engine.py`.
 
-**F-7 — Degree model is capped at 1–8.** The generator clamps all degrees to `[1,8]` (`maqam_generator` motif/cadence code) and `PitchConverter` clamps to the scale length. This is safe (no wrong notes, verified by tests) but means melodies never use the register below the tonic or above the octave, which real taqasim do. Architectural enhancement, not a bug.
+**F-7 — Degree model is capped at 1–8.** The generator clamps all degrees to `[1,8]` (`maqam_generator` motif/cadence code) and `PitchConverter` clamps to the scale length. This is safe (no wrong notes, verified by tests) but means melodies never use the register below the tonic or above the octave, which real taqasim do. Architectural enhancement, not a bug. **(Still open.)**
 
-**F-8 — Repo hygiene.** Root is cluttered with three prior audit reports, a committed `test_output.musicxml`, `output/` artifacts, and `__pycache__/`. `.gitignore` covers `output/` and `*.musicxml` but a tracked `test_output.musicxml` remains. Consider pruning and moving audits into `docs/`.
+**F-8 — Repo hygiene. ✅ PARTLY DONE.** `vendor/` (5.5 MB of locally pip-installed deps, not used by the Docker build which installs from `requirements.txt`) is now git-ignored so it can't be accidentally committed. `test_output.musicxml` turned out **not** to be tracked (already covered by `*.musicxml`). Still optional: relocate the three historical `AUDIT_REPORT*` files into `docs/`.
 
-**F-9 — `app.run(debug=True)` in `web/app.py` `__main__`.** Fine if production always goes through gunicorn (it does, per Dockerfile), but `debug=True` should never be reachable in prod. Low risk; worth a guard via env var.
+**F-9 — `app.run(debug=True)` in `web/app.py`. ✅ FIXED (2026-10-20).** The `__main__` block no longer hard-codes `debug=True`; it reads `FLASK_DEBUG` (default off) and `PORT`. Production serves via gunicorn and never runs this block, but the debugger can no longer be reached by accident.
 
 ---
 
@@ -111,7 +112,7 @@ The per-note selection in `PitchSelector.select_next_degree` is an **11-stage pr
 
 ## 5. Test suite added in Phase 1
 
-New `tests/` package (pytest 9, **216 tests, all passing**, ~1s):
+New `tests/` package (pytest 9, **220 tests, all passing**, ~1s):
 
 | File | Covers |
 |---|---|

@@ -37,3 +37,7 @@ desktop.ini
 # Local tooling
 .claude/
 .scratch/
+
+# Vendored third-party packages (installed locally via pip --target;
+# the image installs from requirements.txt, so these don't belong in git)
+vendor/

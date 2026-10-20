@@ -324,4 +324,9 @@ def add_no_cache_headers(response):
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    # Audit F-9: never hard-code debug=True. Production serves via
+    # gunicorn (which doesn't run this block); for local use, opt into
+    # the Flask debugger explicitly with FLASK_DEBUG=1.
+    debug = os.environ.get('FLASK_DEBUG', '').lower() in ('1', 'true', 'yes')
+    port = int(os.environ.get('PORT', 5000))
+    app.run(debug=debug, host='0.0.0.0', port=port)
