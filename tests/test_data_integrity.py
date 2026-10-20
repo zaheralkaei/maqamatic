@@ -66,6 +66,47 @@ def test_maqam_modulation_targets_resolve(maqamat):
                 f"{mid}: modulation target '{target}' is not a known maqam")
 
 
+# Maqamat whose declared ajnas chain does not reproduce their own stored
+# scale. Tracked as a data finding (PRELAUNCH_AUDIT / CONTENT_CHECK C-5).
+KNOWN_AJNAS_CHAIN_MISMATCH = {"sikah_baladi"}
+
+
+def _reconstruct_scale_from_ajnas(maqam, ajnas):
+    """Chain the maqam's referenced ajnas from their start degrees and return
+    {degree: semitone} for every degree reached by contiguous chaining from
+    the tonic. Degree 1 is anchored at 0; each later jins must begin on a
+    degree already produced by an earlier jins (the shared ghammaz)."""
+    sem = maqam["scale_semitones"]
+    recon = {1: 0.0}
+    for ref in maqam.get("ajnas", []):
+        start = ref["start_degree"]
+        iv = ajnas.get(ref["jins_id"], {}).get("intervals_semitones", [])
+        base = recon.get(start)
+        if base is None:
+            continue  # start degree not yet reachable; skip this jins
+        cum = base
+        for k, step in enumerate(iv):
+            cum += step
+            recon[start + 1 + k] = cum
+    return recon, sem
+
+
+def test_ajnas_chain_reproduces_scale(maqamat, ajnas):
+    """Each maqam's stored scale must equal the scale built by chaining its
+    declared ajnas — otherwise the ajnas labels and the scale disagree."""
+    for mid, m in maqamat.items():
+        recon, sem = _reconstruct_scale_from_ajnas(m, ajnas)
+        bad = [(deg, val, sem[deg - 1]) for deg, val in recon.items()
+               if deg - 1 < len(sem) and abs(val - sem[deg - 1]) > 0.01]
+        if mid in KNOWN_AJNAS_CHAIN_MISMATCH:
+            assert bad, (f"{mid} was expected to mismatch (C-5) but now "
+                         f"reconstructs cleanly — update KNOWN_AJNAS_CHAIN_MISMATCH")
+            continue
+        assert not bad, (
+            f"{mid}: ajnas chain disagrees with scale_semitones at "
+            f"(degree, chained, stored): {bad}")
+
+
 def test_maqam_first_jins_starts_on_tonic(maqamat):
     """Per maqam theory, the root jins always starts at degree 1."""
     for mid, m in maqamat.items():
