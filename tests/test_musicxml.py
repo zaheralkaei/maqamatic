@@ -30,6 +30,28 @@ def test_decompose_zero_is_empty():
 
 
 # ---------------------------------------------------------------------------
+# Percussion velocity (F-2)
+# ---------------------------------------------------------------------------
+
+def test_percussion_uses_dynamics_attr_not_velocity_element(data):
+    """F-2: per-note playback velocity must be the <note> `dynamics`
+    attribute (percentage of forte 90), not an invalid <velocity> child."""
+    from generator_to_musicxml import PercussionEvent
+    mxg = MusicXMLGenerator(data)
+    strong = mxg._percussion_note_to_xml(
+        PercussionEvent(position=0, duration=8, stroke="dum", accent=2,
+                        midi_note=35))
+    assert "<velocity>" not in strong
+    assert 'dynamics="' in strong
+    # accent 2 -> velocity 105 -> 105/90*100 = 116.7%
+    assert 'dynamics="116.7"' in strong
+    light = mxg._percussion_note_to_xml(
+        PercussionEvent(position=0, duration=8, stroke="ka", accent=0,
+                        midi_note=50))
+    assert 'dynamics="66.7"' in light  # velocity 60
+
+
+# ---------------------------------------------------------------------------
 # Pitch conversion / degree clamping
 # ---------------------------------------------------------------------------
 

@@ -1157,6 +1157,11 @@ class MusicXMLGenerator:
         This gives the percussion the natural rise-and-fall of a
         real riq/dumbek performance instead of every hit being
         equal-volume.
+
+        Audit F-2: playback velocity is emitted via the standard
+        `dynamics` attribute on <note> (a percentage of the default
+        forte velocity 90), not a bare <velocity> child, which is not
+        a valid MusicXML element and was ignored by readers.
         """
         # Map stroke types to display positions on the staff
         display_map = {
@@ -1171,8 +1176,11 @@ class MusicXMLGenerator:
         note_type = self._duration_to_type(event.duration)
         is_dotted = self._duration_is_dotted(event.duration)
         velocity = velocity_map.get(event.accent, 80)
+        # MusicXML expresses Note On velocity as a percentage of the
+        # default forte (90). velocity 90 -> 100%, 105 -> ~116.7%.
+        dynamics_pct = round(velocity / 90.0 * 100.0, 1)
 
-        xml = f'''      <note>
+        xml = f'''      <note dynamics="{dynamics_pct}">
         <unpitched>
           <display-step>{step}</display-step>
           <display-octave>{octave}</display-octave>
@@ -1180,7 +1188,6 @@ class MusicXMLGenerator:
         <duration>{event.duration}</duration>
         <instrument id="P2-I1"/>
         <type>{note_type}</type>
-        <velocity>{velocity}</velocity>
 '''
         if is_dotted:
             xml += "        <dot/>\n"

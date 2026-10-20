@@ -31,7 +31,7 @@ UI params (JSON, 0–100 sliders)
 - Rich per-maqam metadata: ajnas composition, important degrees (tonic/ghammaz/leading tone), sayr, modulations, constraints.
 
 ### Headline assessment
-The project is in **good shape for launch**. The data is high quality and internally consistent, the generator runs on every maqam without crashing, and the MusicXML is well-formed and rhythmically exact. The one confirmed correctness bug (two maqamat mis-rendered a note — F-1) has been **fixed in this pass**; a set of lower-severity issues and enhancements are catalogued below. Before this audit there were **no automated tests**; there are now **212, all passing**.
+The project is in **good shape for launch**. The data is high quality and internally consistent, the generator runs on every maqam without crashing, and the MusicXML is well-formed and rhythmically exact. The one confirmed correctness bug (two maqamat mis-rendered a note — F-1) has been **fixed in this pass**; a set of lower-severity issues and enhancements are catalogued below. Before this audit there were **no automated tests**; there are now **216, all passing**.
 
 ---
 
@@ -61,13 +61,13 @@ The MusicXML exporter (`generator_to_musicxml._note_to_xml`) only emitted an acc
 - **Note on `custom_accidentals`:** the per-maqam `custom_accidentals` data field was intended for this but is **incomplete and inconsistent** across maqamat, so it was *not* wired in; the key-signature computation is complete and supersedes it. That field can be dropped or regenerated in Phase 2 housekeeping.
 - **Tests:** `tests/test_musicxml.py` now asserts, end-to-end, that every scale degree of every maqam exports at its intended effective pitch (`test_exported_scale_degrees_render_at_correct_pitch`), plus unit tests for the natural-emission logic. The former `xfail`s are gone.
 
-### 🟠 MEDIUM
+### 🟠 MEDIUM *(both fixed)*
 
-**F-2 — `<velocity>` is not a valid child of `<note>` in MusicXML.**
-`_percussion_note_to_xml` emits `<velocity>105</velocity>` directly inside `<note>`. MusicXML carries playback velocity via `<note><play><...></play></note>` or `<sound dynamics="…"/>`, not a bare `<velocity>` element. Most readers silently ignore it, so the intended percussion dynamics (the whole point of commit `007a327`) may not actually reach a DAW/notation program. Worth validating against the target consumer (MuseScore / the web renderer) and moving to a supported element.
+**F-2 — `<velocity>` was not a valid child of `<note>`. ✅ FIXED (2026-10-20).**
+`_percussion_note_to_xml` emitted `<velocity>105</velocity>` inside `<note>`, which is not a MusicXML element — readers ignored it, so the intended percussion dynamics (commit `007a327`) never reached a DAW/notation program. **Fix:** velocity is now the standard `dynamics` attribute on `<note>` (a percentage of the default forte velocity 90, e.g. velocity 105 → `dynamics="116.7"`). Guarded by `tests/test_musicxml.py::test_percussion_uses_dynamics_attr_not_velocity_element`.
 
-**F-3 — Global RNG state is shared across concurrent web requests.**
-`MaqamGenerator.__init__` calls `random.seed(...)` on the process-global `random` module, and the whole pipeline uses module-level `random.*`. Under gunicorn with threads (or any concurrency), two in-flight `/api/generate` requests interfere: a seeded request can be perturbed by an unseeded one, breaking reproducibility and determinism. **Fix:** give each generator its own `random.Random()` instance and thread it through the sub-components. (Single-worker, single-thread deployments are unaffected — confirm the deploy topology.)
+**F-3 — Global RNG state was shared across concurrent web requests. ✅ FIXED (2026-10-20).**
+`MaqamGenerator.__init__` called `random.seed(...)` on the process-global `random` module and the whole pipeline used module-level `random.*`, so under threads two in-flight `/api/generate` requests could perturb each other and break reproducibility. **Fix:** each `MaqamGenerator` now owns a `random.Random(seed)` instance, threaded through the `RuleEngine` sub-rules and the pitch/rhythm/phrase/modulation components (all module-level `random.*` calls replaced with the instance). Verified: a seeded generator no longer touches global RNG, and a seeded request stays reproducible even when another generation interleaves. Guarded by two new tests in `tests/test_generation.py`.
 
 **F-4 — Saba's upper structure is simplified; octave is treated as natural.**
 maqamworld defines Saba as Jins Saba + Jins Hijaz (3rd) **+ Jins ‘Ajam or Nikriz on the 6th**; the project models only the first two ajnas. Also, Saba is non-octave and its 8th degree is classically a *flat* upper tonic, but the data lists degree 8 = D♮ (12 semitones). Pitches below the octave are correct; this is a fidelity gap, not a crash. Flag for the correctness phase.
@@ -111,7 +111,7 @@ The per-note selection in `PitchSelector.select_next_degree` is an **11-stage pr
 
 ## 5. Test suite added in Phase 1
 
-New `tests/` package (pytest 9, **212 tests, all passing**, ~1s):
+New `tests/` package (pytest 9, **216 tests, all passing**, ~1s):
 
 | File | Covers |
 |---|---|
@@ -129,8 +129,8 @@ Run with: `python -m pytest`
 
 **A. Correctness fixes (small, high-value)**
 1. ~~Fix F-1 (natural-accidental rendering).~~ ✅ Done. Follow-up: remove/regenerate the now-superseded `custom_accidentals` field.
-2. Decide F-2 (percussion velocity) against the real MusicXML consumer and switch to a supported element.
-3. Fix F-3 (per-generator RNG) if the deployment is ever multi-threaded.
+2. ~~Fix F-2 (percussion velocity → `dynamics` attribute).~~ ✅ Done.
+3. ~~Fix F-3 (per-generator RNG).~~ ✅ Done.
 
 **B. Full external correctness cross-check vs maqamworld.com** *(the big one)*
 - Method validated in Phase 1: maqamworld describes every maqam's **ajnas composition in readable text** ("Jins X on the tonic, Jins Y on the Nth degree"), and jins intervals are fixed. So we can, for all 22 maqamat: (1) scrape the composition text, (2) rebuild the expected scale from our own jins interval data, (3) diff against our stored `scale_semitones`. This needs no image reading.

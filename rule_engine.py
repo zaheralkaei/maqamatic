@@ -218,11 +218,12 @@ class PitchHierarchyRules:
 class PhraseStructureRules:
     """Resolves phrase structure, repetition variation, and cadence rules."""
 
-    def __init__(self, universal: Dict, config: Dict, params):
+    def __init__(self, universal: Dict, config: Dict, params, rng=None):
         self._phrase = universal.get("phrase_structure", {})
         self._repetition = universal.get("repetition_variation", {})
         self._cadences = universal.get("cadence_types", {})
         self._params = params
+        self._rng = rng if rng is not None else random.Random()
 
     def get_target_phrase_length_notes(self) -> int:
         """Return target note count per phrase from config."""
@@ -234,7 +235,7 @@ class PhraseStructureRules:
     def should_pair_antecedent_consequent(self) -> bool:
         """Decide whether next two phrases form a question-answer pair."""
         prob = self._params.traditionality * 0.6
-        return random.random() < prob
+        return self._rng.random() < prob
 
     def select_repetition_type(self) -> str:
         """Select a repetition/variation type by weighted random."""
@@ -258,13 +259,13 @@ class PhraseStructureRules:
             weights.append(max(0.01, w))
             names.append(name)
 
-        return random.choices(names, weights=weights, k=1)[0]
+        return self._rng.choices(names, weights=weights, k=1)[0]
 
     def select_cadence_type(self, phase, is_final_phrase: bool,
                              allowed_cadences: List[str]) -> str:
         """Select cadence type for this phrase."""
         if is_final_phrase and "full" in allowed_cadences:
-            if random.random() < 0.8:
+            if self._rng.random() < 0.8:
                 return "full"
 
         if not allowed_cadences:
@@ -275,13 +276,13 @@ class PhraseStructureRules:
             cad_data = self._cadences.get(cad, {})
             weights.append(cad_data.get("strength", 0.5))
 
-        return random.choices(allowed_cadences, weights=weights, k=1)[0]
+        return self._rng.choices(allowed_cadences, weights=weights, k=1)[0]
 
     def get_cadence_approach_pattern(self, cadence_type: str) -> List[int]:
         """Return a cadence approach degree sequence."""
         cad_data = self._cadences.get(cadence_type, {})
         patterns = cad_data.get("approach_patterns", [[2, 1]])
-        return random.choice(patterns)
+        return self._rng.choice(patterns)
 
     def get_cadence_final_degrees(self, cadence_type: str) -> List[int]:
         cad_data = self._cadences.get(cadence_type, {})
@@ -292,12 +293,13 @@ class DurationRules:
     """Resolves all duration logic: 5-factor model, rhythmic patterns,
     beat alignment, and tempo variance."""
 
-    def __init__(self, config: Dict, data, params):
+    def __init__(self, config: Dict, data, params, rng=None):
         self._duration = config.get("duration_logic", {})
         self._factors = self._duration.get("factors", {})
         self._patterns = self._duration.get("rhythmic_patterns", {})
         self._values = self._duration.get("duration_values", {})
         self._params = params
+        self._rng = rng if rng is not None else random.Random()
 
     def compute_note_duration_multiplier(self, pitch_importance: str,
                                           metric_position: float,
@@ -351,7 +353,7 @@ class DurationRules:
         gs_mult = style_data.get("base_duration", 1.0)
         # Add variance from tempo_stability
         variance = self.get_tempo_variance()
-        gs_mult += random.uniform(-variance, variance) * 0.5
+        gs_mult += self._rng.uniform(-variance, variance) * 0.5
         total += gs_weight * max(0.5, gs_mult)
 
         return max(0.5, total / (pi_weight + mp_weight + nc_weight + pp_weight + gs_weight))
@@ -421,7 +423,7 @@ class DurationRules:
 
             weights.append(w)
 
-        selected = random.choices(cells, weights=weights, k=1)[0]
+        selected = self._rng.choices(cells, weights=weights, k=1)[0]
         return selected.get("durations")
 
     def select_half_cell(self, phrase_position: float) -> Optional[List[int]]:
@@ -449,7 +451,7 @@ class DurationRules:
                 w *= 1.5
             weights.append(w)
 
-        selected = random.choices(cells, weights=weights, k=1)[0]
+        selected = self._rng.choices(cells, weights=weights, k=1)[0]
         return selected.get("durations")
 
     def get_downbeat_multiplier(self) -> float:
@@ -465,12 +467,13 @@ class DurationRules:
 class StructureGrammarRules:
     """Resolves structure grammar: form selection, section expansion."""
 
-    def __init__(self, config: Dict, params, data=None):
+    def __init__(self, config: Dict, params, data=None, rng=None):
         self._grammar = config.get("structure_grammar", {})
         self._base_forms = self._grammar.get("base_forms", {})
         self._expansion = self._grammar.get("expansion_rules", {})
         self._section_props = self._grammar.get("section_properties", {})
         self._params = params
+        self._rng = rng if rng is not None else random.Random()
         # Audit v2: stash iqaat data so _get_iqa_beats_per_measure
         # can compute the right time signature for the current iqa.
         self._iqaat_data = (data.iqaat if data is not None else {}) or {}
@@ -603,7 +606,7 @@ class StructureGrammarRules:
                             adjusted.append(p * boost)
                         total = sum(adjusted)
                         probs = [p / total for p in adjusted] if total > 0 else probs
-                    chosen = random.choices(outputs, weights=probs, k=1)[0]
+                    chosen = self._rng.choices(outputs, weights=probs, k=1)[0]
                     new_sections.extend(list(chosen))
                 else:
                     new_sections.append(label)
@@ -688,11 +691,12 @@ class StructureGrammarRules:
 class PhaseSystemRules:
     """Resolves phase system: phase assignment, duration ratios, intensity."""
 
-    def __init__(self, config: Dict, params):
+    def __init__(self, config: Dict, params, rng=None):
         self._phase_config = config.get("phase_system", {})
         self._fixed_phases = self._phase_config.get("fixed_phases", [])
         self._nesting = self._phase_config.get("dynamic_nesting", {})
         self._params = params
+        self._rng = rng if rng is not None else random.Random()
 
     def build_phase_sequence(self, num_sections: int) -> List[Dict]:
         """Build the complete phase sequence from config.
@@ -827,7 +831,7 @@ class PhaseSystemRules:
         elif contour == "flat":
             return "neutral"
         elif contour == "free":
-            return random.choice(["ascending", "descending", "neutral"])
+            return self._rng.choice(["ascending", "descending", "neutral"])
         # "arch" and "wave" use the phase's own bias
         return base
 
@@ -924,12 +928,13 @@ class ModulationRules:
 class OrnamentationRules:
     """Resolves ornamentation: context-aware type selection, style presets."""
 
-    def __init__(self, config: Dict, data, params):
+    def __init__(self, config: Dict, data, params, rng=None):
         self._orn_config = config.get("ornamentation", {})
         self._types = self._orn_config.get("types", {})
         self._presets = self._orn_config.get("style_presets", {})
         self._data = data
         self._params = params
+        self._rng = rng if rng is not None else random.Random()
 
     def get_style_preset_name(self) -> str:
         freq = self._params.ornament_frequency
@@ -960,7 +965,7 @@ class OrnamentationRules:
 
         # Cap at reasonable max
         total_prob = min(0.8, total_prob)
-        return random.random() < total_prob
+        return self._rng.random() < total_prob
 
     def select_ornament_type(self, context: Dict) -> Optional[str]:
         """Select specific ornament type from applicable ones."""
@@ -990,7 +995,7 @@ class OrnamentationRules:
         if not candidates:
             return None
 
-        return random.choices(candidates, weights=weights, k=1)[0]
+        return self._rng.choices(candidates, weights=weights, k=1)[0]
 
     def _context_matches(self, applies_to: List[str], context: Dict) -> bool:
         """Check if any applies_to condition matches the context."""
@@ -1156,19 +1161,24 @@ class RuleEngine:
     and provides resolved rule values to the generation pipeline.
     """
 
-    def __init__(self, data, params):
+    def __init__(self, data, params, rng=None):
         self.data = data
         self.params = params
         self.config = data.generator_config
         self.universal = self.config.get("universal_rules", {})
+        # Audit F-3: each generator owns its own Random instance so
+        # concurrent web requests don't share/perturb global RNG state.
+        self.rng = rng if rng is not None else random.Random()
 
         self.melodic_motion = MelodicMotionRules(self.universal, params)
         self.pitch_hierarchy = PitchHierarchyRules(self.universal, data, params)
         self.phrase_structure = PhraseStructureRules(
-            self.universal, self.config, params)
-        self.duration = DurationRules(self.config, data, params)
-        self.structure_grammar = StructureGrammarRules(self.config, params, data)
-        self.phase_system = PhaseSystemRules(self.config, params)
+            self.universal, self.config, params, self.rng)
+        self.duration = DurationRules(self.config, data, params, self.rng)
+        self.structure_grammar = StructureGrammarRules(
+            self.config, params, data, self.rng)
+        self.phase_system = PhaseSystemRules(self.config, params, self.rng)
         self.modulation = ModulationRules(self.config, data, params)
-        self.ornamentation = OrnamentationRules(self.config, data, params)
+        self.ornamentation = OrnamentationRules(
+            self.config, data, params, self.rng)
         self.jins = JinsRules(data, params)

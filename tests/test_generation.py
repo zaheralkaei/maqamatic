@@ -119,6 +119,34 @@ def test_measures_sum_to_full_duration(maqam_id, iqa_id, data, mxg, iqaat):
     assert not errors, f"{maqam_id}/{iqa_id}: under/overfull measures: {errors}"
 
 
+def test_generator_does_not_touch_global_rng(data):
+    """F-3: constructing/running a seeded generator must not reseed or
+    consume the process-global random module."""
+    import random
+    random.seed(0)
+    before = [random.random() for _ in range(5)]
+    g = MaqamGenerator(GeneratorParams(maqam_id="rast", random_seed=123),
+                       data_dir=str(DATA_DIR))
+    g.generate()
+    random.seed(0)
+    after = [random.random() for _ in range(5)]
+    assert before == after
+
+
+def test_seed_reproducible_under_interleaving(data, mxg):
+    """F-3: a seeded request stays reproducible even when another
+    generation runs in between (simulates concurrent web requests)."""
+    def out(seed):
+        g = MaqamGenerator(GeneratorParams(maqam_id="hijaz", iqa_id="maqsum",
+                                           random_seed=seed),
+                           data_dir=str(DATA_DIR))
+        return mxg.sections_to_musicxml(g.generate(), iqa_id="maqsum")
+    first = out(42)
+    _ = out(7)          # a different request interleaved
+    second = out(42)
+    assert first == second
+
+
 def test_empty_seed_does_not_crash(data, mxg):
     """Regression: '' seed and missing seed must both work (past bug)."""
     from params_expanded import create_generator_from_ui_params

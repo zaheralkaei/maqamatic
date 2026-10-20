@@ -138,6 +138,7 @@ class PitchSelector:
         self.data = data
         self.params = params
         self.rules = rules
+        self.rng = (rules.rng if rules is not None and hasattr(rules, "rng") else random.Random())
         self.current_maqam = params.maqam_id
         self.sayr = self._get_sayr()
         self.matrix = self._get_matrix()
@@ -588,7 +589,7 @@ class PitchSelector:
         if not degrees:
             return current_degree
 
-        selected = random.choices(degrees, weights=weights, k=1)[0]
+        selected = self.rng.choices(degrees, weights=weights, k=1)[0]
 
         try:
             next_degree = int(selected)
@@ -623,7 +624,7 @@ class PitchSelector:
             return 1
         typical_starts = self.sayr.get("typical_start_degrees", [1, 4])
         if typical_starts:
-            return random.choice(typical_starts)
+            return self.rng.choice(typical_starts)
         return 1
 
     def get_ending_degree(self, phrase_type: PhraseType) -> int:
@@ -640,9 +641,9 @@ class PitchSelector:
 
         if phrase_type == PhraseType.CADENTIAL:
             if 1 in can_end:
-                return 1 if random.random() < 0.7 else random.choice(can_end)
+                return 1 if self.rng.random() < 0.7 else self.rng.choice(can_end)
 
-        return random.choice(can_end)
+        return self.rng.choice(can_end)
 
 
 class RhythmGenerator:
@@ -652,6 +653,7 @@ class RhythmGenerator:
         self.data = data
         self.params = params
         self.rules = rules
+        self.rng = (rules.rng if rules is not None and hasattr(rules, "rng") else random.Random())
         self.current_iqa = self._get_iqa()
         self.config = data.generator_config.get("duration_logic", {})
 
@@ -733,7 +735,7 @@ class RhythmGenerator:
             if (beat_idx + 1 < total_beats and
                     self.rules and
                     self.params.energy_level < 0.6 and
-                    random.random() < 0.3):
+                    self.rng.random() < 0.3):
                 use_half = True
 
             if use_half:
@@ -874,7 +876,7 @@ class RhythmGenerator:
             if total_weight > 0:
                 option_weights = [w / total_weight for w in option_weights]
 
-            dur = random.choices(valid_options, weights=option_weights, k=1)[0]
+            dur = self.rng.choices(valid_options, weights=option_weights, k=1)[0]
             durations.append(dur)
             remaining -= dur
 
@@ -922,7 +924,7 @@ class RhythmGenerator:
             next_pos = position + adjusted[i]
             for accent_pos in accent_positions:
                 if position < accent_pos < next_pos:
-                    if random.random() > syncopation_prob:
+                    if self.rng.random() > syncopation_prob:
                         new_dur = accent_pos - position
                         if new_dur >= 2:
                             remainder = adjusted[i] - new_dur
@@ -945,6 +947,7 @@ class PhraseGenerator:
         self.data = data
         self.params = params
         self.rules = rules
+        self.rng = (rules.rng if rules is not None and hasattr(rules, "rng") else random.Random())
         # Motif memory for repetition/variation
         self._motif_memory: List[List[int]] = []
 
@@ -994,7 +997,7 @@ class PhraseGenerator:
             char_phrases = self._get_characteristic_phrase(phrase_type)
             adherence = getattr(self.params, 'characteristic_phrase_adherence',
                                 self.params.traditionality)
-            use_skeleton = char_phrases and random.random() < adherence
+            use_skeleton = char_phrases and self.rng.random() < adherence
 
             if use_skeleton:
                 skeleton = char_phrases
@@ -1068,16 +1071,16 @@ class PhraseGenerator:
         """Attempt to recall and vary a previous motif."""
         if not self.rules or not self._motif_memory:
             return None
-        if random.random() > self.params.repetition_amount:
+        if self.rng.random() > self.params.repetition_amount:
             return None
 
         var_type = self.rules.phrase_structure.select_repetition_type()
-        source = random.choice(self._motif_memory)
+        source = self.rng.choice(self._motif_memory)
 
         if var_type == "exact_repetition":
             return source.copy()
         elif var_type == "sequence":
-            transposition = random.choice([-3, -2, -1, 1, 2, 3])
+            transposition = self.rng.choice([-3, -2, -1, 1, 2, 3])
             # Clamp to valid degree range [1, 8] — out-of-range degrees
             # would otherwise produce wrong notes via the pitch converter
             # (see generator_to_musicxml.PitchConverter.degree_to_pitch).
@@ -1087,11 +1090,11 @@ class PhraseGenerator:
         elif var_type == "melodic_variation":
             varied = source.copy()
             for j in range(len(varied)):
-                if random.random() < 0.3:
-                    varied[j] = max(1, min(8, varied[j] + random.choice([-1, 1])))
+                if self.rng.random() < 0.3:
+                    varied[j] = max(1, min(8, varied[j] + self.rng.choice([-1, 1])))
             return varied
         elif var_type == "development":
-            start = random.randint(0, max(0, len(source) - 3))
+            start = self.rng.randint(0, max(0, len(source) - 3))
             fragment = source[start:start + max(3, len(source) // 2)]
             return fragment
         return None
@@ -1144,13 +1147,13 @@ class PhraseGenerator:
             return None
 
         weights = [p.get("weight", 1.0) for p in type_phrases]
-        selected = random.choices(type_phrases, weights=weights, k=1)[0]
+        selected = self.rng.choices(type_phrases, weights=weights, k=1)[0]
 
         return selected.get("degrees", [])
 
     def _maybe_add_ornament(self, degree: int) -> Optional[str]:
         """Fallback ornament selection (legacy)"""
-        if random.random() > self.params.ornament_frequency:
+        if self.rng.random() > self.params.ornament_frequency:
             return None
 
         maqam = self.data.maqamat.get(self.params.maqam_id, {})
@@ -1159,7 +1162,7 @@ class PhraseGenerator:
 
         if degree in ornament_degrees:
             ornaments = ["trill", "mordent", "turn", "grace_note"]
-            return random.choice(ornaments)
+            return self.rng.choice(ornaments)
 
         return None
 
@@ -1171,6 +1174,7 @@ class ModulationHandler:
         self.data = data
         self.params = params
         self.rules = rules
+        self.rng = (rules.rng if rules is not None and hasattr(rules, "rng") else random.Random())
         self.modulation_history: List[str] = [params.maqam_id]
 
     def should_modulate(self, current_section: int, total_sections: int) -> bool:
@@ -1195,9 +1199,9 @@ class ModulationHandler:
                 "short_modulation": 0.4,
                 "full_modulation": 0.6
             }
-            return random.random() < prob_map.get(depth, 0.3)
+            return self.rng.random() < prob_map.get(depth, 0.3)
 
-        return random.random() < self.params.modulation_depth
+        return self.rng.random() < self.params.modulation_depth
 
     def get_modulation_target(self, current_maqam: str) -> Optional[str]:
         """Get a suitable modulation target"""
@@ -1226,7 +1230,7 @@ class ModulationHandler:
         if not targets:
             return None
 
-        selected = random.choices(targets, weights=weights, k=1)[0]
+        selected = self.rng.choices(targets, weights=weights, k=1)[0]
         self.modulation_history.append(selected)
 
         return selected
@@ -1248,13 +1252,15 @@ class MaqamGenerator:
         self.params = params or GeneratorParams()
         self.data = DataLoader(data_dir)
 
-        # Create RuleEngine
-        from rule_engine import RuleEngine
-        self.rules = RuleEngine(self.data, self.params)
+        # Audit F-3: each generator owns a Random instance (seeded if a
+        # seed was requested, otherwise system-seeded). This replaces the
+        # old global random.seed(), which made seeded output and concurrent
+        # requests interfere through the shared module-level RNG.
+        self.rng = random.Random(self.params.random_seed)
 
-        # Seed randomness if requested
-        if self.params.random_seed is not None:
-            random.seed(self.params.random_seed)
+        # Create RuleEngine (shares this generator's RNG)
+        from rule_engine import RuleEngine
+        self.rules = RuleEngine(self.data, self.params, rng=self.rng)
 
         # Pass rules to all sub-components
         self.pitch_selector = PitchSelector(self.data, self.params, self.rules)
@@ -1467,14 +1473,14 @@ class MaqamGenerator:
         if tradition < 0.4:
             return
         prob = min(1.0, tradition * 1.3)
-        if random.random() > prob:
+        if self.rng.random() > prob:
             return
         # Find the last phrase with notes
         for section in reversed(sections):
             for phrase in reversed(section.phrases):
                 if phrase.notes and len(phrase.notes) >= 2:
                     # Apply cadential approach → degree 1
-                    if len(phrase.notes) >= 3 and random.random() < tradition:
+                    if len(phrase.notes) >= 3 and self.rng.random() < tradition:
                         # [3, 2, 1] pattern
                         phrase.notes[-3].degree = 3
                         phrase.notes[-2].degree = 2
