@@ -144,3 +144,17 @@ def test_rate_limit_is_per_forwarded_client(monkeypatch):
     assert _post(c, BASE, headers=a).status_code == 200
     assert _post(c, BASE, headers=a).status_code == 429   # same client throttled
     assert _post(c, BASE, headers=b).status_code == 200   # other client unaffected
+
+
+# --- form map ------------------------------------------------------------------
+
+def test_generate_returns_the_form(client):
+    r = _post(client, {"maqam_selection": "rast", "iqa_selection": "maqsum",
+                       "modulation_frequency": 80, "randomness_seed": "1"})
+    body = r.get_json()
+    assert r.status_code == 200 and body["success"]
+    form = body["form"]
+    assert form and form[0]["change"] == "start" and form[0]["maqam"] == "rast"
+    for entry in form:
+        assert {"label", "maqam", "maqam_name", "tonic", "change", "measure",
+                "end_measure", "start_beat", "beats"} <= entry.keys()

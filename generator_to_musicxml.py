@@ -36,6 +36,33 @@ class MusicXMLNote:
 
 
 @dataclass
+class SectionMark:
+    """What the score shows where a section begins: its rehearsal label and,
+    when the maqam changes there, the new maqam and its starting note
+    ("Nahawand on G"). Printed as one direction whose id ("section-N")
+    lets the form map find the measure it landed in."""
+    index: int
+    label: str = ""
+    maqam_text: str = ""
+
+    def __bool__(self):
+        return bool(self.label or self.maqam_text)
+
+
+ACCIDENTAL_TEXT = {-1.5: "¾♭", -1: "♭", -0.5: "½♭", 0: "",
+                   0.5: "½♯", 1: "♯", 1.5: "¾♯"}
+
+
+def note_name(pitch: "MusicXMLNote") -> str:
+    """Pitch name for text, e.g. 'G', 'B♭', 'E½♭'."""
+    return pitch.step + ACCIDENTAL_TEXT.get(pitch.alter, "")
+
+
+def ordinal(n: int) -> str:
+    return {1: "1st", 2: "2nd", 3: "3rd"}.get(n, f"{n}th")
+
+
+@dataclass
 class PercussionEvent:
     """Represents a percussion event for iqa"""
     position: int  # Position in divisions from start of measure
@@ -288,6 +315,28 @@ class MusicXMLGenerator:
         When sections have different iqa_id values, time signature changes are
         emitted at section boundaries in both melody and percussion parts.
         """
+        return self.sections_to_score(sections, iqa_id, title, composer,
+                                      include_percussion)[0]
+
+    def sections_to_score(self, sections: List[Section],
+                          iqa_id: Optional[str] = None,
+                          title: str = "Generated Maqam Melody",
+                          composer: str = "Maqamatic Generator",
+                          include_percussion: bool = True) -> Tuple[str, List[Dict]]:
+        """The MusicXML document plus the piece's form: one entry per
+        section with its label, maqam, starting note, how it was reached
+        (start / modulation / return / continue) and where it sits in the
+        score (measure and beat, read back from the written score)."""
+        xml = self._sections_to_xml(sections, iqa_id, title, composer,
+                                    include_percussion)
+        return xml, self._locate_sections(xml, self._form)
+
+    def _maqam_name(self, maqam_id: str) -> str:
+        name = self.data.maqamat.get(maqam_id, {}).get("name", maqam_id)
+        return name.replace("Maqam ", "")
+
+    def _sections_to_xml(self, sections, iqa_id, title, composer,
+                         include_percussion) -> str:
         # Check if we have per-section iqaat (composed forms with different meters)
         # M5 (audit): include empty iqa_id values by falling back to the
         # request's iqa_id parameter; otherwise two sections with empty
@@ -301,7 +350,10 @@ class MusicXMLGenerator:
         # section_label is non-empty only for the first note of each section
         annotated_notes = []
         converter = None
-        for section in sections:
+        home = sections[0].maqam_id if sections else None
+        self._form = []
+        for index, section in enumerate(sections):
+            previous = converter
             # Audit R2-06: a modulating section starts its maqam on the
             # pivot note of the previous section's (possibly transposed)
             # scale. Following sections in the same maqam keep that
@@ -321,6 +373,36 @@ class MusicXMLGenerator:
                 converter = PitchConverter(self.data, section.maqam_id)
             section_iqa = section.iqa_id or iqa_id or "maqsum"
             section_label = section.section_label or ""
+
+            # How this section's maqam was reached, and the text the score
+            # prints there when it changes ("Nahawand on G", "Rast (home)").
+            name = self._maqam_name(section.maqam_id)
+            tonic = note_name(converter.degree_to_pitch(1))
+            if previous is None:
+                change, maqam_text = "start", ""
+            elif section.maqam_id == previous.maqam_id:
+                change, maqam_text = "continue", ""
+            elif section.maqam_id == home:
+                change, maqam_text = "return", f"{name} (home)"
+            else:
+                change, maqam_text = "modulation", f"{name} on {tonic}"
+            mark = SectionMark(index=index, label=section_label,
+                               maqam_text=maqam_text)
+            entry = {
+                "index": index,
+                "label": self._SECTION_DISPLAY_LABELS.get(section_label, section_label),
+                "maqam": section.maqam_id,
+                "maqam_name": name,
+                "tonic": tonic,
+                "change": change,
+                "measure": None, "end_measure": None,
+                "start_beat": None, "beats": None,
+            }
+            if change == "modulation" and pivot is not None:
+                entry["pivot"] = {"degree": pivot,
+                                  "of": self._maqam_name(previous.maqam_id),
+                                  "text": f"{ordinal(pivot)} of {self._maqam_name(previous.maqam_id)}"}
+            self._form.append(entry)
             is_first_note = True
 
             for phrase in section.phrases:
@@ -339,7 +421,7 @@ class MusicXMLGenerator:
                     if is_first_phrase_note and not xml_note.is_rest:
                         xml_note.dynamic = self._level_to_dynamic(
                             phrase.dynamics_level)
-                    label = section_label if is_first_note else ""
+                    label = mark if is_first_note else ""
                     annotated_notes.append((xml_note, section_iqa, label))
                     is_first_note = False
                     is_first_phrase_note = False
@@ -1118,15 +1200,69 @@ class MusicXMLGenerator:
     }
 
     @classmethod
-    def _rehearsal_mark(cls, label: str) -> str:
-        """Generate a MusicXML rehearsal mark direction element."""
-        display = cls._SECTION_DISPLAY_LABELS.get(label, label)
-        return f'''      <direction placement="above">
+    def _rehearsal_mark(cls, mark) -> str:
+        """The direction printed where a section begins: its rehearsal mark
+        and, when the maqam changes there, the new maqam as text.
+        `mark` is a SectionMark or a plain label string."""
+        if isinstance(mark, SectionMark):
+            label, text = mark.label, mark.maqam_text
+            ident = f' id="section-{mark.index + 1}"'
+        else:
+            label, text, ident = mark, "", ""
+        # Separate directions: OSMD 1.7.6 draws only the first
+        # direction-type of a direction, so text sharing one with the
+        # rehearsal mark disappears from the web score.
+        types = []
+        if label:
+            display = xml_escape(cls._SECTION_DISPLAY_LABELS.get(label, label))
+            types.append(f'''<rehearsal default-x="-25" relative-y="30" font-size="14" font-weight="bold" enclosure="rectangle">{display}</rehearsal>''')
+        if text:
+            types.append(f'''<words font-size="11" font-style="italic">{xml_escape(text)}</words>''')
+        out = []
+        for i, content in enumerate(types):
+            out.append(f'''      <direction placement="above"{ident if i == 0 else ""}>
         <direction-type>
-          <rehearsal default-x="-25" relative-y="30" font-size="14" font-weight="bold" enclosure="rectangle">{display}</rehearsal>
+          {content}
         </direction-type>
       </direction>
-'''
+''')
+        return "".join(out)
+
+    @staticmethod
+    def _locate_sections(xml: str, form: List[Dict]) -> List[Dict]:
+        """Fill in where each section sits in the written score: the measure
+        holding its mark and the beat (in quarter notes, as the player
+        counts) where that mark falls. Read from the score itself, so it
+        matches what is printed even when a mark moves to the next barline
+        or a meter change pads a measure."""
+        import xml.etree.ElementTree as ET
+        part = ET.fromstring(xml).find("part")
+        if part is None:
+            return form
+        divisions, offset, found, last_measure = 8, 0, {}, 0
+        for measure in part.findall("measure"):
+            number = int(measure.get("number"))
+            last_measure = number
+            for el in measure:
+                if el.tag == "attributes" and el.find("divisions") is not None:
+                    divisions = int(el.find("divisions").text)
+                elif el.tag == "direction" and (el.get("id") or "").startswith("section-"):
+                    found[int(el.get("id")[8:]) - 1] = (number, offset / divisions)
+                elif el.tag == "note" and el.find("chord") is None and el.find("duration") is not None:
+                    offset += int(el.find("duration").text)
+                elif el.tag == "backup":
+                    offset -= int(el.find("duration").text)
+                elif el.tag == "forward":
+                    offset += int(el.find("duration").text)
+        total_beats = offset / divisions
+        placed = [e for e in form if e["index"] in found]
+        for e in placed:
+            e["measure"], e["start_beat"] = found[e["index"]]
+        for e, nxt in zip(placed, placed[1:] + [None]):
+            e["end_measure"] = (nxt["measure"] - 1 if nxt and nxt["measure"] > e["measure"]
+                                else (e["measure"] if nxt else last_measure))
+            e["beats"] = (nxt["start_beat"] if nxt else total_beats) - e["start_beat"]
+        return form
 
     @staticmethod
     def _level_to_dynamic(level: float) -> str:
@@ -1394,6 +1530,14 @@ def generate_musicxml(params: GeneratorParams,
 
     The same DataLoader drives both generation and export, so the score is
     always built from one consistent copy of the data (audit R2-13)."""
+    return generate_score(params, include_percussion, data)[0]
+
+
+def generate_score(params: GeneratorParams,
+                   include_percussion: bool = True,
+                   data: DataLoader = None) -> Tuple[str, List[Dict]]:
+    """Generate a melody: the MusicXML string and the piece's form (see
+    MusicXMLGenerator.sections_to_score)."""
     if data is None:
         data = DataLoader()
 
@@ -1406,7 +1550,7 @@ def generate_musicxml(params: GeneratorParams,
     iqa_name = data.iqaat.get(params.iqa_id, {}).get("name", params.iqa_id)
     title = f"{maqam_name} with {iqa_name}"
 
-    return xml_generator.sections_to_musicxml(
+    return xml_generator.sections_to_score(
         sections,
         iqa_id=params.iqa_id if include_percussion else None,
         title=title,

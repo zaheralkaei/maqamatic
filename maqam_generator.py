@@ -1496,11 +1496,13 @@ class MaqamGenerator:
         occurrence = sum(1 for lbl in all_labels[:index + 1] if lbl == label)
         if occurrence == 1:
             return label  # first occurrence: plain letter
-        # Subsequent: A', A'', A''' (prime marks, max 3 — beyond that
-        # the piece is just very repetitive and the score still
-        # indicates the structural repeat)
-        primes = min(occurrence - 1, 3)
-        return label + "'" * primes
+        # Subsequent: A', A'', A''', then A⁴, A⁵… so every repeat keeps
+        # its own label (capping at A''' repeated it, which the form map
+        # made obvious).
+        primes = occurrence - 1
+        if primes <= 3:
+            return label + "'" * primes
+        return label + str(primes).translate(str.maketrans("0123456789", "⁰¹²³⁴⁵⁶⁷⁸⁹"))
 
     def _build_composed_phase_sequence(self, section_labels: List[str]) -> List[Dict]:
         """Build phase sequence for composed forms (samai/longa/bashraf).

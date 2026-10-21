@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.2.96/css/materialdesignicons.min.css">
-    <link rel="stylesheet" href="/static/css/style.css?v=5">
+    <link rel="stylesheet" href="/static/css/style.css?v=6">
 </head>
 <body>
     <!-- Decorative Pattern Overlay -->
@@ -661,6 +661,13 @@
                     <p>Configure your settings and click "Generate Melody" to create a new piece</p>
                 </div>
                 <div class="score-container" id="score-container" style="display: none;">
+                    <div class="form-map" id="form-map" hidden>
+                        <div class="form-map-head">
+                            <span class="form-map-title">Form</span>
+                            <span class="form-map-path" id="form-map-path"></span>
+                        </div>
+                        <div class="form-map-strip" id="form-map-strip" role="list" aria-label="Sections of the piece"></div>
+                    </div>
                     <div id="osmd-container"></div>
                 </div>
                 <div class="loading-state" id="loading-state" style="display: none;">
@@ -786,6 +793,6 @@
     <script src="https://cdn.jsdelivr.net/npm/opensheetmusicdisplay@1.7.6/build/opensheetmusicdisplay.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/tone@14.7.77/build/Tone.min.js"></script>
     <script src="/static/js/drumkit.js?v=2"></script>
-    <script src="/static/js/app.js?v=11"></script>
+    <script src="/static/js/app.js?v=12"></script>
 </body>
 </html>

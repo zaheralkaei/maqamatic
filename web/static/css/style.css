@@ -20,6 +20,8 @@
     --color-accent-gold-dim: #8a7235;
     --color-accent-copper: #b87333;
     --color-accent-teal: #3d8a8a;
+    --color-accent-plum: #8a6aa6;
+    --color-accent-rose: #b0607a;
 
     --color-border: rgba(201, 168, 76, 0.15);
     --color-border-hover: rgba(201, 168, 76, 0.3);
@@ -717,6 +719,98 @@ input[type="range"]:disabled {
     height: 100%;
     overflow: auto;
     padding: var(--space-lg);
+}
+
+/* Form map: the piece's sections and maqamat, above the score. Sticks to
+   the top while the score scrolls; each block jumps to its section. */
+.form-map {
+    position: sticky;
+    top: calc(-1 * var(--space-lg));
+    z-index: 2;
+    margin: calc(-1 * var(--space-lg)) calc(-1 * var(--space-lg)) var(--space-md);
+    padding: var(--space-md) var(--space-lg) var(--space-sm);
+    background: var(--color-bg-secondary);
+    border-bottom: 1px solid var(--color-border);
+    display: grid;
+    gap: var(--space-sm);
+}
+
+.form-map[hidden] { display: none; }
+
+.form-map-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-xs) var(--space-md);
+    min-width: 0;
+}
+
+.form-map-title {
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+}
+
+.form-map-path {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    min-width: 0;
+}
+
+.form-map-path b { color: var(--color-text-primary); font-weight: 600; }
+
+.form-map-strip {
+    display: flex;
+    gap: 3px;
+    min-width: 0;
+}
+
+.form-block {
+    --maqam-color: var(--color-accent-gold-dim);
+    flex: var(--beats, 1) 1 0;
+    min-width: 0;
+    display: grid;
+    gap: 1px;
+    align-content: start;
+    padding: 5px 6px 6px;
+    border: 0;
+    border-top: 3px solid var(--maqam-color);
+    border-radius: var(--radius-sm);
+    background: color-mix(in srgb, var(--maqam-color) 18%, var(--color-bg-tertiary));
+    color: var(--color-text-primary);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    overflow: hidden;
+    transition: background var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.form-block:hover { background: color-mix(in srgb, var(--maqam-color) 32%, var(--color-bg-tertiary)); }
+.form-block:focus-visible { outline: 2px solid var(--color-accent-gold-light); outline-offset: 1px; }
+.form-block.active { box-shadow: inset 0 0 0 2px var(--maqam-color); background: color-mix(in srgb, var(--maqam-color) 40%, var(--color-bg-tertiary)); }
+
+.form-block .fb-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.form-block .fb-maqam {
+    font-size: 0.7rem;
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.form-block.fm-1 { --maqam-color: var(--color-accent-teal); }
+.form-block.fm-2 { --maqam-color: var(--color-accent-copper); }
+.form-block.fm-3 { --maqam-color: var(--color-accent-plum); }
+.form-block.fm-4 { --maqam-color: var(--color-accent-rose); }
+
+@media (prefers-reduced-motion: reduce) {
+    .form-block { transition: none; }
 }
 
 #osmd-container {

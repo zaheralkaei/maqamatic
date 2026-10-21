@@ -379,6 +379,9 @@ const Score = {
         try {
             await state.osmd.load(musicxml);
             state.osmd.EngravingRules.RenderSingleHorizontalStaffline = false;
+            // Mid-system rehearsal marks sit left of the note, so the maqam
+            // text printed beside them ("Sikah on E½♭") stays readable.
+            state.osmd.EngravingRules.RehearsalMarkXOffsetDefault = -20;
             state.osmd.render();
             UI.enablePlayback();
             Playback.parseNotesFromMusicXML(musicxml);
@@ -390,6 +393,102 @@ const Score = {
     },
     zoomIn() { if (state.osmd) { state.osmd.Zoom *= 1.2; state.osmd.render(); } },
     zoomOut() { if (state.osmd) { state.osmd.Zoom *= 0.8; state.osmd.render(); } }
+};
+
+// ============================================
+// Form map: the piece's sections and maqamat, above the score
+// ============================================
+
+const FormMap = {
+    sections: [],
+
+    clear() {
+        this.sections = [];
+        document.getElementById('form-map').hidden = true;
+        document.getElementById('form-map-strip').innerHTML = '';
+        document.getElementById('form-map-path').textContent = '';
+    },
+
+    render(form) {
+        this.clear();
+        if (!Array.isArray(form) || form.length === 0) return;
+        this.sections = form;
+        const home = form[0].maqam;
+        // home maqam in gold, each other maqam its own colour (fm-1..fm-4)
+        const colour = {};
+        let next = 1;
+        form.forEach((s) => {
+            if (!(s.maqam in colour)) colour[s.maqam] = s.maqam === home ? 0 : Math.min(4, next++);
+        });
+
+        const strip = document.getElementById('form-map-strip');
+        form.forEach((s, i) => {
+            const block = document.createElement('button');
+            block.type = 'button';
+            block.className = 'form-block fm-' + colour[s.maqam];
+            block.setAttribute('role', 'listitem');
+            block.style.setProperty('--beats', s.beats || 1);
+            const showMaqam = s.change !== 'continue';
+            block.innerHTML = '<span class="fb-label"></span><span class="fb-maqam"></span>';
+            block.querySelector('.fb-label').textContent = s.label || '·';
+            block.querySelector('.fb-maqam').textContent = showMaqam ? `${s.maqam_name} · ${s.tonic}` : '';
+            block.title = this._describe(s);
+            block.setAttribute('aria-label', this._describe(s));
+            block.addEventListener('click', () => this.scrollTo(s.measure));
+            strip.append(block);
+        });
+
+        // The path through the maqamat, e.g. "Rast on C → Sikah on E½♭ (bar 9) → Rast (bar 17)"
+        const path = document.getElementById('form-map-path');
+        const steps = form.filter((s) => s.change !== 'continue');
+        if (steps.length === 1) {
+            path.innerHTML = '<b></b> throughout';
+            path.querySelector('b').textContent = `${steps[0].maqam_name} on ${steps[0].tonic}`;
+        } else {
+            steps.forEach((s, i) => {
+                if (i) path.append(' → ');
+                const b = document.createElement('b');
+                b.textContent = s.change === 'return' ? s.maqam_name : `${s.maqam_name} on ${s.tonic}`;
+                path.append(b);
+                if (i && s.measure) path.append(` (bar ${s.measure})`);
+            });
+        }
+        document.getElementById('form-map').hidden = false;
+    },
+
+    _describe(s) {
+        const bars = s.measure ? (s.end_measure && s.end_measure !== s.measure
+            ? `bars ${s.measure}–${s.end_measure}` : `bar ${s.measure}`) : '';
+        const how = {
+            start: 'home maqam',
+            continue: 'continues',
+            return: 'returns home',
+            modulation: s.pivot ? `modulation, starting on the ${s.pivot.text}` : 'modulation',
+        }[s.change] || '';
+        return [s.label, `${s.maqam_name} on ${s.tonic}`, how, bars].filter(Boolean).join(' · ');
+    },
+
+    // Highlight the section being played (index into sections; null = none).
+    setActive(index) {
+        document.querySelectorAll('#form-map-strip .form-block').forEach((b, i) => {
+            b.classList.toggle('active', i === index);
+        });
+    },
+
+    // Scroll the score so the section's first measure sits under the map.
+    scrollTo(measure) {
+        const sheet = state.osmd && state.osmd.GraphicSheet;
+        const row = measure && sheet && sheet.MeasureList[measure - 1];
+        const gm = row && row.find((m) => m);
+        if (!gm) return;
+        const scroller = document.getElementById('score-container');
+        const osmdBox = document.getElementById('osmd-container');
+        const map = document.getElementById('form-map');
+        // OSMD positions are in units of 10 px at zoom 1
+        const y = gm.PositionAndShape.AbsolutePosition.y * 10 * (state.osmd.Zoom || 1);
+        const top = osmdBox.offsetTop + y - map.offsetHeight - 24;
+        scroller.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+    }
 };
 
 // ============================================
@@ -855,6 +954,17 @@ const Playback = {
             if (state.isLooping && state.isPlaying) { this.stop(); setTimeout(() => this.play(), 100); }
             else this.stop();
         }, Math.max(0, totalDuration - resumeFrom) * 1000 + 500);
+        // Light up each section of the form map as it is played.
+        FormMap.sections.forEach((s, i) => {
+            if (s.start_beat === null || s.start_beat === undefined) return;
+            // A timer, not Tone.Draw: Draw runs on animation frames and
+            // drops late callbacks, so throttled tabs skipped sections.
+            const id = Tone.Transport.schedule((time) => {
+                setTimeout(() => { if (state.isPlaying) FormMap.setActive(i); },
+                           Math.max(0, (time - Tone.now()) * 1000));
+            }, s.start_beat * secondsPerBeat);
+            this.scheduledIds.push(id);
+        });
         Tone.Transport.start();
     },
 
@@ -885,6 +995,7 @@ const Playback = {
         this.clearScheduled();
         Tone.Transport.stop();
         Tone.Transport.cancel();
+        FormMap.setActive(null);
         if (state.synth) state.synth.releaseAll();
         if (this.endTimeoutId) { clearTimeout(this.endTimeoutId); this.endTimeoutId = null; }
     },
@@ -992,7 +1103,9 @@ async function generateMelody() {
         if (result.success) {
             state.generatedMusicXML = result.musicxml;
             state.fileId = result.file_id;
+            FormMap.clear();
             await Score.render(result.musicxml);
+            FormMap.render(result.form);
         } else {
             alert('Generation failed: ' + result.error);
             UI.showEmpty();

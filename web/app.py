@@ -17,7 +17,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from maqam_generator import MaqamGenerator, DataLoader
 from params_expanded import (GeneratorParams, ParamValidationError,
                              create_generator_from_ui_params, sanitize_ui_values)
-from generator_to_musicxml import generate_musicxml
+from generator_to_musicxml import generate_score
 
 app = Flask(__name__,
             static_folder='static',
@@ -241,8 +241,8 @@ def generate_melody():
         file_id = str(uuid.uuid4())[:8]
         output_filename = f"maqam_{params.maqam_id}_{file_id}.musicxml"
         include_percussion = data.get('include_percussion', True)
-        musicxml_content = generate_musicxml(params, include_percussion,
-                                             data=data_loader)
+        musicxml_content, form = generate_score(params, include_percussion,
+                                                data=data_loader)
 
         # Get maqam and iqa names for display
         maqam_name = data_loader.maqamat.get(params.maqam_id, {}).get('name', params.maqam_id)
@@ -253,6 +253,8 @@ def generate_melody():
             'file_id': file_id,
             'filename': output_filename,
             'musicxml': musicxml_content,
+            # The piece's sections and modulations, for the form map.
+            'form': form,
             'title': f"{maqam_name} with {iqa_name}",
             'maqam': params.maqam_id,
             'iqa': params.iqa_id
