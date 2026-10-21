@@ -428,7 +428,11 @@ const Playback = {
             // Breath noise → breathFilter (dynamic) → Reverb → Dest
             // ============================================
 
-            const nayReverb = new Tone.Reverb({ decay: 2.2, wet: 0.22 }).toDestination();
+            // Master: a limiter just below full scale, so nay and drums
+            // playing loud together never clip.
+            const master = new Tone.Limiter(-1).toDestination();
+
+            const nayReverb = new Tone.Reverb({ decay: 2.2, wet: 0.22 }).connect(master);
 
             // Breath-like tremolo for natural variation
             const nayTremolo = new Tone.Tremolo({
@@ -549,75 +553,33 @@ const Playback = {
             };
 
             // ============================================
-            // PERCUSSION: Riq / Cajon — acoustic layered
+            // PERCUSSION: darbuka (dum / tak / ka) with riq jingles on tak.
+            // Strokes are synthesised once into sample buffers (drumkit.js)
+            // and each hit plays one of them, so hits overlap and ring out
+            // instead of cutting each other off.
+            // Voices → bus compressor → master, plus a small room (send).
             // ============================================
 
-            const drumReverb = new Tone.Reverb({ decay: 0.6, wet: 0.12 }).toDestination();
-            const drumComp = new Tone.Compressor({
-                threshold: -18, ratio: 3, attack: 0.002, release: 0.15
-            }).connect(drumReverb);
+            const drumRoom = new Tone.Reverb({ decay: 1.1, preDelay: 0.008, wet: 1 }).connect(master);
+            const drumBus = new Tone.Compressor({
+                threshold: -16, ratio: 2.5, attack: 0.004, release: 0.12
+            }).connect(master);
+            drumBus.connect(new Tone.Gain(0.16).connect(drumRoom));
 
-            // DUM (bass centre hit)
-            state.dumSkin = new Tone.MembraneSynth({
-                pitchDecay: 0.06, octaves: 5,
-                oscillator: { type: 'sine' },
-                envelope: { attack: 0.002, decay: 0.35, sustain: 0.0, release: 0.25 }
-            }).connect(drumComp);
-            state.dumSkin.volume.value = -2;
-
-            const dumBodyFilter = new Tone.Filter({ frequency: 180, type: 'lowpass', rolloff: -24 }).connect(drumComp);
-            state.dumBody = new Tone.NoiseSynth({
-                noise: { type: 'brown' },
-                envelope: { attack: 0.001, decay: 0.12, sustain: 0, release: 0.08 }
-            }).connect(dumBodyFilter);
-            state.dumBody.volume.value = -8;
-
-            const dumTransientFilter = new Tone.Filter({ frequency: 800, type: 'bandpass', Q: 0.8 }).connect(drumComp);
-            state.dumTransient = new Tone.NoiseSynth({
-                noise: { type: 'white' },
-                envelope: { attack: 0.001, decay: 0.015, sustain: 0, release: 0.01 }
-            }).connect(dumTransientFilter);
-            state.dumTransient.volume.value = -16;
-
-            // TAK (edge slap)
-            const takSkinFilter = new Tone.Filter({ frequency: 4500, type: 'bandpass', Q: 1.5 }).connect(drumComp);
-            state.takSkin = new Tone.MembraneSynth({
-                pitchDecay: 0.008, octaves: 3,
-                oscillator: { type: 'triangle' },
-                envelope: { attack: 0.001, decay: 0.06, sustain: 0.0, release: 0.04 }
-            }).connect(takSkinFilter);
-            state.takSkin.volume.value = -4;
-
-            const takCrackFilter = new Tone.Filter({ frequency: 6000, type: 'highpass', rolloff: -12 }).connect(drumComp);
-            state.takCrack = new Tone.NoiseSynth({
-                noise: { type: 'white' },
-                envelope: { attack: 0.001, decay: 0.025, sustain: 0, release: 0.015 }
-            }).connect(takCrackFilter);
-            state.takCrack.volume.value = -10;
-
-            const jingleFilter = new Tone.Filter({ frequency: 8000, type: 'highpass', rolloff: -12 }).connect(drumComp);
-            state.takJingle = new Tone.MetalSynth({
-                frequency: 300,
-                envelope: { attack: 0.001, decay: 0.08, release: 0.05 },
-                harmonicity: 5.1, modulationIndex: 16, resonance: 5000, octaves: 1.5
-            }).connect(jingleFilter);
-            state.takJingle.volume.value = -22;
-
-            // KA (ghost finger tap)
-            const kaSkinFilter = new Tone.Filter({ frequency: 2000, type: 'bandpass', Q: 1 }).connect(drumComp);
-            state.kaSkin = new Tone.MembraneSynth({
-                pitchDecay: 0.005, octaves: 1.5,
-                oscillator: { type: 'sine' },
-                envelope: { attack: 0.001, decay: 0.035, sustain: 0, release: 0.025 }
-            }).connect(kaSkinFilter);
-            state.kaSkin.volume.value = -10;
-
-            const kaNoiseFilter = new Tone.Filter({ frequency: 3000, type: 'bandpass', Q: 0.6 }).connect(drumComp);
-            state.kaNoise = new Tone.NoiseSynth({
-                noise: { type: 'pink' },
-                envelope: { attack: 0.001, decay: 0.02, sustain: 0, release: 0.015 }
-            }).connect(kaNoiseFilter);
-            state.kaNoise.volume.value = -18;
+            const sampleRate = Tone.getContext().sampleRate;
+            state.drumVoices = {};
+            state.drumBuffers = {};
+            for (const [name, db] of Object.entries(MaqamaticDrums.LEVELS)) {
+                state.drumVoices[name] = new Tone.Gain(Tone.dbToGain(db)).connect(drumBus);
+                state.drumBuffers[name] = [];
+                for (let v = 0; v < MaqamaticDrums.VARIANTS; v++) {
+                    state.drumBuffers[name].push(
+                        Tone.ToneAudioBuffer.fromArray(MaqamaticDrums.render(name, sampleRate, v)));
+                }
+                // let the page breathe between strokes (~20 ms of work each)
+                await new Promise((resolve) => setTimeout(resolve, 0));
+            }
+            await drumRoom.ready;
 
             state.audioInitialized = true;
         } catch (error) {
@@ -867,21 +829,14 @@ const Playback = {
                 if (!state.isPlaying) return;
                 switch (note.strokeType) {
                     case 'dum':
-                        if (state.dumSkin) state.dumSkin.triggerAttackRelease('G1', '8n', time, gain);
-                        if (state.dumBody) state.dumBody.triggerAttackRelease('8n', time, gain);
-                        if (state.dumTransient) state.dumTransient.triggerAttackRelease('64n', time, gain);
+                        this._stroke('dum', time, gain);
                         break;
                     case 'tak':
-                        if (state.takSkin) state.takSkin.triggerAttackRelease('A4', '32n', time, gain);
-                        if (state.takCrack) state.takCrack.triggerAttackRelease('32n', time, gain);
-                        // MetalSynth takes (note, duration, time, velocity); it was
-                        // called as ('64n', time), i.e. with no note and fired at
-                        // scheduling time instead of on the beat.
-                        if (state.takJingle) state.takJingle.triggerAttackRelease(300, '64n', time, gain);
+                        this._stroke('tak', time, gain);
+                        this._stroke('jingle', time, gain);
                         break;
                     case 'ka':
-                        if (state.kaSkin) state.kaSkin.triggerAttackRelease('D4', '32n', time, gain);
-                        if (state.kaNoise) state.kaNoise.triggerAttackRelease('64n', time, gain);
+                        this._stroke('ka', time, gain);
                         break;
                 }
             }, startTime - now);
@@ -901,6 +856,20 @@ const Playback = {
             else this.stop();
         }, Math.max(0, totalDuration - resumeFrom) * 1000 + 500);
         Tone.Transport.start();
+    },
+
+    // One percussion hit: a randomly chosen variant of the stroke, played
+    // at the hit's loudness, with a hair of pitch variation like a hand
+    // never striking quite the same spot.
+    _stroke(name, time, gain) {
+        const bank = state.drumBuffers && state.drumBuffers[name];
+        if (!bank || !bank.length) return;
+        const source = new Tone.ToneBufferSource({
+            url: bank[Math.floor(Math.random() * bank.length)],
+            playbackRate: 1 + (Math.random() - 0.5) * 0.02,
+        }).connect(state.drumVoices[name]);
+        source.onended = () => { if (!source.disposed) source.dispose(); };
+        source.start(time, 0, undefined, gain);
     },
 
     pause() {
