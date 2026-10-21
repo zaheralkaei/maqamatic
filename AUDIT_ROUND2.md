@@ -85,10 +85,16 @@ The generator also never handles the `C` section role (`distant_or_return`), so 
 
 Across 528 pieces in six forms, 0 now end in a modulated maqam and every key signature is the home maqam's. `tests/test_structure_and_ui_contract.py` checks this.
 
-### R2-06 — Modulations ignore their pivot degree *(needs a musical decision)*
+### R2-06 — Modulations ignore their pivot degree ✅ FIXED (owner decisions, 2026-10-21)
 Each modulation in `maqamat.json` has a `pivot_degree`, and `ModulationHandler.get_pivot_info()` exists, but **nothing calls it**. A modulated section simply plays the target maqam on its default tonic. In **19 of 33** modulations, that tonic is not the pivot note — for example Rast → Nahawand "pivot 5" plays Nahawand on C, not G.
 
 The pivot data itself also looks inconsistent: Rast → Bayati is given pivot 4 (F), while Bayati usually enters Rast on D. **Decision needed:** should a modulation transpose the target maqam so it starts on the pivot note? Then the pivot data needs a pass with you. The alternative is to keep "same tonic" (parallel) modulation and document it.
+**Fixed:**
+- A modulating section now starts its maqam on the pivot note, transposed. Spelling stays diatonic and the quarter tones are kept: Rast on G is G A B½♭ C D E F½♯ G.
+- The home key signature is kept; continuing sections stay transposed, and the return home is untransposed.
+- Pivots were corrected per the owner (see CONTENT_CHECK.md, round 3). An entry may list several pivots (Rast → Bayati on D or G).
+- The dead `get_pivot_info` and the contradictory `common_pivots` table were removed.
+- Note: Jiharkah → Rast now sounds on C5 (Jiharkah's 5th, maqamworld's Upper Rast), where before it played on C4.
 
 ### R2-07 — Several UI controls do nothing ✅ FIXED
 | Control | Problem |
@@ -107,12 +113,17 @@ The pivot data itself also looks inconsistent: Rast → Bayati is given pivot 4 
 - **New controls:** "Register Range" (`register_excursion`) and "Characteristic Phrases" (`characteristic_phrase_adherence`, which falls back to traditionality when unset).
 - **Also found by the new contract test:** the UI sent `melodic_density` with no definition, so the server didn't clamp it. It is now defined.
 
-### R2-08 — Most chosen ornaments never reach the score
+### R2-08 — Most chosen ornaments never reach the score ✅ RESOLVED (owner decision)
 The generator picks from trill, mordent, grace note, slide, vibrato and passing tone, but the exporter only writes **trill and mordent**. In a high-ornament sample, 287 of 402 chosen ornaments (71%) were silently dropped, mostly slides and grace notes. The vibrato slider therefore has essentially no visible effect.
 **Fix:**
 - Map slide → `<slide>`/`<glissando>` and vibrato → `<wavy-line>`.
 - Render grace notes as real grace `<note>`s, and passing tones as added notes.
 - Or drop the unsupported types from the config.
+**Resolved (owner decision):**
+- Grace notes are now written to the score as real `<grace>` notes on the maqam's upper neighbour; every grace note chosen reaches the score.
+- Trills and mordents are unchanged.
+- Slides, vibrato and passing tones stay as they are; the owner considers them not important for now.
+- Tested in the renderer: `<slide>` would stop OSMD 1.7.6 loading the score, and `<glissando>` and `<wavy-line>` draw nothing.
 
 ### R2-09 — The parameter inspector shows values that don't match the backend ✅ FIXED
 The inspector re-implements backend logic by hand, and it has drifted:
@@ -153,7 +164,11 @@ These should be 400 errors with a message that names the bad field.
 
 ## 🟡 Low / polish
 
-- **R2-12 — Playback ignores melody dynamics and ornaments.** *(Batch C — open)* pp…ff markings and trills only change the printed score; the browser audio plays at a constant level.
+- **R2-12 — Playback ignores melody dynamics and ornaments.** ✅ FIXED:
+  - **Dynamics:** the melody follows the score's markings (pp 0.4 … ff 1.0 velocity).
+  - **Ornaments:** the player performs grace notes (just before the beat), trills (alternating with the upper neighbour), mordents and turns. Neighbour notes take their accidental from the nearest melody note on that letter, so a trill on D in Rast goes to E½♭.
+  - **No regressions:** four saved scores parse identically to the old player (times, durations, pitches, percussion), and plain notes are still one event each.
+  - **Also fixed:** if the first click on the page was Play, the audio engine was built twice and Tone.js threw *"Start time must be strictly greater than previous start time"*. Initialisation now runs once. pp…ff markings and trills only change the printed score; the browser audio plays at a constant level.
 - **R2-13 — Unnecessary disk I/O, and a working-directory dependency.** ✅ FIXED: scores are generated in memory, the unused `/api/download` endpoint and temporary files are gone, and requests share one preloaded `DataLoader` (absolute path). The suite runs about 3× faster.
   - Each `/api/generate` writes the score to `output/` and reads it back. The UI builds its download in the browser, so `/api/download` is unused.
   - The generator builds a fresh `DataLoader("data")` on every request, re-reading all 7 JSON files from a *relative* path. That works only because the container's working directory is `/app`.
@@ -191,7 +206,7 @@ These should be 400 errors with a message that names the bad field.
 - R2-10 render order
 - R2-13, R2-14, R2-15, R2-17
 
-**Batch C — needs your musical decisions:**
+**Batch C — musical decisions: ✅ DONE (2026-10-21)**
 - R2-06 modulation pivots (and a pass over the pivot data)
 - R2-08 how to notate slides, grace notes and vibrato
 - R2-12 whether the player should follow dynamics and ornaments

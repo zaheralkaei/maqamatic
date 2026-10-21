@@ -404,7 +404,20 @@ const Playback = {
 
     async initAudio() {
         if (state.audioInitialized) return;
+        // The page-wide first-click handler and the Play button can both
+        // call this on the same click; share one initialisation instead of
+        // building every instrument twice (which made Tone.js throw
+        // "Start time must be strictly greater than previous start time").
+        if (!this._audioInit) {
+            this._audioInit = this._buildAudio().catch((error) => {
+                this._audioInit = null;
+                throw error;
+            });
+        }
+        return this._audioInit;
+    },
 
+    async _buildAudio() {
         try {
             await Tone.start();
             console.log('Audio context started');
@@ -482,7 +495,10 @@ const Playback = {
 
             // Combined nay synth wrapper
             state.synth = {
-                triggerAttackRelease: (freq, duration, time) => {
+                // velocity follows the score's dynamics; `fast` gives the
+                // short notes of ornaments (trills, grace notes) a crisp
+                // attack instead of the nay's slow breath-in (audit R2-12).
+                triggerAttackRelease: (freq, duration, time, velocity = 1, fast = false) => {
                     const freqVal = typeof freq === 'string' ? Tone.Frequency(freq).toFrequency() : freq;
                     const dur = typeof duration === 'number' ? duration : Tone.Time(duration).toSeconds();
 
@@ -493,7 +509,7 @@ const Playback = {
                     }
 
                     // Per-note attack variation: ±30ms for human-like irregularity
-                    const attackVar = 0.10 + (Math.random() * 0.06 - 0.03);
+                    const attackVar = fast ? 0.01 : 0.10 + (Math.random() * 0.06 - 0.03);
                     state.naySine.set({ envelope: { attack: attackVar } });
 
                     // Register-dependent breath: higher notes = louder, brighter breath
@@ -507,10 +523,10 @@ const Playback = {
                     }
 
                     // Trigger all layers
-                    if (state.naySine) state.naySine.triggerAttackRelease(freqVal, duration, time);
-                    if (state.nayBreath) state.nayBreath.triggerAttackRelease(duration, time);
-                    if (state.nayOvertone) state.nayOvertone.triggerAttackRelease(freqVal * 2.003, duration, time);
-                    if (state.nayOvertone2) state.nayOvertone2.triggerAttackRelease(freqVal * 3.005, duration, time);
+                    if (state.naySine) state.naySine.triggerAttackRelease(freqVal, duration, time, velocity);
+                    if (state.nayBreath) state.nayBreath.triggerAttackRelease(duration, time, velocity);
+                    if (state.nayOvertone) state.nayOvertone.triggerAttackRelease(freqVal * 2.003, duration, time, velocity);
+                    if (state.nayOvertone2) state.nayOvertone2.triggerAttackRelease(freqVal * 3.005, duration, time, velocity);
 
                     // Note-end volume fade: simulate breath running out on longer notes
                     if (dur > 0.5 && state.naySine) {
@@ -613,78 +629,185 @@ const Playback = {
     parseNotesFromMusicXML(musicxml) {
         this.melodyNotes = [];
         this.percussionNotes = [];
+        // Dynamic marking -> melody velocity (audit R2-12).
+        const DYNAMIC_VELOCITY = { pp: 0.4, p: 0.5, mp: 0.65, mf: 0.8, f: 0.9, ff: 1.0 };
         try {
             const parser = new DOMParser();
             const xmlDoc = parser.parseFromString(musicxml, 'text/xml');
             const parts = xmlDoc.querySelectorAll('part');
             parts.forEach((part) => {
                 const divisions = parseInt(part.querySelector('divisions')?.textContent) || 8;
+                const keyFifths = parseInt(part.querySelector('key fifths')?.textContent) || 0;
                 let currentTime = 0;
-                const notes = part.querySelectorAll('note');
-                notes.forEach(note => {
-                    const isRest = note.querySelector('rest') !== null;
-                    const isChord = note.querySelector('chord') !== null;
-                    const duration = parseInt(note.querySelector('duration')?.textContent) || divisions;
-                    const durationBeats = duration / divisions;
-                    const ties = note.querySelectorAll('tie');
-                    let hasTieStop = false;
-                    let hasTieStart = false;
-                    ties.forEach(tie => {
-                        if (tie.getAttribute('type') === 'stop') hasTieStop = true;
-                        if (tie.getAttribute('type') === 'start') hasTieStart = true;
-                    });
-                    const unpitched = note.querySelector('unpitched');
-                    const pitch = note.querySelector('pitch');
-                    if (!isRest) {
-                        if (unpitched) {
-                            const displayStep = unpitched.querySelector('display-step')?.textContent || 'E';
-                            const displayOctave = parseInt(unpitched.querySelector('display-octave')?.textContent) || 4;
-                            let strokeType = 'ka';
-                            if (displayStep === 'F' && displayOctave === 4) strokeType = 'dum';
-                            else if (displayStep === 'C' && displayOctave === 5) strokeType = 'tak';
-                            else if (displayStep === 'E' && displayOctave === 4) strokeType = 'ka';
-                            // Read velocity/accent from the MusicXML so the
-                            // audio playback gets the same dynamic shape as
-                            // the visual score. Velocity is the standard
-                            // `dynamics` attribute on <note> (percent of the
-                            // forte velocity 90; audit F-2/R2-04). Older
-                            // files carried a <velocity>1-127</velocity>.
-                            const dynAttr = parseFloat(note.getAttribute('dynamics'));
-                            const velText = note.querySelector('velocity')?.textContent;
-                            const vel = Number.isFinite(dynAttr) ? Math.round(dynAttr * 0.9)
-                                      : velText ? parseInt(velText) : 80;
-                            const hasAccent = note.querySelector('notations articulations accent') !== null;
-                            const accent = hasAccent ? 1.0 : 0.6;
-                            this.percussionNotes.push({
-                                time: currentTime,
-                                duration: durationBeats,
-                                strokeType,
-                                velocity: vel,
-                                accent,
-                            });
-                        } else if (pitch) {
-                            const step = pitch.querySelector('step')?.textContent || 'C';
-                            const octave = parseInt(pitch.querySelector('octave')?.textContent) || 4;
-                            const alterEl = pitch.querySelector('alter');
-                            const alter = alterEl ? parseFloat(alterEl.textContent) : 0;
-                            const freq = this.noteToFrequency(step, octave, alter);
-                            if (hasTieStop && this.melodyNotes.length > 0) {
-                                this.melodyNotes[this.melodyNotes.length - 1].duration += durationBeats;
-                            } else {
-                                this.melodyNotes.push({
-                                    time: currentTime, duration: durationBeats, frequency: freq,
-                                    noteName: `${step}${alter === -0.5 ? 'half-flat' : alter === 0.5 ? 'half-sharp' : alter === -1 ? 'b' : alter === 1 ? '#' : ''}${octave}`
+                let velocity = DYNAMIC_VELOCITY.mf;
+                let pendingGrace = null;
+                const partNotes = [];
+                // Walk each measure in document order so a <direction>
+                // (dynamics) applies to the notes after it.
+                part.querySelectorAll('measure').forEach(measure => {
+                    for (const el of measure.children) {
+                        if (el.tagName === 'direction') {
+                            const dyn = el.querySelector('dynamics > *');
+                            if (dyn && DYNAMIC_VELOCITY[dyn.tagName] !== undefined) {
+                                velocity = DYNAMIC_VELOCITY[dyn.tagName];
+                            }
+                            continue;
+                        }
+                        if (el.tagName !== 'note') continue;
+                        const note = el;
+                        const pitch = note.querySelector('pitch');
+                        // Grace notes take no time: play them just before
+                        // the next note.
+                        if (note.querySelector('grace')) {
+                            if (pitch) pendingGrace = this._readPitch(pitch);
+                            continue;
+                        }
+                        const isRest = note.querySelector('rest') !== null;
+                        const isChord = note.querySelector('chord') !== null;
+                        const duration = parseInt(note.querySelector('duration')?.textContent) || divisions;
+                        const durationBeats = duration / divisions;
+                        const ties = note.querySelectorAll('tie');
+                        let hasTieStop = false;
+                        ties.forEach(tie => {
+                            if (tie.getAttribute('type') === 'stop') hasTieStop = true;
+                        });
+                        const unpitched = note.querySelector('unpitched');
+                        if (!isRest) {
+                            if (unpitched) {
+                                const displayStep = unpitched.querySelector('display-step')?.textContent || 'E';
+                                const displayOctave = parseInt(unpitched.querySelector('display-octave')?.textContent) || 4;
+                                let strokeType = 'ka';
+                                if (displayStep === 'F' && displayOctave === 4) strokeType = 'dum';
+                                else if (displayStep === 'C' && displayOctave === 5) strokeType = 'tak';
+                                else if (displayStep === 'E' && displayOctave === 4) strokeType = 'ka';
+                                // Read velocity/accent from the MusicXML so the
+                                // audio playback gets the same dynamic shape as
+                                // the visual score. Velocity is the standard
+                                // `dynamics` attribute on <note> (percent of the
+                                // forte velocity 90; audit F-2/R2-04). Older
+                                // files carried a <velocity>1-127</velocity>.
+                                const dynAttr = parseFloat(note.getAttribute('dynamics'));
+                                const velText = note.querySelector('velocity')?.textContent;
+                                const vel = Number.isFinite(dynAttr) ? Math.round(dynAttr * 0.9)
+                                          : velText ? parseInt(velText) : 80;
+                                const hasAccent = note.querySelector('notations articulations accent') !== null;
+                                const accent = hasAccent ? 1.0 : 0.6;
+                                this.percussionNotes.push({
+                                    time: currentTime,
+                                    duration: durationBeats,
+                                    strokeType,
+                                    velocity: vel,
+                                    accent,
                                 });
+                            } else if (pitch) {
+                                const p = this._readPitch(pitch);
+                                if (hasTieStop && this.melodyNotes.length > 0) {
+                                    this.melodyNotes[this.melodyNotes.length - 1].duration += durationBeats;
+                                } else {
+                                    const orn = note.querySelector(
+                                        'notations ornaments trill-mark, notations ornaments mordent, ' +
+                                        'notations ornaments inverted-mordent, notations ornaments turn');
+                                    const entry = {
+                                        time: currentTime, duration: durationBeats, frequency: p.frequency,
+                                        noteName: `${p.step}${p.alter === -0.5 ? 'half-flat' : p.alter === 0.5 ? 'half-sharp' : p.alter === -1 ? 'b' : p.alter === 1 ? '#' : ''}${p.octave}`,
+                                        step: p.step, octave: p.octave, alter: p.alter,
+                                        velocity,
+                                        ornament: orn ? orn.tagName : null,
+                                        grace: pendingGrace ? pendingGrace.frequency : null,
+                                    };
+                                    this.melodyNotes.push(entry);
+                                    partNotes.push(entry);
+                                }
+                                pendingGrace = null;
                             }
                         }
+                        if (!isChord) currentTime += durationBeats;
                     }
-                    if (!isChord) currentTime += durationBeats;
                 });
+                this._resolveOrnamentNeighbours(partNotes, keyFifths);
             });
             console.log(`Parsed ${this.melodyNotes.length} melody notes and ${this.percussionNotes.length} percussion notes`);
         } catch (error) {
             console.error('Error parsing MusicXML:', error);
         }
+    },
+
+    _readPitch(pitchEl) {
+        const step = pitchEl.querySelector('step')?.textContent || 'C';
+        const octave = parseInt(pitchEl.querySelector('octave')?.textContent) || 4;
+        const alterEl = pitchEl.querySelector('alter');
+        const alter = alterEl ? parseFloat(alterEl.textContent) : 0;
+        return { step, octave, alter, frequency: this.noteToFrequency(step, octave, alter) };
+    },
+
+    // Trills, mordents and turns use the scale neighbours of the note. The
+    // score only names their letter, so take each neighbour's accidental
+    // from the nearest melody note on that letter (which keeps the maqam's
+    // quarter tones), falling back to the key signature.
+    _resolveOrnamentNeighbours(notes, keyFifths) {
+        notes.forEach((n, i) => {
+            if (!n.ornament) return;
+            if (['trill-mark', 'inverted-mordent', 'turn'].includes(n.ornament)) {
+                n.upperFrequency = this._neighbour(notes, i, +1, keyFifths);
+            }
+            if (['mordent', 'turn'].includes(n.ornament)) {
+                n.lowerFrequency = this._neighbour(notes, i, -1, keyFifths);
+            }
+        });
+    },
+
+    _neighbour(notes, i, direction, keyFifths) {
+        const LETTERS = 'CDEFGAB';
+        const index = LETTERS.indexOf(notes[i].step) + direction;
+        const step = LETTERS[(index + 7) % 7];
+        const octave = notes[i].octave + Math.floor(index / 7);
+        let alter = null;
+        for (let d = 1; d < notes.length && alter === null; d++) {
+            for (const j of [i - d, i + d]) {
+                if (j >= 0 && j < notes.length && notes[j].step === step) { alter = notes[j].alter; break; }
+            }
+        }
+        if (alter === null) {
+            const flats = 'BEADGCF', sharps = 'FCGDAEB';
+            alter = keyFifths < 0 && flats.slice(0, -keyFifths).includes(step) ? -1
+                  : keyFifths > 0 && sharps.slice(0, keyFifths).includes(step) ? 1 : 0;
+        }
+        return this.noteToFrequency(step, octave, alter);
+    },
+
+    // Turn one melody note into the sounding events: an optional grace note,
+    // the ornament figure, then the main note for the remaining time.
+    _expandOrnaments(note, totalSeconds, secondsPerBeat) {
+        const vel = note.velocity ?? 0.8;
+        const events = [];
+        let offset = 0;
+        let remaining = totalSeconds;
+        if (note.grace) {
+            const g = Math.min(0.08, totalSeconds * 0.3);
+            events.push({ offset: 0, dur: g, freq: note.grace, vel: vel * 0.85, fast: true });
+            offset = g;
+            remaining -= g;
+        }
+        // Ornament notes are about a 32nd note, kept between 50 and 90 ms.
+        const seg = Math.min(0.09, Math.max(0.05, secondsPerBeat / 8));
+        const play = (freqs) => freqs.forEach(f => {
+            events.push({ offset, dur: seg, freq: f, vel, fast: true });
+            offset += seg;
+            remaining -= seg;
+        });
+        const main = note.frequency, up = note.upperFrequency, low = note.lowerFrequency;
+        if (note.ornament === 'trill-mark' && up && remaining > seg * 4) {
+            const n = Math.floor((remaining - seg) / seg);
+            play(Array.from({ length: n }, (_, k) => (k % 2 === 0 ? main : up)));
+        } else if (note.ornament === 'mordent' && low && remaining > seg * 3) {
+            play([main, low]);
+        } else if (note.ornament === 'inverted-mordent' && up && remaining > seg * 3) {
+            play([main, up]);
+        } else if (note.ornament === 'turn' && up && low && remaining > seg * 5) {
+            play([up, main, low]);
+        }
+        events.push({ offset, dur: Math.max(0.05, remaining), freq: main, vel, fast: false });
+        return events;
     },
 
     noteToFrequency(step, octave, alter) {
@@ -715,10 +838,16 @@ const Playback = {
         this.melodyNotes.forEach((note) => {
             const startTime = now + (note.time * secondsPerBeat);
             const dur = Math.max(0.1, note.duration * secondsPerBeat * 0.9);
-            const id = Tone.Transport.schedule((time) => {
-                if (state.synth && state.isPlaying) state.synth.triggerAttackRelease(note.frequency, dur, time);
-            }, startTime - now);
-            this.scheduledIds.push(id);
+            // Grace notes and ornaments become extra short notes; a plain
+            // note is a single event, as before.
+            this._expandOrnaments(note, dur, secondsPerBeat).forEach((ev) => {
+                const id = Tone.Transport.schedule((time) => {
+                    if (state.synth && state.isPlaying) {
+                        state.synth.triggerAttackRelease(ev.freq, ev.dur, time, ev.vel, ev.fast);
+                    }
+                }, startTime - now + ev.offset);
+                this.scheduledIds.push(id);
+            });
         });
         this.percussionNotes.forEach((note) => {
             const startTime = now + (note.time * secondsPerBeat);

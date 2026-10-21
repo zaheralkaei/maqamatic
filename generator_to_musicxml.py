@@ -31,6 +31,8 @@ class MusicXMLNote:
     # 'f', 'ff'). Set by the exporter from the phrase's
     # dynamics_level; only the first note of each phrase carries it.
     dynamic: Optional[str] = None
+    # A grace note played/printed just before this note (audit R2-08).
+    grace: Optional["MusicXMLNote"] = None
 
 
 @dataclass
@@ -48,12 +50,20 @@ class PitchConverter:
 
     _STEP_SEMITONES = {"C": 0, "D": 2, "E": 4, "F": 5, "G": 7, "A": 9, "B": 11}
 
-    def __init__(self, data: DataLoader, maqam_id: str, tonic: str = "D4"):
+    _LETTERS = "CDEFGAB"
+
+    def __init__(self, data: DataLoader, maqam_id: str, tonic: str = "D4",
+                 tonic_note: Optional[Dict] = None):
+        """tonic_note ({step, octave, alter}) transposes the maqam so its
+        tonic sits on that note, e.g. Nahawand on G after a modulation from
+        Rast on its 5th (audit R2-06). None = the maqam's own tonic."""
         self.data = data
         self.maqam_id = maqam_id
         self.maqam_data = data.maqamat.get(maqam_id, {})
         self.tonic = self._parse_tonic(tonic)
         self.scale_notes = self._get_scale_notes()
+        if tonic_note is not None and self.scale_notes:
+            self.scale_notes = self._transpose(self.scale_notes, tonic_note)
         self.degree_min, self.degree_max = data.degree_range
         self.degree_semitones = self._build_degree_semitones()
 
@@ -64,6 +74,34 @@ class PitchConverter:
             octave = int(tonic[1:])
             return {"step": step, "octave": octave, "alter": 0}
         return {"step": "D", "octave": 4, "alter": 0}
+
+    @classmethod
+    def _diatonic(cls, note: Dict) -> int:
+        return cls._LETTERS.index(note["step"]) + 7 * note["octave"]
+
+    def _transpose(self, notes: List[Dict], tonic_note: Dict) -> List[Dict]:
+        """Respell the scale so its first note becomes tonic_note.
+
+        Every note moves by the same number of letters and the same number
+        of semitones, so the interval structure (quarter tones included) is
+        kept and the spelling stays diatonic (Rast on G: G A B-half-flat C
+        D E-half-flat F G).
+        """
+        letter_shift = self._diatonic(tonic_note) - self._diatonic(notes[0])
+        semitone_shift = self._note_abs(tonic_note) - self._note_abs(notes[0])
+        out = []
+        for n in notes:
+            d = self._diatonic(n) + letter_shift
+            step, octave = self._LETTERS[d % 7], d // 7
+            target = self._note_abs(n) + semitone_shift
+            alter = round((target - (self._STEP_SEMITONES[step] + 12 * octave)) * 2) / 2
+            if abs(alter) > 1.5:
+                raise ValueError(
+                    f"cannot spell {self.maqam_id} on {tonic_note}: {step}{octave} "
+                    f"would need alter {alter}")
+            out.append({"step": step, "octave": octave,
+                        "alter": int(alter) if alter == int(alter) else alter})
+        return out
 
     def _get_scale_notes(self) -> List[Dict]:
         """Get the scale notes from maqam definition"""
@@ -262,12 +300,25 @@ class MusicXMLGenerator:
         # Tuple: (MusicXMLNote, iqa_id, section_label_or_empty)
         # section_label is non-empty only for the first note of each section
         annotated_notes = []
-        current_maqam = sections[0].maqam_id if sections else "bayati"
-
+        converter = None
         for section in sections:
-            if section.maqam_id != current_maqam:
-                current_maqam = section.maqam_id
-            converter = PitchConverter(self.data, current_maqam)
+            # Audit R2-06: a modulating section starts its maqam on the
+            # pivot note of the previous section's (possibly transposed)
+            # scale. Following sections in the same maqam keep that
+            # transposition; a new maqam without a pivot (e.g. the return
+            # home) uses its own tonic.
+            pivot = getattr(section, "modulation_pivot", None)
+            if pivot is not None and converter is not None:
+                anchor = converter.degree_to_pitch(pivot)
+                tonic_note = {"step": anchor.step, "octave": anchor.octave,
+                              "alter": anchor.alter}
+                try:
+                    converter = PitchConverter(self.data, section.maqam_id,
+                                               tonic_note=tonic_note)
+                except ValueError:
+                    converter = PitchConverter(self.data, section.maqam_id)
+            elif converter is None or converter.maqam_id != section.maqam_id:
+                converter = PitchConverter(self.data, section.maqam_id)
             section_iqa = section.iqa_id or iqa_id or "maqsum"
             section_label = section.section_label or ""
             is_first_note = True
@@ -279,6 +330,8 @@ class MusicXMLGenerator:
                     xml_note.duration = note.duration
                     xml_note.is_rest = note.is_rest
                     xml_note.ornament = note.ornament
+                    if note.ornament == "grace_note" and not note.is_rest:
+                        xml_note.grace = self._grace_for(converter, note.degree)
                     # Audit v2: convert the phrase's dynamics_level to
                     # a MusicXML dynamic marking on the first note of
                     # each phrase. Subsequent notes in the phrase use
@@ -584,6 +637,7 @@ class MusicXMLGenerator:
                             alter=note.alter, duration=sub_dur,
                             tie_start=tie_start, tie_stop=tie_stop,
                             ornament=note.ornament if is_first_sub and i == 0 else None,
+                            grace=note.grace if is_first_sub and i == 0 else None,
                             # Audit v2: propagate dynamic marking from the
                             # original note (set by the section-to-note
                             # mapper from the phrase's dynamics_level).
@@ -857,6 +911,7 @@ class MusicXMLGenerator:
                             tie_stop=tie_stop,
                             # Only put ornament on the first notehead
                             ornament=note.ornament if is_first_sub and i == 0 else None,
+                            grace=note.grace if is_first_sub and i == 0 else None,
                             # Audit v2: propagate dynamic marking to the
                             # first notehead of any tied chain.
                             dynamic=note.dynamic if is_first_sub and i == 0 else None,
@@ -1121,7 +1176,16 @@ class MusicXMLGenerator:
             return 1 if step in cls._SHARP_ORDER[:fifths] else 0
         return 0
 
-    def _note_to_xml(self, note: MusicXMLNote, key_fifths: int = 0) -> str:
+    @staticmethod
+    def _grace_for(converter: "PitchConverter", degree: int) -> MusicXMLNote:
+        """Grace note on the maqam's upper neighbour (lower neighbour at the
+        top of the register), so it keeps the maqam's quarter tones."""
+        neighbour = degree + 1 if degree + 1 <= converter.degree_max else degree - 1
+        g = converter.degree_to_pitch(neighbour)
+        return MusicXMLNote(step=g.step, octave=g.octave, alter=g.alter, duration=0)
+
+    def _note_to_xml(self, note: MusicXMLNote, key_fifths: int = 0,
+                     is_grace: bool = False) -> str:
         """Convert a single melody note to MusicXML.
 
         Assumes note.duration is a valid single-notehead value
@@ -1133,6 +1197,9 @@ class MusicXMLGenerator:
         key signature alters gets an explicit natural sign — otherwise the
         printed score reads (and many MusicXML→MIDI consumers play) the note
         a semitone off. See PRELAUNCH_AUDIT F-1.
+
+        is_grace writes the note as a grace note (no duration, sixteenth
+        notehead). A note's own .grace is emitted right before it.
         """
         if note.is_rest:
             return self._rest_to_xml(note.duration)
@@ -1140,10 +1207,14 @@ class MusicXMLGenerator:
         # Audit v2: dynamic marking is a <direction> placed before the
         # note. Emit it as a prefix.
         prefix = ""
-        if note.dynamic:
+        if note.dynamic and not is_grace:
             prefix = self._dynamic_to_xml(note.dynamic)
+        if note.grace is not None and not is_grace:
+            prefix += self._note_to_xml(note.grace, key_fifths, is_grace=True)
 
         xml_parts = ["      <note>\n"]
+        if is_grace:
+            xml_parts.append('        <grace slash="yes"/>\n')
 
         # Does this natural note sit on a letter the key signature alters?
         # If so it needs an explicit natural (both <alter>0</alter> for
@@ -1162,18 +1233,19 @@ class MusicXMLGenerator:
         xml_parts.append(f"          <octave>{note.octave}</octave>\n")
         xml_parts.append("        </pitch>\n")
 
-        xml_parts.append(f"        <duration>{note.duration}</duration>\n")
+        if not is_grace:
+            xml_parts.append(f"        <duration>{note.duration}</duration>\n")
 
         if note.tie_start:
             xml_parts.append('        <tie type="start"/>\n')
         if note.tie_stop:
             xml_parts.append('        <tie type="stop"/>\n')
 
-        note_type = self._duration_to_type(note.duration)
+        note_type = "16th" if is_grace else self._duration_to_type(note.duration)
         xml_parts.append(f"        <type>{note_type}</type>\n")
 
         # Dotted note
-        if self._duration_is_dotted(note.duration):
+        if not is_grace and self._duration_is_dotted(note.duration):
             xml_parts.append("        <dot/>\n")
 
         # Accidental display for quarter tones, whole accidentals, and

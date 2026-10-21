@@ -427,20 +427,6 @@
       "original_tonic": 1.8,
       "original_characteristic": 1.5,
       "pivot_tone": 1.3
-    },
-
-    "common_pivots": {
-      "bayati_to_rast": {"pivot_degree": 4, "target_degree": 5},
-      "bayati_to_saba": {"pivot_degree": 1, "target_degree": 1},
-      "bayati_to_hijaz": {"pivot_degree": 4, "target_degree": 1},
-      "rast_to_bayati": {"pivot_degree": 5, "target_degree": 4},
-      "rast_to_nahawand": {"pivot_degree": 5, "target_degree": 5},
-      "rast_to_sikah": {"pivot_degree": 3, "target_degree": 1},
-      "hijaz_to_bayati": {"pivot_degree": 4, "target_degree": 4},
-      "hijaz_to_nahawand": {"pivot_degree": 4, "target_degree": 4},
-      "nahawand_to_hijaz": {"pivot_degree": 5, "target_degree": 5},
-      "nahawand_to_ajam": {"pivot_degree": 3, "target_degree": 1},
-      "sikah_to_rast": {"pivot_degree": 3, "target_degree": 3}
     }
   }
 }

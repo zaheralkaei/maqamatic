@@ -33,7 +33,7 @@
       "modulations": {
         "common_modulations": [
           {"target": "nahawand", "pivot_degree": 5, "frequency": "common", "constraint": "soft"},
-          {"target": "hijaz", "pivot_degree": 4, "frequency": "occasional", "constraint": "preference"}
+          {"target": "hijaz", "pivot_degree": 6, "frequency": "occasional", "constraint": "preference"}
         ]
       },
       "characteristics": {
@@ -156,7 +156,7 @@
       },
       "modulations": {
         "common_modulations": [
-          {"target": "rast", "pivot_degree": 5, "frequency": "common", "constraint": "soft"},
+          {"target": "rast", "pivot_degree": 4, "frequency": "common", "constraint": "soft"},
           {"target": "saba", "pivot_degree": 1, "frequency": "common", "constraint": "soft"},
           {"target": "hijaz", "pivot_degree": 4, "frequency": "occasional", "constraint": "preference"}
         ]
@@ -497,7 +497,7 @@
       },
       "modulations": {
         "common_modulations": [
-          {"target": "nahawand", "pivot_degree": 1, "frequency": "common", "constraint": "soft"}
+          {"target": "nahawand", "pivot_degree": 4, "frequency": "common", "constraint": "soft"}
         ]
       },
       "characteristics": {
@@ -666,7 +666,7 @@
       },
       "modulations": {
         "common_modulations": [
-          {"target": "bayati", "pivot_degree": 4, "frequency": "common", "constraint": "soft"},
+          {"target": "bayati", "pivot_degree": [2, 5], "frequency": "common", "constraint": "soft"},
           {"target": "nahawand", "pivot_degree": 5, "frequency": "occasional", "constraint": "preference"},
           {"target": "sikah", "pivot_degree": 3, "frequency": "common", "constraint": "soft"}
         ]
@@ -896,7 +896,7 @@
       "modulations": {
         "common_modulations": [
           {"target": "bayati", "pivot_degree": 1, "frequency": "common", "constraint": "soft"},
-          {"target": "hijaz", "pivot_degree": 4, "frequency": "common", "constraint": "soft"}
+          {"target": "hijaz", "pivot_degree": 3, "frequency": "common", "constraint": "soft"}
         ]
       },
       "characteristics": {
@@ -1232,7 +1232,7 @@
       "modulations": {
         "common_modulations": [
           {"target": "rast", "pivot_degree": 1, "frequency": "common", "constraint": "soft"},
-          {"target": "suznak", "pivot_degree": 5, "frequency": "occasional", "constraint": "preference"}
+          {"target": "suznak", "pivot_degree": 1, "frequency": "occasional", "constraint": "preference"}
         ]
       },
       "characteristics": {

@@ -92,6 +92,10 @@ class Section:
     phase: Phase = Phase.EXPOSITION
     iqa_id: str = ""            # Per-section iqa (for composed forms)
     section_label: str = ""     # K1/K2/K3/K4/T etc. for composed forms
+    # When this section modulates: the degree of the previous section's
+    # maqam on which this maqam's tonic sits (the exporter transposes the
+    # target maqam to start there). None = no new modulation here.
+    modulation_pivot: Optional[int] = None
 
 
 class DataLoader:
@@ -1252,6 +1256,9 @@ class ModulationHandler:
         self.rules = rules
         self.rng = (rules.rng if rules is not None and hasattr(rules, "rng") else random.Random())
         self.modulation_history: List[str] = [params.maqam_id]
+        # Pivot degree of the most recently chosen modulation (see
+        # get_modulation_target); None if the data gives none.
+        self.last_pivot_degree: Optional[int] = None
 
     def should_modulate(self, current_section: int, total_sections: int) -> bool:
         """Determine if we should modulate at this point"""
@@ -1297,31 +1304,31 @@ class ModulationHandler:
                 modulations, current_maqam)
 
         weights = []
-        targets = []
+        candidates = []
         for mod in modulations:
             target = mod.get("target")
             freq = mod.get("frequency", "occasional")
 
             if target and target not in self.modulation_history:
-                targets.append(target)
+                candidates.append(mod)
                 weight = {"common": 3, "occasional": 1, "rare": 0.3}.get(freq, 1)
                 weights.append(weight)
 
-        if not targets:
+        if not candidates:
             return None
 
-        selected = self.rng.choices(targets, weights=weights, k=1)[0]
+        chosen = self.rng.choices(candidates, weights=weights, k=1)[0]
+        selected = chosen["target"]
+        # The target maqam starts on this degree of the current maqam
+        # (audit R2-06). Some entries allow several, e.g. Rast -> Bayati
+        # on D or G; pick one.
+        pivot = chosen.get("pivot_degree")
+        if isinstance(pivot, list):
+            pivot = self.rng.choice(pivot) if pivot else None
+        self.last_pivot_degree = pivot
         self.modulation_history.append(selected)
 
         return selected
-
-    def get_pivot_info(self, from_maqam: str, to_maqam: str) -> Dict:
-        """Get pivot tone information for modulation"""
-        matrices = self.data.transition_matrices
-        common_pivots = matrices.get("modulation_transitions", {}).get("common_pivots", {})
-
-        key = f"{from_maqam}_to_{to_maqam}"
-        return common_pivots.get(key, {"pivot_degree": 4, "target_degree": 1})
 
 
 class MaqamGenerator:
@@ -1393,6 +1400,7 @@ class MaqamGenerator:
             role = section_props.get("maqam")
             is_final_section = (i == len(section_labels) - 1)
             modulated = False
+            new_pivot = None
             if not is_final_section and role in (
                     "related_or_modulatory", "distant_or_return"):
                 if self.modulation_handler.should_modulate(
@@ -1404,6 +1412,7 @@ class MaqamGenerator:
                         current_maqam = new_maqam
                         self.pitch_selector.set_maqam(current_maqam)
                         modulated = True
+                        new_pivot = self.modulation_handler.last_pivot_degree
             if is_final_section or role == "tonic_maqam" or (
                     role == "distant_or_return" and not modulated):
                 # L4 (audit): reset to the original tonic maqam, not
@@ -1441,6 +1450,7 @@ class MaqamGenerator:
                     is_first_section=(i == 0))
 
             # Set per-section metadata
+            section.modulation_pivot = new_pivot if modulated else None
             section.section_label = self._format_section_label(
                 label, i, section_labels, is_composed)
             if is_composed:

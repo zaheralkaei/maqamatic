@@ -38,6 +38,23 @@ Iqaat were checked against maqamworld's rhythm index (meters) and, where maqamwo
 | 15 | Degree range | **Allow notes below the tonic and above the octave** | See PRELAUNCH_AUDIT F-7 |
 | 16 | Old audit reports | **Move to `docs/`** | Done with `git mv` |
 
+## Owner decisions — round 3: modulation pivots (2026-10-21)
+
+A modulation now starts the target maqam **on its pivot note**, transposed, under the home key signature (audit R2-06). Pivots confirmed or corrected by the owner:
+
+| Modulation | Starts on |
+|---|---|
+| Ajam → Hijaz | **G** (6th; was 4th = E♭) |
+| Bayati → Rast | **G** (4th; was 5th = A) |
+| Hijaz → Bayati | **G** (4th) |
+| Kurd → Bayati | **G** (4th) |
+| Farahfaza → Nahawand | **C** (4th; was 1st = G, i.e. no modulation) |
+| Rast → Bayati | **D or G** (2nd or 5th, chosen at random; was 4th = F) |
+| Saba → Hijaz | **F** (3rd; was 4th = G♭) |
+| Nairuz → Suznak | **C** (1st; was 5th) |
+
+All other modulations keep their pivot. The unused `common_pivots` table in `transition_matrices.json` (which contradicted these) was removed. Pinned by `tests/test_modulation_and_grace.py`.
+
 ---
 
 ## Per-maqam results (current data)
