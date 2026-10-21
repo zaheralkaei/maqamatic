@@ -62,7 +62,6 @@ function updateComposedFormIndicator() {
 function updateNumericDisplays() {
     const map = {
         'slider-phrase-length': 'val-phrase-length',
-        'slider-section-count': 'val-section-count',
         'slider-phrase-measures': 'val-phrase-measures',
         'slider-max-maqamat': 'val-max-maqamat'
     };
@@ -111,8 +110,8 @@ const API = {
     },
 
     async generate(params) {
-        // Audit v3: a bare fetch() on Railway's free tier can hit
-        // a cold start where the service takes 30+ seconds to
+        // Audit v3: a bare fetch() during a scale-to-zero cold start
+        // can hit a delay where the service takes 30+ seconds to
         // respond, which the browser interprets as a network
         // failure. Use AbortController with a 90s timeout so the
         // user sees a real error instead of "Failed to fetch".
@@ -134,7 +133,7 @@ const API = {
             }
             // Browser's "Failed to fetch" is uninformative; add
             // guidance so the user knows what to try.
-            throw new Error('Network error: ' + err.message + '. Check your connection and the Railway service status.');
+            throw new Error('Network error: ' + err.message + '. Check your connection and try again.');
         }
     }
 };
@@ -228,7 +227,6 @@ const UI = {
         setSlider('slider-repetition-amount', v.repetition_amount);
         setSelect('select-form-type', v.form_type);
         setSlider('slider-phase-mode', v.phase_mode);
-        setSlider('slider-section-count', v.section_count);
         setSlider('slider-phrase-measures', v.phrase_length_measures || 1);
         setSelect('select-tension-curve', v.tension_curve);
         setSlider('slider-rhythmic-alignment', v.rhythmic_alignment);
@@ -368,6 +366,11 @@ const Score = {
     async render(musicxml) {
         const container = document.getElementById('osmd-container');
         container.innerHTML = '';
+        // Audit R2-10: OSMD measures its container while laying out the
+        // score, so make it visible first (it is hidden while loading).
+        // Rendering into a hidden, zero-width container produced squeezed
+        // scores and NaN layout errors.
+        UI.showScore();
         state.osmd = new opensheetmusicdisplay.OpenSheetMusicDisplay(container, {
             autoResize: true, backend: 'svg', drawTitle: true, drawComposer: true,
             drawingParameters: 'compacttight', drawPartNames: true,
@@ -377,12 +380,12 @@ const Score = {
             await state.osmd.load(musicxml);
             state.osmd.EngravingRules.RenderSingleHorizontalStaffline = false;
             state.osmd.render();
-            UI.showScore();
             UI.enablePlayback();
             Playback.parseNotesFromMusicXML(musicxml);
         } catch (error) {
             console.error('Error rendering score:', error);
             alert('Error rendering score: ' + error.message);
+            UI.showEmpty();
         }
     },
     zoomIn() { if (state.osmd) { state.osmd.Zoom *= 1.2; state.osmd.render(); } },
@@ -701,6 +704,9 @@ const Playback = {
             alert('No notes to play. Please generate a melody first.');
             return;
         }
+        // Resuming after pause continues from the paused position, so the
+        // end-of-piece timer must only cover what is left (audit R2-17).
+        const resumeFrom = Tone.Transport.state === 'paused' ? Tone.Transport.seconds : 0;
         state.isPlaying = true;
         this.updatePlayButton();
         this.clearScheduled();
@@ -725,46 +731,28 @@ const Playback = {
             const vel = (note.velocity || 80) / 127;
             const accent = note.accent || 0.6;
             const gain = Math.max(0.1, Math.min(1.0, vel * accent));
+            // Loudness is passed as each hit's velocity. Setting the shared
+            // .volume at scheduling time (as before) also changed hits that
+            // were still sounding (audit R2-17).
             const id = Tone.Transport.schedule((time) => {
                 if (!state.isPlaying) return;
                 switch (note.strokeType) {
                     case 'dum':
-                        if (state.dumSkin) {
-                            state.dumSkin.volume.value = -2 + (1 - gain) * -10;
-                            state.dumSkin.triggerAttackRelease('G1', '8n', time);
-                        }
-                        if (state.dumBody) {
-                            state.dumBody.volume.value = -8 + (1 - gain) * -10;
-                            state.dumBody.triggerAttackRelease('8n', time);
-                        }
-                        if (state.dumTransient) {
-                            state.dumTransient.volume.value = -16 + (1 - gain) * -8;
-                            state.dumTransient.triggerAttackRelease('64n', time);
-                        }
+                        if (state.dumSkin) state.dumSkin.triggerAttackRelease('G1', '8n', time, gain);
+                        if (state.dumBody) state.dumBody.triggerAttackRelease('8n', time, gain);
+                        if (state.dumTransient) state.dumTransient.triggerAttackRelease('64n', time, gain);
                         break;
                     case 'tak':
-                        if (state.takSkin) {
-                            state.takSkin.volume.value = -4 + (1 - gain) * -10;
-                            state.takSkin.triggerAttackRelease('A4', '32n', time);
-                        }
-                        if (state.takCrack) {
-                            state.takCrack.volume.value = -10 + (1 - gain) * -8;
-                            state.takCrack.triggerAttackRelease('32n', time);
-                        }
-                        if (state.takJingle) {
-                            state.takJingle.volume.value = -22 + (1 - gain) * -8;
-                            state.takJingle.triggerAttackRelease('64n', time);
-                        }
+                        if (state.takSkin) state.takSkin.triggerAttackRelease('A4', '32n', time, gain);
+                        if (state.takCrack) state.takCrack.triggerAttackRelease('32n', time, gain);
+                        // MetalSynth takes (note, duration, time, velocity); it was
+                        // called as ('64n', time), i.e. with no note and fired at
+                        // scheduling time instead of on the beat.
+                        if (state.takJingle) state.takJingle.triggerAttackRelease(300, '64n', time, gain);
                         break;
                     case 'ka':
-                        if (state.kaSkin) {
-                            state.kaSkin.volume.value = -10 + (1 - gain) * -10;
-                            state.kaSkin.triggerAttackRelease('D4', '32n', time);
-                        }
-                        if (state.kaNoise) {
-                            state.kaNoise.volume.value = -18 + (1 - gain) * -8;
-                            state.kaNoise.triggerAttackRelease('64n', time);
-                        }
+                        if (state.kaSkin) state.kaSkin.triggerAttackRelease('D4', '32n', time, gain);
+                        if (state.kaNoise) state.kaNoise.triggerAttackRelease('64n', time, gain);
                         break;
                 }
             }, startTime - now);
@@ -782,7 +770,7 @@ const Playback = {
         this.endTimeoutId = setTimeout(() => {
             if (state.isLooping && state.isPlaying) { this.stop(); setTimeout(() => this.play(), 100); }
             else this.stop();
-        }, totalDuration * 1000 + 500);
+        }, Math.max(0, totalDuration - resumeFrom) * 1000 + 500);
         Tone.Transport.start();
     },
 
@@ -870,7 +858,6 @@ async function generateMelody() {
         // Structure
         form_type: document.getElementById('select-form-type').value,
         phase_mode: parseInt(document.getElementById('slider-phase-mode').value),
-        section_count: parseInt(document.getElementById('slider-section-count').value),
         phrase_length_measures: parseInt(document.getElementById('slider-phrase-measures').value),
         tension_curve: document.getElementById('select-tension-curve').value,
 
@@ -892,6 +879,8 @@ async function generateMelody() {
         // Advanced
         pitch_gravity_strength: parseInt(document.getElementById('slider-pitch-gravity').value),
         transition_matrix_weight: parseInt(document.getElementById('slider-transition-weight').value),
+        register_excursion: parseInt(document.getElementById('slider-register-excursion').value),
+        characteristic_phrase_adherence: parseInt(document.getElementById('slider-char-phrases').value),
         randomness_seed: document.getElementById('input-randomness-seed').value || '',
 
         // Misc
@@ -961,11 +950,12 @@ function setupEventHandlers() {
         'slider-tradition', 'slider-energy-level',
         'slider-density', 'slider-melodic-balance', 'slider-step-vs-jump',
         'slider-jins-adherence', 'slider-phrase-length', 'slider-repetition-amount',
-        'slider-phase-mode', 'slider-section-count', 'slider-phrase-measures',
+        'slider-beats', 'slider-phase-mode', 'slider-phrase-measures',
         'slider-rhythmic-alignment', 'slider-duration-variety', 'slider-tempo-stability',
         'slider-modulation-frequency', 'slider-modulation-distance', 'slider-max-maqamat',
         'slider-ornaments', 'slider-vibrato-amount', 'slider-dynamics-range',
-        'slider-pitch-gravity', 'slider-transition-weight'
+        'slider-pitch-gravity', 'slider-transition-weight',
+        'slider-register-excursion', 'slider-char-phrases'
     ].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.addEventListener('input', () => Inspector.updateAll());
@@ -988,7 +978,6 @@ function setupEventHandlers() {
     // Numeric value displays for integer sliders
     const numericSliders = {
         'slider-phrase-length': 'val-phrase-length',
-        'slider-section-count': 'val-section-count',
         'slider-phrase-measures': 'val-phrase-measures',
         'slider-max-maqamat': 'val-max-maqamat'
     };
@@ -1044,7 +1033,6 @@ function setupEventHandlers() {
         // Structure
         document.getElementById('select-form-type').value = 'free';
         document.getElementById('slider-phase-mode').value = 30;
-        document.getElementById('slider-section-count').value = 4;
         document.getElementById('slider-phrase-measures').value = 1;
         document.getElementById('select-tension-curve').value = 'arch';
         // Rhythm
@@ -1062,6 +1050,8 @@ function setupEventHandlers() {
         // Advanced
         document.getElementById('slider-pitch-gravity').value = 70;
         document.getElementById('slider-transition-weight').value = 60;
+        document.getElementById('slider-register-excursion').value = 35;
+        document.getElementById('slider-char-phrases').value = 70;
         document.getElementById('input-randomness-seed').value = '';
         // Percussion
         document.getElementById('check-percussion').checked = true;
@@ -1117,67 +1107,49 @@ function setupEventHandlers() {
 // ============================================
 
 const Inspector = {
+    // Every value below mirrors the backend formula named in its comment,
+    // so the panel shows what generation will actually use (audit R2-09).
     updateAll() {
-        const tradition = parseInt(document.getElementById('slider-tradition').value);
-        const energy = parseInt(document.getElementById('slider-energy-level').value);
-        const density = parseInt(document.getElementById('slider-density').value);
-        const balance = parseInt(document.getElementById('slider-melodic-balance').value);
-        const stepJump = parseInt(document.getElementById('slider-step-vs-jump').value);
-        const ornaments = parseInt(document.getElementById('slider-ornaments').value);
-        const modFreq = parseInt(document.getElementById('slider-modulation-frequency').value);
-        const modDist = parseInt(document.getElementById('slider-modulation-distance').value);
-        const rhythmAlign = parseInt(document.getElementById('slider-rhythmic-alignment').value);
-        const tempoStab = parseInt(document.getElementById('slider-tempo-stability').value);
-        const gravity = parseInt(document.getElementById('slider-pitch-gravity').value);
-        const transWeight = parseInt(document.getElementById('slider-transition-weight').value);
+        const val = (id) => parseInt(document.getElementById(id).value);
+        const t = val('slider-tradition') / 100;
+        const energy = val('slider-energy-level') / 100;
+        const density = val('slider-density') / 100;
+        const stepJump = val('slider-step-vs-jump') / 100;
+        const jinsAdh = val('slider-jins-adherence') / 100;
+        const ornaments = val('slider-ornaments') / 100;
+        const modFreq = val('slider-modulation-frequency') / 100;
+        const modDist = val('slider-modulation-distance') / 100;
+        const rhythmAlign = val('slider-rhythmic-alignment') / 100;
+        const tempoStab = val('slider-tempo-stability') / 100;
+        const gravity = val('slider-pitch-gravity') / 100;
+        const transWeight = val('slider-transition-weight') / 100;
 
-        // --- Tradition-derived ---
-        let ruleStrictness, violationProb;
-        if (tradition <= 30) { ruleStrictness = 'soft'; violationProb = 0.40; }
-        else if (tradition <= 70) {
-            ruleStrictness = 'medium';
-            violationProb = 0.40 - ((tradition - 31) / 39) * 0.25;
-        } else {
-            ruleStrictness = 'hard';
-            violationProb = 0.15 - ((tradition - 71) / 29) * 0.13;
-        }
-        this._set('insp-rule-strictness', ruleStrictness);
-        this._set('insp-violation-prob', violationProb.toFixed(2));
-        this._setBar('insp-bar-violation', violationProb * 100);
+        // --- Style ---
+        // PhraseStructureRules.should_pair_antecedent_consequent
+        this._set('insp-pairing', (t * 0.6).toFixed(2));
+        // MaqamGenerator._enforce_tonic_ending
+        const tonicEnding = t < 0.4 ? 0 : Math.min(1, t * 1.3);
+        this._set('insp-tonic-ending', tonicEnding.toFixed(2));
+        this._setBar('insp-bar-tonic-ending', tonicEnding * 100);
+        // DurationRules.get_style_for_energy
+        this._set('insp-energy-style',
+            energy < 0.25 ? 'sustained' : energy < 0.75 ? 'flowing' : 'agitated');
 
-        // --- Energy ---
-        let energyStyle;
-        if (energy <= 25) energyStyle = 'calm';
-        else if (energy <= 60) energyStyle = 'moderate';
-        else if (energy <= 80) energyStyle = 'lively';
-        else energyStyle = 'intense';
-        this._set('insp-energy-style', energyStyle);
-
-        // --- Step probability ---
-        const stepProb = (0.4 + (stepJump / 100) * 0.4);
+        // --- Melodic ---
+        // MelodicMotionRules.get_interval_type_probs
+        const stepProb = 0.4 + stepJump * 0.4;
         this._set('insp-step-prob', stepProb.toFixed(2));
         this._setBar('insp-bar-step-prob', stepProb * 100);
-
-        // --- Density ---
-        const densityNorm = density / 100;
-        let packing;
-        if (density <= 25) packing = 'very sparse';
-        else if (density <= 45) packing = 'sparse';
-        else if (density <= 55) packing = 'normal';
-        else if (density <= 75) packing = 'dense';
-        else packing = 'very dense';
-        this._set('insp-density', densityNorm.toFixed(2));
-        this._setBar('insp-bar-density', density);
-        this._set('insp-packing', packing);
-
-        // --- Contour ---
+        // PhraseGenerator.generate_phrase: clamp(phrase_length) x (0.5 + density)
+        const phraseLen = Math.max(4, Math.min(16, val('slider-phrase-length')));
+        const notesPerPhrase = Math.max(4, Math.min(16, Math.trunc(phraseLen * (0.5 + density))));
+        this._set('insp-density', density.toFixed(2));
+        this._setBar('insp-bar-density', density * 100);
+        this._set('insp-notes-per-phrase', notesPerPhrase);
         this._set('insp-contour', document.getElementById('select-contour-type').value);
-
-        // --- Jins Adherence ---
-        const jinsAdh = parseInt(document.getElementById('slider-jins-adherence').value);
-        const jinsLabel = jinsAdh <= 30 ? 'free' : jinsAdh <= 65 ? 'moderate' : 'strict';
-        this._setBar('insp-bar-jins', jinsAdh);
-        this._set('insp-jins', jinsLabel);
+        // JinsRules.get_jins_boundary_adjustment: weight of a cross-jins step
+        this._setBar('insp-bar-jins', jinsAdh * 100);
+        this._set('insp-jins', '×' + Math.max(0.1, 1 - 0.8 * jinsAdh).toFixed(2));
 
         // --- Structure ---
         const formVal = document.getElementById('select-form-type').value;
@@ -1186,60 +1158,53 @@ const Inspector = {
             this._set('insp-form', `${composedInfo.name} (K×4 + T)`);
             this._set('insp-sections', '8 (fixed)');
         } else {
+            // StructureGrammarRules._compute_target_section_count
+            const bars = val('slider-beats');
+            const measuresPerSection = 2 * Math.max(1, val('slider-phrase-measures'));
+            const sections = Math.max(1, Math.min(24, this._pyRound(bars / measuresPerSection)));
             this._set('insp-form', formVal);
-            this._set('insp-sections', document.getElementById('slider-section-count').value);
+            this._set('insp-sections', sections);
         }
         this._set('insp-tension', document.getElementById('select-tension-curve').value);
 
         // --- Rhythm ---
-        let rhythmStyle;
-        if (rhythmAlign <= 30) rhythmStyle = 'syncopated';
-        else if (rhythmAlign <= 70) rhythmStyle = 'mixed';
-        else rhythmStyle = 'on-beat';
-        this._set('insp-rhythm-style', rhythmStyle);
+        // DurationRules.get_syncopation_probability / get_tempo_variance
+        this._set('insp-syncopation', (0.6 - rhythmAlign * 0.5).toFixed(2));
+        this._set('insp-tempo-variance', (0.4 - tempoStab * 0.35).toFixed(2));
 
-        let tempoFeel;
-        if (tempoStab <= 30) tempoFeel = 'rubato';
-        else if (tempoStab <= 70) tempoFeel = 'moderate';
-        else tempoFeel = 'strict';
-        this._set('insp-tempo-feel', tempoFeel);
-
-        // --- Ornament-derived ---
-        let ornPreset, ornMult;
-        if (ornaments <= 25) { ornPreset = 'plain'; ornMult = 0.2; }
-        else if (ornaments <= 50) { ornPreset = 'moderate'; ornMult = 0.6; }
-        else if (ornaments <= 75) { ornPreset = 'ornate'; ornMult = 1.0; }
-        else { ornPreset = 'virtuosic'; ornMult = 1.5; }
+        // --- Expression ---
+        // OrnamentationRules.get_style_preset_name + config multipliers
+        const [ornPreset, ornMult] =
+            ornaments < 0.25 ? ['plain', 0.2] :
+            ornaments < 0.5  ? ['moderate', 0.6] :
+            ornaments < 0.75 ? ['ornate', 1.0] : ['virtuosic', 1.5];
         this._set('insp-ornament-preset', ornPreset);
         this._set('insp-ornament-mult', ornMult.toFixed(1));
         this._setBar('insp-bar-ornament', (ornMult / 1.5) * 100);
 
-        // --- Modulation-derived ---
-        if (modFreq <= 15) {
-            this._set('insp-mod-count', '0');
-            this._set('insp-mod-depth', 'none');
-        } else if (modFreq <= 40) {
-            this._set('insp-mod-count', '1');
-            this._set('insp-mod-depth', 'brief tonicization');
-        } else if (modFreq <= 70) {
-            this._set('insp-mod-count', '2');
-            this._set('insp-mod-depth', 'short modulation');
-        } else {
-            this._set('insp-mod-count', '4');
-            this._set('insp-mod-depth', 'full modulation');
-        }
-
-        let modDistLabel;
-        if (modDist <= 30) modDistLabel = 'close';
-        else if (modDist <= 70) modDistLabel = 'moderate';
-        else modDistLabel = 'distant';
-        this._set('insp-mod-distance', modDistLabel);
+        // --- Modulation ---
+        // ModulationRules.get_modulation_depth_category / filter_targets_by_distance
+        this._set('insp-mod-depth',
+            modFreq <= 0.15 ? 'none' : modFreq <= 0.4 ? 'brief tonicization'
+            : modFreq <= 0.7 ? 'short modulation' : 'full modulation');
+        this._set('insp-max-maqamat', val('slider-max-maqamat'));
+        this._set('insp-mod-distance',
+            modDist < 0.3 ? 'same family' : modDist < 0.7 ? 'related' : 'any');
 
         // --- Advanced ---
-        this._set('insp-gravity', (gravity / 100).toFixed(2));
-        this._setBar('insp-bar-gravity', gravity);
-        this._set('insp-transition-weight', (transWeight / 100).toFixed(2));
-        this._setBar('insp-bar-transition', transWeight);
+        this._set('insp-gravity', gravity.toFixed(2));
+        this._setBar('insp-bar-gravity', gravity * 100);
+        this._set('insp-transition-weight', transWeight.toFixed(2));
+        this._setBar('insp-bar-transition', transWeight * 100);
+    },
+
+    // Python's round(): halves go to the even neighbour.
+    _pyRound(x) {
+        const floor = Math.floor(x);
+        const diff = x - floor;
+        if (diff > 0.5) return floor + 1;
+        if (diff < 0.5) return floor;
+        return floor % 2 === 0 ? floor : floor + 1;
     },
 
     _set(id, value) {

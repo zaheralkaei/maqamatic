@@ -307,17 +307,6 @@
                             </div>
                         </div>
                         <div class="slider-group">
-                            <label><span class="label-text">Section Count</span>
-                                <span class="slider-numeric-value" id="val-section-count">4</span>
-                                <span class="help-icon" data-tooltip="Number of sections in the piece"><i class="mdi mdi-help-circle"></i></span>
-                            </label>
-                            <div class="slider-with-labels">
-                                <span class="label-min">2</span>
-                                <input type="range" id="slider-section-count" min="2" max="12" value="4" step="1">
-                                <span class="label-max">12</span>
-                            </div>
-                        </div>
-                        <div class="slider-group">
                             <label><span class="label-text">Measures per Phrase</span>
                                 <span class="slider-numeric-value" id="val-phrase-measures">1</span>
                                 <span class="help-icon" data-tooltip="Number of measures in each phrase. Each section has 2 phrases."><i class="mdi mdi-help-circle"></i></span>
@@ -334,11 +323,12 @@
                             </label>
                             <div class="select-wrapper">
                                 <select id="select-tension-curve" class="styled-select">
-                                    <option value="arch">Arch (build and release)</option>
-                                    <option value="ascending">Rising tension</option>
-                                    <option value="descending">Falling tension</option>
-                                    <option value="flat">Even throughout</option>
-                                    <option value="wave">Multiple waves</option>
+                                    <option value="arch">Arch (build to middle, then resolve)</option>
+                                    <option value="gradual_build">Gradual build (late climax)</option>
+                                    <option value="early_climax">Early climax (long descent)</option>
+                                    <option value="multiple_peaks">Multiple peaks</option>
+                                    <option value="plateau">Plateau (sustained intensity)</option>
+                                    <option value="wave">Wave (oscillating intensity)</option>
                                 </select>
                             </div>
                         </div>
@@ -490,13 +480,23 @@
                             </div>
                         </div>
                         <div class="slider-group">
-                            <label><span class="label-text">Pitch Gravity</span>
-                                <span class="help-icon" data-tooltip="How strongly the melody is pulled toward stable pitches (tonic, ghammaz)"><i class="mdi mdi-help-circle"></i></span>
+                            <label><span class="label-text">Register Range</span>
+                                <span class="help-icon" data-tooltip="How readily the melody steps below the tonic or above the octave"><i class="mdi mdi-help-circle"></i></span>
                             </label>
                             <div class="slider-with-labels">
-                                <span class="label-min">Free</span>
-                                <input type="range" id="slider-pitch-gravity" min="0" max="100" value="70" step="5">
-                                <span class="label-max">Sticky</span>
+                                <span class="label-min">Octave</span>
+                                <input type="range" id="slider-register-excursion" min="0" max="100" value="35" step="5">
+                                <span class="label-max">Wide</span>
+                            </div>
+                        </div>
+                        <div class="slider-group">
+                            <label><span class="label-text">Characteristic Phrases</span>
+                                <span class="help-icon" data-tooltip="How often phrases are built on the maqam's typical melodic figures"><i class="mdi mdi-help-circle"></i></span>
+                            </label>
+                            <div class="slider-with-labels">
+                                <span class="label-min">Rarely</span>
+                                <input type="range" id="slider-char-phrases" min="0" max="100" value="70" step="5">
+                                <span class="label-max">Often</span>
                             </div>
                         </div>
                         <div class="slider-group">
@@ -533,17 +533,17 @@
                         <div class="param-inspector-grid" id="inspector-grid">
                             <!-- Style -->
                             <div class="inspector-row">
-                                <span class="inspector-label">Rule Strictness</span>
-                                <span class="inspector-value" id="insp-rule-strictness">hard</span>
+                                <span class="inspector-label">Q&amp;A Phrase Pairing</span>
+                                <span class="inspector-value" id="insp-pairing">0.42</span>
                             </div>
                             <div class="inspector-row">
-                                <span class="inspector-label">Violation Prob.</span>
-                                <div class="inspector-bar-wrap"><div class="inspector-bar" id="insp-bar-violation" style="width: 2%"></div></div>
-                                <span class="inspector-value" id="insp-violation-prob">0.02</span>
+                                <span class="inspector-label">Tonic Ending</span>
+                                <div class="inspector-bar-wrap"><div class="inspector-bar" id="insp-bar-tonic-ending" style="width: 91%"></div></div>
+                                <span class="inspector-value" id="insp-tonic-ending">0.91</span>
                             </div>
                             <div class="inspector-row">
                                 <span class="inspector-label">Energy Style</span>
-                                <span class="inspector-value" id="insp-energy-style">moderate</span>
+                                <span class="inspector-value" id="insp-energy-style">flowing</span>
                             </div>
                             <!-- Melodic -->
                             <div class="inspector-divider"></div>
@@ -558,15 +558,15 @@
                                 <span class="inspector-value" id="insp-density">0.50</span>
                             </div>
                             <div class="inspector-row">
-                                <span class="inspector-label">Phrase Packing</span>
-                                <span class="inspector-value" id="insp-packing">normal</span>
+                                <span class="inspector-label">Notes / Phrase</span>
+                                <span class="inspector-value" id="insp-notes-per-phrase">8</span>
                             </div>
                             <div class="inspector-row">
                                 <span class="inspector-label">Contour</span>
                                 <span class="inspector-value" id="insp-contour">arch</span>
                             </div>
                             <div class="inspector-row">
-                                <span class="inspector-label">Jins Boundary</span>
+                                <span class="inspector-label">Cross-Jins Weight</span>
                                 <div class="inspector-bar-wrap"><div class="inspector-bar" id="insp-bar-jins" style="width: 60%"></div></div>
                                 <span class="inspector-value" id="insp-jins">moderate</span>
                             </div>
@@ -587,12 +587,12 @@
                             <!-- Rhythm -->
                             <div class="inspector-divider"></div>
                             <div class="inspector-row">
-                                <span class="inspector-label">Rhythm Style</span>
-                                <span class="inspector-value" id="insp-rhythm-style">on-beat</span>
+                                <span class="inspector-label">Syncopation Prob.</span>
+                                <span class="inspector-value" id="insp-syncopation">0.25</span>
                             </div>
                             <div class="inspector-row">
-                                <span class="inspector-label">Tempo Feel</span>
-                                <span class="inspector-value" id="insp-tempo-feel">moderate</span>
+                                <span class="inspector-label">Duration Variance</span>
+                                <span class="inspector-value" id="insp-tempo-variance">0.16</span>
                             </div>
                             <!-- Expression -->
                             <div class="inspector-divider"></div>
@@ -608,8 +608,8 @@
                             <!-- Modulation -->
                             <div class="inspector-divider"></div>
                             <div class="inspector-row">
-                                <span class="inspector-label">Modulations / Piece</span>
-                                <span class="inspector-value" id="insp-mod-count">1</span>
+                                <span class="inspector-label">Max Maqamat</span>
+                                <span class="inspector-value" id="insp-max-maqamat">2</span>
                             </div>
                             <div class="inspector-row">
                                 <span class="inspector-label">Mod. Depth</span>
@@ -617,7 +617,7 @@
                             </div>
                             <div class="inspector-row">
                                 <span class="inspector-label">Mod. Distance</span>
-                                <span class="inspector-value" id="insp-mod-distance">close</span>
+                                <span class="inspector-value" id="insp-mod-distance">related</span>
                             </div>
                             <!-- Advanced -->
                             <div class="inspector-divider"></div>
@@ -785,6 +785,6 @@
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/opensheetmusicdisplay@1.7.6/build/opensheetmusicdisplay.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/tone@14.7.77/build/Tone.min.js"></script>
-    <script src="/static/js/app.js?v=6"></script>
+    <script src="/static/js/app.js?v=8"></script>
 </body>
 </html>

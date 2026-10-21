@@ -79,7 +79,7 @@ Documentation:
 
 The default Flask port is 5025 (set in `run.py`). Override with the `PORT` environment variable if needed.
 
-Generated scores are stored temporarily in `output/`. They are deleted when the server restarts and are not committed to git (see `.gitignore`).
+Generated scores are built in memory and returned in the `/api/generate` response; the browser saves them. Nothing is written to disk. (`generate_and_export()` still writes a file when used from Python.)
 
 ## License
 

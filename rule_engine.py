@@ -648,9 +648,14 @@ class StructureGrammarRules:
                     new_sections.append(label)
             sections = new_sections
 
-        # Trim or pad to match target
+        # Trim or pad to match target. Trimming keeps the closing section
+        # (audit R2-05): cutting from the end used to drop the final return,
+        # so e.g. ternary pieces could end on a modulated B.
         if len(sections) > target_count:
-            sections = sections[:target_count]
+            if target_count == 1:
+                sections = [sections[0]]
+            else:
+                sections = sections[:target_count - 1] + [sections[-1]]
         while len(sections) < target_count:
             sections.append("A")
 
@@ -783,7 +788,7 @@ class PhaseSystemRules:
                 except ValueError:
                     phase_enum = Phase.EXPOSITION
 
-                direction = self._resolve_direction(phase_def)
+                direction = self._resolve_direction(phase_def, len(sequence))
                 intensity = self._resolve_intensity(
                     phase_def, len(sequence), num_sections)
 
@@ -841,7 +846,8 @@ class PhaseSystemRules:
                 elif pid in ("exposition", "resolution"):
                     mult = 0.7
             elif curve == "wave":
-                # No change, the natural phases already oscillate
+                # Phase lengths unchanged; the oscillation is applied to
+                # intensity per section in _resolve_intensity.
                 pass
             # "arch" = default, no adjustment
             adjusted.append((phase_def, ratio * mult))
@@ -853,11 +859,18 @@ class PhaseSystemRules:
         base_range = phase_def.get("intensity_range", [0.3, 0.7])
         low, high = base_range[0], base_range[1]
         # Shift by energy_level
-        energy_shift = (self._params.energy_level - 0.5) * 0.3
-        return (max(0.0, low + energy_shift), min(1.0, high + energy_shift))
+        shift = (self._params.energy_level - 0.5) * 0.3
+        # Audit R2-07: the 'wave' tension curve alternates sections between
+        # raised and lowered intensity (it used to change nothing).
+        if self._params.tension_curve == "wave":
+            shift += 0.15 if section_index % 2 == 0 else -0.15
+        return (max(0.0, low + shift), min(1.0, high + shift))
 
-    def _resolve_direction(self, phase_def: Dict) -> str:
-        """Resolve direction bias, overridden by contour_type."""
+    def _resolve_direction(self, phase_def: Dict, section_index: int = 0) -> str:
+        """Resolve a section's melodic direction bias, overridden by
+        contour_type. The generator applies it through
+        PitchSelector._apply_direction_bias (audit R2-07: it used to be
+        computed and then ignored)."""
         base = phase_def.get("direction_bias", "neutral")
         contour = self._params.contour_type
         if contour == "ascending":
@@ -868,8 +881,16 @@ class PhaseSystemRules:
             return "neutral"
         elif contour == "free":
             return self._rng.choice(["ascending", "descending", "neutral"])
-        # "arch" and "wave" use the phase's own bias
+        elif contour == "wave":
+            return "ascending" if section_index % 2 == 0 else "descending"
+        # "arch" follows the phases' own bias (rise, peak, descend)
         return base
+
+    def get_phase_definition(self, phase_id: str) -> Dict:
+        for phase_def in self._fixed_phases:
+            if phase_def.get("id") == phase_id:
+                return phase_def
+        return {}
 
     def get_phase_zone_focus(self, phase_id: str) -> List[str]:
         """Return zone_focus from config for the phase."""

@@ -62,7 +62,7 @@ F-2 moved percussion velocity from an invalid `<velocity>` element to MusicXML's
 
 ## 🟠 Medium
 
-### R2-05 — Ternary and Rondo pieces can end in the wrong maqam
+### R2-05 — Ternary and Rondo pieces can end in the wrong maqam ✅ FIXED
 `StructureGrammarRules.expand_form` expands the pattern and then trims it to the target length, which can cut off the closing **A**. In 352 generated pieces:
 
 | Form | Pieces ending in a modulated section |
@@ -77,13 +77,20 @@ The generator also never handles the `C` section role (`distant_or_return`), so 
 - Make trimming keep the final section; for forms that close on A, force the last label back to A.
 - Handle `distant_or_return`.
 - Take the key signature from the home maqam.
+**Fixed:**
+- The final section always returns to the home maqam.
+- Trimming keeps the closing section.
+- `C` sections (`distant_or_return`) may modulate to any distance, otherwise they return home.
+- The key signature comes from the home maqam.
+
+Across 528 pieces in six forms, 0 now end in a modulated maqam and every key signature is the home maqam's. `tests/test_structure_and_ui_contract.py` checks this.
 
 ### R2-06 — Modulations ignore their pivot degree *(needs a musical decision)*
 Each modulation in `maqamat.json` has a `pivot_degree`, and `ModulationHandler.get_pivot_info()` exists, but **nothing calls it**. A modulated section simply plays the target maqam on its default tonic. In **19 of 33** modulations, that tonic is not the pivot note — for example Rast → Nahawand "pivot 5" plays Nahawand on C, not G.
 
 The pivot data itself also looks inconsistent: Rast → Bayati is given pivot 4 (F), while Bayati usually enters Rast on D. **Decision needed:** should a modulation transpose the target maqam so it starts on the pivot note? Then the pivot data needs a pass with you. The alternative is to keep "same tonic" (parallel) modulation and document it.
 
-### R2-07 — Several UI controls do nothing
+### R2-07 — Several UI controls do nothing ✅ FIXED
 | Control | Problem |
 |---|---|
 | **Tension curve** | `index.html` offers arch / ascending / descending / flat / wave. The backend only acts on gradual_build / early_climax / multiple_peaks / plateau (arch and wave = no change). **No option changes the output.** `ui_parameters.json` has the right list; the HTML drifted from it. |
@@ -92,6 +99,13 @@ The pivot data itself also looks inconsistent: Rast → Bayati is given pivot 4 
 | **Pitch Gravity (2nd)** | `slider-pitch-gravity` appears **twice** in the Advanced panel. Only the first one works. |
 | `characteristic_phrase_adherence` | Defined in `ui_parameters.json`, but has no UI control, no mapping and no field, so it always falls back to traditionality. |
 | `register_excursion` (new) | Added today; no UI control yet. |
+**Fixed:**
+- **Contour type** now drives each section's direction bias, in composed forms too. "Wave" alternates up and down by section. The effect is real but modest: within a phrase, "ascending" rises about +0.29 degrees and "descending" stays at 0.00, because later pipeline stages dilute it. It can be strengthened if you want a more pronounced contour.
+- **Tension curve:** the HTML now offers exactly the six implemented values (a contract test keeps the HTML and `ui_parameters.json` in sync). "Wave" now alternates section intensity, so the dynamics spread rises from 0.18 to 0.25.
+- **Section count:** slider and definition removed; the inspector shows the derived count.
+- **Duplicate Pitch Gravity slider:** removed; a test now forbids duplicate element IDs.
+- **New controls:** "Register Range" (`register_excursion`) and "Characteristic Phrases" (`characteristic_phrase_adherence`, which falls back to traditionality when unset).
+- **Also found by the new contract test:** the UI sent `melodic_density` with no definition, so the server didn't clamp it. It is now defined.
 
 ### R2-08 — Most chosen ornaments never reach the score
 The generator picks from trill, mordent, grace note, slide, vibrato and passing tone, but the exporter only writes **trill and mordent**. In a high-ornament sample, 287 of 402 chosen ornaments (71%) were silently dropped, mostly slides and grace notes. The vibrato slider therefore has essentially no visible effect.
@@ -100,7 +114,7 @@ The generator picks from trill, mordent, grace note, slide, vibrato and passing 
 - Render grace notes as real grace `<note>`s, and passing tones as added notes.
 - Or drop the unsupported types from the config.
 
-### R2-09 — The parameter inspector shows values that don't match the backend
+### R2-09 — The parameter inspector shows values that don't match the backend ✅ FIXED
 The inspector re-implements backend logic by hand, and it has drifted:
 
 - **Energy:** UI calm/moderate/lively/intense at 25/60/80, versus backend sustained/flowing/agitated at 25/75.
@@ -109,10 +123,20 @@ The inspector re-implements backend logic by hand, and it has drifted:
 - **Sections:** it shows the dead section-count value.
 
 **Fix:** have the backend return the derived values (e.g. a `/api/inspect` endpoint), or align the labels and drop invented numbers.
+**Fixed:** every inspector value now mirrors a named backend formula:
+- **Style:** question–answer phrase pairing, tonic-ending probability, and energy style (sustained/flowing/agitated).
+- **Melody:** notes per phrase and cross-jins weight.
+- **Structure:** derived section count, with Python rounding.
+- **Rhythm:** syncopation and duration variance.
+- **Expression:** ornament preset, with the backend's boundaries.
+- **Modulation:** depth, max maqamat and distance (same family / related / any).
 
-### R2-10 — The score renders while its container is hidden
+The invented metrics are gone.
+
+### R2-10 — The score renders while its container is hidden ✅ FIXED
 `Score.render()` loads and renders OSMD while `#score-container` is `display:none` (it's hidden during loading) and only shows it afterwards. Every render logs OSMD zero-width layout warnings and SVG `NaN` attribute errors. In my session the first score came out squeezed into a column a few pixels wide, until it was redrawn.
 **Fix:** call `UI.showScore()` (or make the container visible) before `osmd.load/render`, and keep the loading overlay on top.
+**Fixed:** the container is shown before OSMD loads and renders. Verified in a 1280×800 browser: the first render fills the panel (864 px SVG), with 0 zero-width warnings and 0 `NaN` errors.
 
 ### R2-11 — Bad input returns HTTP 500 instead of 400 ✅ FIXED
 - Malformed JSON, or values of the wrong type (`"abc"` for a number, a list for the maqam), return **500** "Melody generation failed".
@@ -129,14 +153,14 @@ These should be 400 errors with a message that names the bad field.
 
 ## 🟡 Low / polish
 
-- **R2-12 — Playback ignores melody dynamics and ornaments.** pp…ff markings and trills only change the printed score; the browser audio plays at a constant level.
-- **R2-13 — Unnecessary disk I/O, and a working-directory dependency.**
+- **R2-12 — Playback ignores melody dynamics and ornaments.** *(Batch C — open)* pp…ff markings and trills only change the printed score; the browser audio plays at a constant level.
+- **R2-13 — Unnecessary disk I/O, and a working-directory dependency.** ✅ FIXED: scores are generated in memory, the unused `/api/download` endpoint and temporary files are gone, and requests share one preloaded `DataLoader` (absolute path). The suite runs about 3× faster.
   - Each `/api/generate` writes the score to `output/` and reads it back. The UI builds its download in the browser, so `/api/download` is unused.
   - The generator builds a fresh `DataLoader("data")` on every request, re-reading all 7 JSON files from a *relative* path. That works only because the container's working directory is `/app`.
-- **R2-14 — The API returns wrong or empty fields.** `/api/maqamat` returns `tonic: "D"` for every maqam (there is no such field). `/api/maqam/<id>` returns `modulation_targets: {}` (the data uses `modulations`). `description` is always empty.
-- **R2-15 — Stale text.** The network-error text tells users to check "Railway"; the app is on Azure now. The MusicXML `encoding-date` is hard-coded to 2024-01-01.
+- **R2-14 — The API returns wrong or empty fields.** ✅ FIXED: `tonic` is the real written tonic (e.g. `E½♭4`), `modulations` lists the maqam's modulations, and the always-empty `description` fields were dropped. `/api/maqamat` returns `tonic: "D"` for every maqam (there is no such field). `/api/maqam/<id>` returns `modulation_targets: {}` (the data uses `modulations`). `description` is always empty.
+- **R2-15 — Stale text.** ✅ FIXED: the network-error message no longer mentions Railway, and the MusicXML `encoding-date` is the generation date. The network-error text tells users to check "Railway"; the app is on Azure now. The MusicXML `encoding-date` is hard-coded to 2024-01-01.
 - **R2-16 — CDN scripts have no integrity hashes.** OSMD and Tone.js are version-pinned (good) but have no `integrity` (SRI) attribute.
-- **R2-17 — Player quirks.**
+- **R2-17 — Player quirks.** ✅ FIXED: resuming after a pause only waits for the remaining duration, and drum loudness is passed as each hit's velocity. **Also found and fixed:** the tak "jingle" layer called `MetalSynth.triggerAttackRelease` with the wrong arguments, so it had no pitch and fired at scheduling time instead of on the beat.
   - After a pause, the end timer restarts from the full duration, so playback stops late.
   - Drum volume is set when a hit is *scheduled*, not when it sounds, so overlapping hits can bleed.
 
@@ -160,7 +184,7 @@ These should be 400 errors with a message that names the bad field.
 - R2-04 player velocity
 - R2-11 400 errors
 
-**Batch B — correctness and UI honesty (no musical judgement needed):**
+**Batch B — correctness and UI honesty: ✅ DONE (2026-10-21)**
 - R2-05 form endings and key signature
 - R2-07 remove or wire the dead controls; fix the tension-curve options and the duplicate slider
 - R2-09 inspector

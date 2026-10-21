@@ -138,6 +138,25 @@
       }
     },
 
+    "melodic_density": {
+      "id": "melodic_density",
+      "group": "melodic_behavior",
+      "name": "Note Density",
+      "description": "How many notes each phrase holds (scales the phrase length)",
+      "type": "slider",
+      "min": 0,
+      "max": 100,
+      "default": 50,
+      "step": 5,
+      "labels": {
+        "0": "Sparse",
+        "100": "Dense"
+      },
+      "affects": [
+        "phrase_generator.num_notes"
+      ]
+    },
+
     "step_vs_jump": {
       "id": "step_vs_jump",
       "group": "melodic_behavior",
@@ -301,27 +320,6 @@
         "31-70": {"nesting_enabled": true, "max_depth": 1},
         "71-100": {"nesting_enabled": true, "max_depth": 2}
       }
-    },
-
-    "section_count": {
-      "id": "section_count",
-      "group": "structure",
-      "name": "Piece Length",
-      "description": "Approximate number of sections",
-      "type": "slider",
-      "min": 2,
-      "max": 12,
-      "default": 4,
-      "step": 1,
-      "unit": "sections",
-      "labels": {
-        "2": "Short",
-        "6": "Medium",
-        "12": "Long"
-      },
-      "affects": [
-        "structure_grammar.expansion_rules.max_total_sections"
-      ]
     },
 
     "phrase_length_measures": {
@@ -671,12 +669,12 @@
     "characteristic_phrase_adherence": {
       "id": "characteristic_phrase_adherence",
       "group": "advanced",
-      "name": "Phrase Template Adherence",
-      "description": "How closely to follow characteristic phrase patterns",
+      "name": "Characteristic Phrases",
+      "description": "How often phrases are built on the maqam's characteristic phrase skeletons (unset = follows traditionality)",
       "type": "slider",
       "min": 0,
       "max": 100,
-      "default": 50,
+      "default": 70,
       "step": 5,
       "labels": {
         "0": "Free",
@@ -685,6 +683,25 @@
       },
       "affects": [
         "sayr.characteristic_phrases"
+      ]
+    },
+
+    "register_excursion": {
+      "id": "register_excursion",
+      "group": "advanced",
+      "name": "Register Range",
+      "description": "How readily the melody steps below the tonic or above the octave",
+      "type": "slider",
+      "min": 0,
+      "max": 100,
+      "default": 35,
+      "step": 5,
+      "labels": {
+        "0": "Within the octave",
+        "100": "Wide"
+      },
+      "affects": [
+        "generator.register_excursion"
       ]
     }
   },
@@ -808,7 +825,6 @@
         "title": "Structure",
         "parameters": [
           "form_type",
-          "section_count",
           "phrase_length_measures",
           "tension_curve",
           "modulation_frequency"

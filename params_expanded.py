@@ -40,6 +40,9 @@ class GeneratorParams:
     # How readily the melody steps past the tonic/octave into the register
     # below the tonic and above the octave (0 = stay within degrees 1-8).
     register_excursion: float = 0.35
+    # How often phrases follow the sayr's characteristic phrase skeletons.
+    # None = follow traditionality (the long-standing behaviour).
+    characteristic_phrase_adherence: Optional[float] = None
 
     # === Structure ===
     form_type: str = "free"
@@ -168,11 +171,11 @@ def sanitize_ui_values(ui_values: Dict, parameter_defs: Dict,
     return clean
 
 
-def create_generator_from_ui_params(ui_values: Dict):
+def create_generator_from_ui_params(ui_values: Dict, data=None):
     """Map ALL UI parameter values to GeneratorParams fields.
 
     UI sliders are on 0-100 scale. Float params are normalized to 0.0-1.0.
-    Returns a MaqamGenerator instance.
+    Returns a MaqamGenerator instance (using `data`, a DataLoader, if given).
     """
     def norm(key: str, default: int = 50) -> float:
         return ui_values.get(key, default) / 100.0
@@ -223,6 +226,9 @@ def create_generator_from_ui_params(ui_values: Dict):
         phrase_length_notes=int(ui_values.get("phrase_length", 8)),
         repetition_amount=norm("repetition_amount", 50),
         register_excursion=norm("register_excursion", 35),
+        characteristic_phrase_adherence=(
+            norm("characteristic_phrase_adherence")
+            if "characteristic_phrase_adherence" in ui_values else None),
 
         # Structure
         form_type=ui_values.get("form_type", "free"),
@@ -258,4 +264,4 @@ def create_generator_from_ui_params(ui_values: Dict):
     )
 
     from maqam_generator import MaqamGenerator
-    return MaqamGenerator(params)
+    return MaqamGenerator(params, data=data)

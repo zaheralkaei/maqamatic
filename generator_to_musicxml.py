@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import List, Dict, Optional, Tuple
 from dataclasses import dataclass
 from xml.sax.saxutils import escape as xml_escape
+from datetime import date
 
 from maqam_generator import (
     MaqamGenerator, GeneratorParams, Section, Phrase, Note,
@@ -290,8 +291,11 @@ class MusicXMLGenerator:
                     is_first_note = False
                     is_first_phrase_note = False
 
-        # Get maqam info for key signature
-        maqam_data = self.data.maqamat.get(current_maqam, {})
+        # Key signature of the home maqam (audit R2-05). It used to come from
+        # whichever maqam the last section was in. Modulated sections still
+        # spell correctly: accidentals are computed against this printed key.
+        home_maqam = sections[0].maqam_id if sections else "bayati"
+        maqam_data = self.data.maqamat.get(home_maqam, {})
         musicxml_info = maqam_data.get("musicxml", {})
         key_fifths = musicxml_info.get("key_signature_fifths", 0)
 
@@ -353,7 +357,7 @@ class MusicXMLGenerator:
     <creator type="composer">{xml_composer}</creator>
     <encoding>
       <software>Maqamatic Generator</software>
-      <encoding-date>2024-01-01</encoding-date>
+      <encoding-date>{date.today().isoformat()}</encoding-date>
     </encoding>
   </identification>
   <part-list>
@@ -415,7 +419,7 @@ class MusicXMLGenerator:
     <creator type="composer">{xml_composer}</creator>
     <encoding>
       <software>Maqamatic Generator</software>
-      <encoding-date>2024-01-01</encoding-date>
+      <encoding-date>{date.today().isoformat()}</encoding-date>
     </encoding>
   </identification>
   <part-list>
@@ -1311,16 +1315,17 @@ class MusicXMLGenerator:
         return ornament_map.get(ornament, "")
 
 
-def generate_and_export(params: GeneratorParams,
-                        output_path: str = "output.musicxml",
-                        include_percussion: bool = True,
-                        data: DataLoader = None) -> str:
-    """Generate a melody and export to MusicXML file"""
+def generate_musicxml(params: GeneratorParams,
+                      include_percussion: bool = True,
+                      data: DataLoader = None) -> str:
+    """Generate a melody and return it as a MusicXML string (no disk I/O).
+
+    The same DataLoader drives both generation and export, so the score is
+    always built from one consistent copy of the data (audit R2-13)."""
     if data is None:
         data = DataLoader()
 
-    # Generate melody
-    generator = MaqamGenerator(params, data_dir="data")
+    generator = MaqamGenerator(params, data=data)
     sections = generator.generate()
 
     # Convert to MusicXML
@@ -1329,17 +1334,22 @@ def generate_and_export(params: GeneratorParams,
     iqa_name = data.iqaat.get(params.iqa_id, {}).get("name", params.iqa_id)
     title = f"{maqam_name} with {iqa_name}"
 
-    xml_content = xml_generator.sections_to_musicxml(
+    return xml_generator.sections_to_musicxml(
         sections,
         iqa_id=params.iqa_id if include_percussion else None,
         title=title,
         include_percussion=include_percussion
     )
 
-    # Write to file
+
+def generate_and_export(params: GeneratorParams,
+                        output_path: str = "output.musicxml",
+                        include_percussion: bool = True,
+                        data: DataLoader = None) -> str:
+    """Generate a melody and write it to a MusicXML file (CLI helper)."""
+    xml_content = generate_musicxml(params, include_percussion, data)
     with open(output_path, 'w', encoding='utf-8') as f:
         f.write(xml_content)
-
     return output_path
 
 

@@ -171,6 +171,7 @@ class PitchSelector:
         self.HISTORY_WINDOW = 8
         self.current_zone = "tonic"
         self.current_phase = Phase.EXPOSITION
+        self.current_direction: Optional[str] = None
         self.visited_degrees: set = set()
         self.degree_min, self.degree_max = data.degree_range
 
@@ -192,9 +193,11 @@ class PitchSelector:
         self.sayr = self._get_sayr()
         self.matrix = self._get_matrix()
 
-    def set_phase(self, phase: Phase):
-        """Set the current sayr phase"""
+    def set_phase(self, phase: Phase, direction: Optional[str] = None):
+        """Set the current sayr phase and the section's direction bias
+        (from contour_type via the phase system; None = phase default)."""
         self.current_phase = phase
+        self.current_direction = direction
         self._update_zone_for_phase()
 
     def _update_zone_for_phase(self):
@@ -293,7 +296,8 @@ class PitchSelector:
             Phase.DESCENT: "descending",
             Phase.RESOLUTION: "descending"
         }
-        target_dir = phase_directions.get(self.current_phase, "neutral")
+        target_dir = (getattr(self, "current_direction", None)
+                      or phase_directions.get(self.current_phase, "neutral"))
 
         if len(self.direction_history) >= 3:
             recent = self.direction_history[-3:]
@@ -1061,8 +1065,9 @@ class PhraseGenerator:
         else:
             # Existing paths: skeleton or free generation
             char_phrases = self._get_characteristic_phrase(phrase_type)
-            adherence = getattr(self.params, 'characteristic_phrase_adherence',
-                                self.params.traditionality)
+            adherence = getattr(self.params, 'characteristic_phrase_adherence', None)
+            if adherence is None:
+                adherence = self.params.traditionality
             use_skeleton = char_phrases and self.rng.random() < adherence
 
             if use_skeleton:
@@ -1274,8 +1279,12 @@ class ModulationHandler:
 
         return self.rng.random() < self.params.modulation_depth
 
-    def get_modulation_target(self, current_maqam: str) -> Optional[str]:
-        """Get a suitable modulation target"""
+    def get_modulation_target(self, current_maqam: str,
+                              any_distance: bool = False) -> Optional[str]:
+        """Get a suitable modulation target.
+
+        any_distance skips the modulation_distance filter (used for 'C'
+        sections, whose role is a distant excursion or a return)."""
         maqam_data = self.data.maqamat.get(current_maqam, {})
         modulations = maqam_data.get("modulations", {}).get("common_modulations", [])
 
@@ -1283,7 +1292,7 @@ class ModulationHandler:
             return None
 
         # Filter by distance when rules available
-        if self.rules:
+        if self.rules and not any_distance:
             modulations = self.rules.modulation.filter_targets_by_distance(
                 modulations, current_maqam)
 
@@ -1319,9 +1328,11 @@ class MaqamGenerator:
     """Main generator class that orchestrates melody generation"""
 
     def __init__(self, params: Optional[GeneratorParams] = None,
-                 data_dir: str = "data"):
+                 data_dir: str = "data", data: Optional[DataLoader] = None):
         self.params = params or GeneratorParams()
-        self.data = DataLoader(data_dir)
+        # Reuse a caller's (already loaded, read-only) DataLoader when given;
+        # the web app shares one instead of re-reading the JSON per request.
+        self.data = data if data is not None else DataLoader(data_dir)
 
         # Audit F-3: each generator owns a Random instance (seeded if a
         # seed was requested, otherwise system-seeded). This replaces the
@@ -1375,27 +1386,38 @@ class MaqamGenerator:
                 if section_iqa:
                     self.rhythm_generator.set_iqa(section_iqa)
 
-            # Maqam assignment based on section role
-            if section_props.get("maqam") == "related_or_modulatory":
+            # Maqam assignment based on section role.
+            # Audit R2-05: the final section always returns to the home
+            # maqam, whatever its label, so a piece never ends inside a
+            # modulation (ternary/rondo pieces used to end on B or C).
+            role = section_props.get("maqam")
+            is_final_section = (i == len(section_labels) - 1)
+            modulated = False
+            if not is_final_section and role in (
+                    "related_or_modulatory", "distant_or_return"):
                 if self.modulation_handler.should_modulate(
                     i, len(section_labels)):
                     new_maqam = self.modulation_handler.get_modulation_target(
-                        current_maqam)
+                        current_maqam,
+                        any_distance=(role == "distant_or_return"))
                     if new_maqam:
                         current_maqam = new_maqam
                         self.pitch_selector.set_maqam(current_maqam)
-            elif section_props.get("maqam") == "tonic_maqam":
+                        modulated = True
+            if is_final_section or role == "tonic_maqam" or (
+                    role == "distant_or_return" and not modulated):
                 # L4 (audit): reset to the original tonic maqam, not
                 # the last modulation target. This matches traditional
                 # Arabic practice (the piece returns to its starting
-                # maqam). If a future "tonic follow modulation" mode
-                # is added, this is the line to revisit.
+                # maqam). A 'C' section that doesn't modulate is the
+                # "return" half of its distant_or_return role.
                 if current_maqam != self.params.maqam_id:
                     current_maqam = self.params.maqam_id
                     self.pitch_selector.set_maqam(current_maqam)
 
             # Set phase context
-            self.pitch_selector.set_phase(phase_info["phase"])
+            self.pitch_selector.set_phase(phase_info["phase"],
+                                          phase_info.get("direction"))
 
             # For composed forms: reuse taslim content
             if is_composed and label == "T":
@@ -1515,16 +1537,23 @@ class MaqamGenerator:
                 )
 
         sequence = []
-        for label in section_labels:
+        phase_system = self.rules.phase_system
+        for index, label in enumerate(section_labels):
             phase = phase_map.get(label, Phase.EXPOSITION)
             phase_id = phase.value
             # Use the phase's intensity range; fall back to
             # a neutral (0.3, 0.7) only if not found.
             intensity = phase_intensity.get(phase_id, (0.3, 0.7))
+            phase_def = phase_system.get_phase_definition(phase_id)
+            if phase_def:
+                intensity = phase_system._resolve_intensity(
+                    phase_def, index, len(section_labels))
             sequence.append({
                 "phase": phase,
                 "intensity": intensity,
-                "direction": "neutral",
+                # Audit R2-07: honour contour_type in composed forms too.
+                "direction": phase_system._resolve_direction(
+                    phase_def or {"direction_bias": "neutral"}, index),
                 "zone_focus": ["tonic"],
                 "allowed_cadences": ["half", "full"],
                 "goals": []

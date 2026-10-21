@@ -181,20 +181,15 @@ az group delete --name maqamatic-rg --yes
 
 ## Known constraints
 
-`maxReplicas` is deliberately pinned to **1**. Two pieces of per-instance state
-make horizontal scaling incorrect today:
+`maxReplicas` is pinned to **1** because rate limiting is in-process:
+`RateLimiter` in [`web/app.py`](web/app.py) is a plain `OrderedDict` per gunicorn
+worker, so the effective limit is 10 requests/minute × workers (2) × replicas,
+and the window resets on every deploy. It keys on the real client IP via
+`ProxyFix`, trusting `TRUSTED_PROXY_HOPS` (default `1`, the Container Apps
+ingress) entries of `X-Forwarded-For`; set it to `0` when nothing sits in front
+of the app.
 
-1. **Rate limiting is in-process.** `RateLimiter` in [`web/app.py`](web/app.py) is
-   a plain `OrderedDict` per gunicorn worker, so the effective limit is
-   10 requests/minute × workers (2) × replicas, and the window resets on every
-   deploy. It keys on the real client IP via `ProxyFix`, trusting
-   `TRUSTED_PROXY_HOPS` (default `1`, the Container Apps ingress) entries of
-   `X-Forwarded-For`; set it to `0` when nothing sits in front of the app.
-2. **Downloads are instance-local.** `/api/download/<file_id>` reads from the
-   container's `output/` directory, so a download served by a different replica
-   than the one that generated the file returns 404.
-
-Both also mean generated scores do not survive a restart — same as on Railway.
-Fixing them properly means Redis for the limiter and Azure Blob Storage with SAS
-URLs for the scores, at which point `maxReplicas` can be raised safely. Until
-then, one replica is the correct setting, not a limitation of Azure.
+Generated scores are no longer stored on the instance (they are returned in the
+`/api/generate` response and saved by the browser), so the old
+"downloads are instance-local" constraint is gone. Moving the limiter to Redis is
+the remaining step before `maxReplicas` can be raised safely.

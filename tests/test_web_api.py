@@ -105,6 +105,35 @@ def test_extreme_request_is_cheap(client):
     assert time.time() - start < 5
 
 
+# --- API fields and in-memory generation (R2-13 / R2-14) ----------------------
+
+def test_maqam_detail_has_real_tonic_and_modulations(client):
+    body = client.get("/api/maqam/sikah").get_json()
+    assert body["tonic"] == "E½♭4"
+    assert {m["target"] for m in body["modulations"]} == {"rast", "huzam"}
+    assert "description" not in body and "modulation_targets" not in body
+
+
+def test_maqam_list_tonics(client):
+    tonics = {m["id"]: m["tonic"] for m in client.get("/api/maqamat").get_json()}
+    assert tonics["bayati"] == "D4"
+    assert tonics["farahfaza"] == "G3"
+    assert tonics["ajam"] == "B♭3"
+
+
+def test_generation_writes_nothing_to_disk(client, tmp_path, monkeypatch):
+    output = webapp.Path(webapp.__file__).parent.parent / "output"
+    before = set(output.glob("*.musicxml")) if output.exists() else set()
+    r = _post(client, BASE)
+    assert r.status_code == 200 and r.get_json()["musicxml"].startswith("<?xml")
+    after = set(output.glob("*.musicxml")) if output.exists() else set()
+    assert after == before
+
+
+def test_download_endpoint_removed(client):
+    assert client.get("/api/download/abc123").status_code == 404
+
+
 # --- proxy-aware rate limiting (R2-02) -------------------------------------------
 
 def test_rate_limit_is_per_forwarded_client(monkeypatch):

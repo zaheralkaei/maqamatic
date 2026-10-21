@@ -59,10 +59,10 @@
 │  ┌─────────────────────────────────────────────────────────────────────┐     │
 │  │                     POST /api/generate                              │     │
 │  │  1. Rate limit check (10 req/min/IP)                                │     │
-│  │  2. Cleanup old output files (1hr TTL)                              │     │
+│  │  2. Validate + clamp params (400 if bad)                            │     │
 │  │  3. Parse UI params JSON                                           │     │
 │  │  4. Call create_generator_from_ui_params() → MaqamGenerator        │     │
-│  │  5. Call generate_and_export() → MusicXML file                     │     │
+│  │  5. Call generate_musicxml() → MusicXML str                        │     │
 │  │  6. Return { musicxml, title, file_id }                            │     │
 │  └──────────────────────────┬──────────────────────────────────────────┘     │
 │                              │                                                │
@@ -234,10 +234,10 @@
 │  │  • Builds full .musicxml document                                   │      │
 │  │  • Melody part (with ornaments, ties, dynamics)                     │      │
 │  │  • Percussion part (iqa cycle, optional)                            │      │
-│  │  • Writes to output/ directory                                      │      │
+│  │  • Returned in the API response                                     │      │
 │  └────────────────────────────────────────────────────────────────────┘      │
 │                                                                              │
-│  Output: output/maqam_{maqam_id}_{uuid}.musicxml                            │
+│  Output: MusicXML string (nothing written to disk)                          │
 └──────────────────────────────────────────────────────────────────────────────┘
 
                             │
@@ -310,13 +310,13 @@
 │  └──────────────────────────────────────────────────────────┘                     │
 │         │                                                                     │
 │         ▼                                                                     │
-│  generate_and_export(params, output_path, include_percussion, data)           │
+│  generate_musicxml(params, include_percussion, data)                          │
 │         │                                                                     │
 │         ▼                                                                     │
 │  MusicXMLGenerator builds .musicxml file                                      │
 │  ├─ PitchConverter: degrees → pitches                                         │
 │  ├─ IqaConverter: iqa patterns → percussion                                    │
-│  └─ Write to output/maqam_{id}_{uuid}.musicxml                                │
+│  └─ Return the document as a string                                           │
 │         │                                                                     │
 │         ▼                                                                     │
 │  Return JSON { musicxml, title, file_id } ──▶ Frontend                       │
